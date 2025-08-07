@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.1
+// @name         SuperMAX 2.8.2
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.1
-// @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG+S. Updates via GitHub.
+// @version      2.8.2
+// @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @match        https://pps.berliner-woche.de/*
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.1 gestartet");
+    console.log("🚀 SuperMAX v2.8.2 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -27,6 +27,8 @@ console.log("SuperMAX läuft!");
         [/\bt\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
         [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"],
         [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"],
+        [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
+        [/(?<=[.;:?!])\s+(?=(?![\p{L}\p{N}„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
 
     // Shortcuts für Insttitutionen, Organisationen und Vereine
         [/#ABDA/g, "Bundesvereinigung Deutscher Apothekenverbände (ABDA)"],
@@ -497,6 +499,25 @@ console.log("SuperMAX läuft!");
         [/\bvon\s+(\d{1,2}(?:[.:]\d{2})?)\s*[-–]\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "von $1 bis $2"],
         [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
 
+        // Autorenkürzel Debugging
+        [/\bcs\b/g, " cs"], // Christian Sell
+        [/\bgo\b/g, " go"], // Simone Gogol-Grützner
+        [/\bmy\b/g, " my"], // Manuela Frey
+        [/\bst\b/g, " st"], // Hendrik Stein
+        [/\bpb\b/g, " pb"], // Parvin Buchta
+        [/\bpet\b/g, " pet"], // Peter Erdmann
+        [/\bsabka\b/g, " sabka"], // Sabine Kalkus
+        [/\btf\b/g, " tf"], // Thomas Frey
+        [/\bRR\b/g, " RR"], // Ratgeber-Redaktion
+        [/\bakz/g, " akz"], // Ratgeber-Redaktion
+        [/\bBZfE/g, " BZfE"], // Ratgeber-Redaktion
+        [/\bDEKRA Info\b/g, " DEKRA Info"], // Ratgeber-Redaktion
+        [/\bdjd\b/g, " djd"], // Ratgeber-Redaktion
+        [/\bIPM\b/g, " IPM"], // Ratgeber-Redaktion
+        [/\bIVH\b/g, " IVH"], // Ratgeber-Redaktion
+        [/\bProMotor/g, " ProMotor"], // Ratgeber-Redaktion
+        [/\btxn\b/g, " txn"], // Ratgeber-Redaktion
+
         // Finishing
         [/\b(auf|unter):/gi, "$1"], // Doppelpunkt entfernen
         [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
@@ -507,8 +528,6 @@ console.log("SuperMAX läuft!");
         [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
         [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
         [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
-        [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
-        [/(?<=[.;:?!])\s+(?=(?![\p{L}\p{N}"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
         [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s*\/\s*(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern formatieren
         [/(?<=\b[0-9])(\s*?)(\/)(\s*?)(?=\b[0-9])/g, "$3"], // Slash zwischen zwei Zahlen formatieren
     ];
