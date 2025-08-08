@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.2
+// @name         SuperMAX 2.8.3
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.2
+// @version      2.8.3
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.2 gestartet");
+    console.log("🚀 SuperMAX v2.8.3 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -28,7 +28,7 @@ console.log("SuperMAX läuft!");
         [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"],
         [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"],
         [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
-        [/(?<=[.;:?!])\s+(?=(?![\p{L}\p{N}„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
+        [/(?<=[.?!])\s+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
 
     // Shortcuts für Insttitutionen, Organisationen und Vereine
         [/#ABDA/g, "Bundesvereinigung Deutscher Apothekenverbände (ABDA)"],
@@ -152,6 +152,7 @@ console.log("SuperMAX läuft!");
     // Richtig Gendern (setzt automatisch weibliche Form voran)
         [/\bAnwohner und Anwohnerinnen/g, "Anwohnerinnen und Anwohner"],
         [/\bArbeitnehmer und Arbeitnehmerinnen/g, "Arbeitnehmerinnen und Arbeitnehmer"],
+        [/arbeitnehmer[\\*\\:\\|]innenfreundliche/gi, "arbeitnehmerfreundliche"],
         [/\bÄrzte und Ärztinnen/g, "Ärztinnen und Ärzte"],
         [/\bAussteller und Ausstellerinnen/g, "Ausstellerinnen und Aussteller"],
         [/\bAutofahrer und Autofahrerinnen/g, "Autofahrerinnen und Autofahrer"],
@@ -171,6 +172,7 @@ console.log("SuperMAX läuft!");
         [/\bMediziner und Medizinerinnen/g, "Medizinerinnen und Mediziner"],
         [/\bMieter und Mieterinnen/g, "Mieterinnen und Mieter"],
         [/\bMitarbeiter und Mitarbeiterinnen/g, "Mitarbeiterinnen und Mitarbeiter"],
+        [/\bNutzer und Nutzerinnen/g, "Nutzerinnen und Nutzer"],
         [/\bPatienten und Patientinnen/g, "Patientinnen und Patienten"],
         [/\bPfleger und Pflegerinnen/g, "Pflegerinnen und Pfleger"],
         [/\bPolitiker und Politikerinnen/g, "Politikerinnen und Politiker"],
@@ -185,44 +187,43 @@ console.log("SuperMAX läuft!");
         [/\bWähler und Wählerinnen/g, "Wählerinnen und Wähler"],
         [/\bZuhörer und Zuhörerinnen/g, "Zuhörerinnen und Zuhörer"],
 
-    // Genderfrei mit Hashtag
-        [/#Anwohner(?:innen und Anwohner|en und Anwohnerinnen| und Anwohnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Anwohner"],
-        [/#Arbeitnehmer(?:innen und Arbeitnehmer| und Arbeitnehmerinnen|[\\*\\:\\|]innen|Innen)?/gu, "Arbeitnehmer"],
-        [/arbeitnehmer[\\*\\:\\|]innenfreundliche/gu, "arbeitnehmerfreundliche"],
-        [/#Ärzt(?:e und Ärztinnen|innen und Ärzte|[\\*\\:\\|]innen|Innen)?/gu, "Ärzte"],
-        [/#Aussteller(?:innen und Aussteller|en und Ausstellerinnen| und Ausstellerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Aussteller"],
-        [/#Autofahrer(?:innen und Autofahrer| und Autofahrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Autofahrer"],
-        [/#Autor(?:innen und Autor|en und Autorinnen| und Autorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Autoren"],
-        [/#Berliner(?:innen und Berliner|en und Berlinerinnen| und Berlinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Berliner"],
-        [/#Besucher(?:innen und Besucher|en und Besucherinnen| und Besucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Besucher"],
-        [/#Bürger(?:innen und Bürger|en und Bürgerinnen| und Bürgerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Bürger"],
-        [/#Erzieher(?:innen und Erzieher|en und Erzieherinnen| und Erzieherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Erzieher"],
-        [/#Expert(?:innen und Experten|en und Expertinnen| und Expertinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Experten"],
-        [/#Gärtner(?:innen und Gärtner|en und Gärtnerinnen| und Gärtnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Gärtner"],
+    // Genderfrei per Hashtag
+        [/#Anwohner(?:innen und Anwohner|en und Anwohnerinnen| und Anwohnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Anwohnende/gi, "Anwohner"],
+        [/#Arbeitnehmer(?:innen und Arbeitnehmer| und Arbeitnehmerinnen|[\\*\\:\\|]innen|Innen)/gi, "Arbeitnehmer"],
+        [/#Ärzt(?:e und Ärztinnen|innen und Ärzte|[\\*\\:\\|]innen|Innen)/gi, "Ärzte"],
+        [/#Aussteller(?:innen und Aussteller|en und Ausstellerinnen| und Ausstellerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Aussteller"],
+        [/#Autofahrer(?:innen und Autofahrer| und Autofahrerinnen|[\\*\\:\\|]innen|Innen)|#Autofahrende/gi, "Autofahrer"],
+        [/#Autor(?:innen und Autor|en und Autorinnen| und Autorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Autoren"],
+        [/#Berliner(?:innen und Berliner|en und Berlinerinnen| und Berlinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Berliner"],
+        [/#Besucher(?:innen und Besucher|en und Besucherinnen| und Besucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Besuchende/gi, "Besucher"],
+        [/#Bürger(?:innen und Bürger|en und Bürgerinnen| und Bürgerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Bürger"],
+        [/#Erzieher(?:innen und Erzieher|en und Erzieherinnen| und Erzieherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Erziehende/gi, "Erzieher"],
+        [/#Expert(?:innen und Experten|en und Expertinnen| und Expertinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Experten"],
+        [/#Gärtner(?:innen und Gärtner|en und Gärtnerinnen| und Gärtnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Gärtner"],
         [/#Gäst(?:e und Gästinnen|innen und Gäste|[\\*\\:\\|]innen|Innen)?/gu, "Gäste"],
-        [/#Händler(?:innen und Händler|en und Händlerinnen| und Händlerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Händler"],
-        [/#Handwerker(?:innen und Handwerker|en und Handwerkerinnen| und Handwerkerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Handwerker"],
-        [/#Kolleg(?:innen und Kollegen|en und Kolleginnen| und Kolleginnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Kollegen"],
-        [/#Kund(?:innen und Kunden|en und Kundinnen| und Kundinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Kunden"],
-        [/#Künstler(?:innen und Künstler|en und Künstlerinnen| und Künstlerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Künstler"],
-        [/#Lehrer(?:innen und Lehrer|en und Lehrerinnen| und Lehrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Lehrer"],
-        [/#Leser(?:innen und Leser|en und Leserinnen| und Leserinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Leser"],
-        [/#Mediziner(?:innen und Mediziner|en und Medizinerinnen| und Medizinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Mediziner"],
-        [/#Mieter(?:innen und Mieter|en und Mieterinnen| und Mieterinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Mieter"],
-        [/#Mitarbeiter(?:innen und Mitarbeiter|en und Mitarbeiterinnen| und Mitarbeiterinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Mitarbeiter"],
-        [/#Patient(?:innen und Patienten|en und Patientinnen| und Patientinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Patienten"],
-        [/#Pfleger(?:innen und Pfleger|en und Pflegerinnen| und Pflegerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Pfleger"],
-        [/#Politiker(?:innen und Politiker|en und Politikerinnen| und Politikerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Politiker"],
-        [/#Radfahrer(?:innen und Radfahrer|en und Radfahrerinnen| und Radfahrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Radfahrer"],
-        [/#Schüler(?:innen und Schüler|en und Schülerinnen| und Schülerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Schüler"],
-        [/#Senior(?:innen und Senioren|en und Seniorinnen| und Seniorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Senioren"],
-        [/#Spender(?:innen und Spender|en und Spenderinnen| und Spenderinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Spender"],
-        [/#Student(?:innen und Studenten|en und Studentinnen| und Studentinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Studenten"],
-        [/#Unternehmer(?:innen und Unternehmer|en und Unternehmerinnen| und Unternehmerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Unternehmer"],
-        [/#Urlauber(?:innen und Urlauber|en und Urlauberinnen| und Urlauberinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Urlauber"],
-        [/#Verbraucher(?:innen und Verbraucher|en und Verbraucherinnen| und Verbraucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Verbraucher"],
-        [/#Wähler(?:innen und Wähler|en und Wählerinnen| und Wählerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Wähler"],
-        [/#Zuhörer(?:innen und Zuhörer|en und Zuhörerinnen| und Zuhörerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?|nde)?/gu, "Zuhörer"],
+        [/#Händler(?:innen und Händler|en und Händlerinnen| und Händlerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Händler"],
+        [/#Handwerker(?:innen und Handwerker|en und Handwerkerinnen| und Handwerkerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Handwerker"],
+        [/#Kolleg(?:innen und Kollegen|en und Kolleginnen| und Kolleginnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Kollegen"],
+        [/#Kund(?:innen und Kunden|en und Kundinnen| und Kundinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Kunden"],
+        [/#Künstler(?:innen und Künstler|en und Künstlerinnen| und Künstlerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Künstler"],
+        [/#Lehrer(?:innen und Lehrer|en und Lehrerinnen| und Lehrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Lehrende/gi, "Lehrer"],
+        [/#Leser(?:innen und Leser|en und Leserinnen| und Leserinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Lesende/gi, "Leser"],
+        [/#Mediziner(?:innen und Mediziner|en und Medizinerinnen| und Medizinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Mediziner"],
+        [/#Mieter(?:innen und Mieter|en und Mieterinnen| und Mieterinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Mietende/gi, "Mieter"],
+        [/#Mitarbeiter(?:innen und Mitarbeiter|en und Mitarbeiterinnen| und Mitarbeiterinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Mitarbeitende/gi, "Mitarbeiter"],
+        [/#Patient(?:innen und Patienten|en und Patientinnen| und Patientinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Patienten"],
+        [/#Pfleger(?:innen und Pfleger|en und Pflegerinnen| und Pflegerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Pflegende/gi, "Pfleger"],
+        [/#Politiker(?:innen und Politiker|en und Politikerinnen| und Politikerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Politiker"],
+        [/#Radfahrer(?:innen und Radfahrer|en und Radfahrerinnen| und Radfahrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Radfahrende/gi, "Radfahrer"],
+        [/#Schüler(?:innen und Schüler|en und Schülerinnen| und Schülerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Schüler"],
+        [/#Senior(?:innen und Senioren|en und Seniorinnen| und Seniorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Senioren"],
+        [/#Spender(?:innen und Spender|en und Spenderinnen| und Spenderinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Spendende/gi, "Spender"],
+        [/#Student(?:innen und Studenten|en und Studentinnen| und Studentinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Studierende/gi, "Studenten"],
+        [/#Unternehmer(?:innen und Unternehmer|en und Unternehmerinnen| und Unternehmerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Unternehmer"],
+        [/#Urlauber(?:innen und Urlauber|en und Urlauberinnen| und Urlauberinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Urlauber"],
+        [/#Verbraucher(?:innen und Verbraucher|en und Verbraucherinnen| und Verbraucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Verbraucher"],
+        [/#Wähler(?:innen und Wähler|en und Wählerinnen| und Wählerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Wählende/gi, "Wähler"],
+        [/#Zuhörer(?:innen und Zuhörer|en und Zuhörerinnen| und Zuhörerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Zuhörende/gi, "Zuhörer"],
 
     // Technische Größen
         // Prozentangaben in Worte fassen
