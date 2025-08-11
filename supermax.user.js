@@ -24,7 +24,7 @@ console.log("SuperMAX läuft!");
 
     // Opening
         [/(?<!Kar)(S|s)amstag/g, "$1onnabend"],
-        [/\bt\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
+        [/\s+\b\t\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
         [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"],
         [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"],
 
