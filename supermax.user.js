@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.4
+// @name         SuperMAX 2.8.6
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.4
+// @version      2.8.6
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.4 gestartet");
+    console.log("🚀 SuperMAX v2.8.6 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -27,8 +27,30 @@ console.log("SuperMAX läuft!");
         [/\bt\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
         [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"],
         [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"],
-        [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
-        [/(?<=[.?!])\s+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
+
+   // Autorenkürzel Debugging
+        [/\b\s*cs\b/g, "\u202Fcs"], // Christian Sell
+        [/\b\s*FL\b/g, "\u202FL"], // Frank Luhn
+        [/\b\s*go\b/g, "\u202Fgo"], // Simone Gogol-Grützner
+        [/\b\s*mv\b/g, "\u202Fmv"], // Michael Vogt
+        [/\b\s*my\b/g, "\u202Fmy"], // Manuela Frey
+        [/\b\s*st\b/g, "\u202Fst"], // Hendrik Stein
+        [/\b\s*pam\b/g, "\u202Fpam"], // Pamela Rabe
+        [/\b\s*PR\b/g, "\u202FPR"], // Pamela Rabe
+        [/\b\s*pb\b/g, "\u202Fpb"], // Parvin Buchta
+        [/\b\s*pet\b/g, "\u202Fpet"], // Peter Erdmann
+        [/\b\s*sabka\b/g, "\u202Fsabka"], // Sabine Kalkus
+        [/\b\s*sus\b/g, "\u202Fsus"], // Susanne Schilp
+        [/\b\s*tf\b/g, "\u202Ftf"], // Thomas Frey
+        [/\b\s*RR\b/g, "\u202FRR"], // Ratgeber-Redaktion
+        [/\b\s*akz/g, "\u202Fakz"], // Ratgeber-Redaktion
+        [/\b\s*BZfE/g, "\u202FBZfE"], // Ratgeber-Redaktion
+        [/\b\s*DEKRA Info\b/g, "\u202FDEKRA Info"], // Ratgeber-Redaktion
+        [/\b\s*djd\b/g, "\u202Fdjd"], // Ratgeber-Redaktion
+        [/\b\s*IPM\b/g, "\u202FIPM"], // Ratgeber-Redaktion
+        [/\b\s*IVH\b/g, "\u202FIVH"], // Ratgeber-Redaktion
+        [/\b\s*ProMotor/g, "\u202FProMotor"], // Ratgeber-Redaktion
+        [/\b\s*txn\b/g, "\u202Ftxn"], // Ratgeber-Redaktion
 
     // Shortcuts für Insttitutionen, Organisationen und Vereine
         [/#ABDA/g, "Bundesvereinigung Deutscher Apothekenverbände (ABDA)"],
@@ -501,17 +523,20 @@ console.log("SuperMAX läuft!");
         [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
 
         // Finishing
-        [/\b(auf|unter):/gi, "$1"], // Doppelpunkt entfernen
+        [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
         [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
         [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
         [/([!?.,:;])\1+/g, "$1"], // Zwei gleiche Satzzeichen auf eines reduzieren
-        [/(\b\w+)[–](\w+\b)/g, "$1 – $2"], // Gedankenstrich wird um Leerzeichen ergänzt
-        [/(\b\w+)\s+[-]\s+(\w+\b)/g, "$1 – $2"], // Bindestrich mit Leerzeichen wird Gedankenstrich
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit optionalen Leerzeichen wird Gedankenstrich
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich
         [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
         [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
         [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
-        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s*\/\s*(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern formatieren
+        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s+\/\s+(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern formatieren
         [/(?<=\b[0-9])(\s*?)(\/)(\s*?)(?=\b[0-9])/g, "$3"], // Slash zwischen zwei Zahlen formatieren
+        [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
+        [/(?<=[.?!])\s+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
+
     ];
     // --- END: replacements Array ---
 
