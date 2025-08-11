@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.3
+// @name         SuperMAX 2.8.4
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.3
+// @version      2.8.4
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.3 gestartet");
+    console.log("🚀 SuperMAX v2.8.4 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -499,25 +499,6 @@ console.log("SuperMAX läuft!");
         [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s+(\d{1,2}(?:[.:]\d{2})?)\s*(bis|und|–|-)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "$1 $2-$4"],
         [/\bvon\s+(\d{1,2}(?:[.:]\d{2})?)\s*[-–]\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "von $1 bis $2"],
         [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
-
-        // Autorenkürzel Debugging
-        [/\bcs\b/g, " cs"], // Christian Sell
-        [/\bgo\b/g, " go"], // Simone Gogol-Grützner
-        [/\bmy\b/g, " my"], // Manuela Frey
-        [/\bst\b/g, " st"], // Hendrik Stein
-        [/\bpb\b/g, " pb"], // Parvin Buchta
-        [/\bpet\b/g, " pet"], // Peter Erdmann
-        [/\bsabka\b/g, " sabka"], // Sabine Kalkus
-        [/\btf\b/g, " tf"], // Thomas Frey
-        [/\bRR\b/g, " RR"], // Ratgeber-Redaktion
-        [/\bakz/g, " akz"], // Ratgeber-Redaktion
-        [/\bBZfE/g, " BZfE"], // Ratgeber-Redaktion
-        [/\bDEKRA Info\b/g, " DEKRA Info"], // Ratgeber-Redaktion
-        [/\bdjd\b/g, " djd"], // Ratgeber-Redaktion
-        [/\bIPM\b/g, " IPM"], // Ratgeber-Redaktion
-        [/\bIVH\b/g, " IVH"], // Ratgeber-Redaktion
-        [/\bProMotor/g, " ProMotor"], // Ratgeber-Redaktion
-        [/\btxn\b/g, " txn"], // Ratgeber-Redaktion
 
         // Finishing
         [/\b(auf|unter):/gi, "$1"], // Doppelpunkt entfernen
