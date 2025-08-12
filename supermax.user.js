@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.6
+// @name         SuperMAX 2.8.8
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.6
+// @version      2.8.8
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.6 gestartet");
+    console.log("🚀 SuperMAX v2.8.8 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
