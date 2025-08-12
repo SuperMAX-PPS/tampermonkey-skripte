@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.8
+// @name         SuperMAX 2.8.9
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.8
+// @version      2.8.9
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.8 gestartet");
+    console.log("🚀 SuperMAX v2.8.9 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -29,28 +29,28 @@ console.log("SuperMAX läuft!");
         [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"],
 
    // Autorenkürzel Debugging
-        [/\b\s*cs\b/g, "\u202Fcs"], // Christian Sell
-        [/\b\s*FL\b/g, "\u202FL"], // Frank Luhn
-        [/\b\s*go\b/g, "\u202Fgo"], // Simone Gogol-Grützner
-        [/\b\s*mv\b/g, "\u202Fmv"], // Michael Vogt
-        [/\b\s*my\b/g, "\u202Fmy"], // Manuela Frey
-        [/\b\s*st\b/g, "\u202Fst"], // Hendrik Stein
-        [/\b\s*pam\b/g, "\u202Fpam"], // Pamela Rabe
-        [/\b\s*PR\b/g, "\u202FPR"], // Pamela Rabe
-        [/\b\s*pb\b/g, "\u202Fpb"], // Parvin Buchta
-        [/\b\s*pet\b/g, "\u202Fpet"], // Peter Erdmann
-        [/\b\s*sabka\b/g, "\u202Fsabka"], // Sabine Kalkus
-        [/\b\s*sus\b/g, "\u202Fsus"], // Susanne Schilp
-        [/\b\s*tf\b/g, "\u202Ftf"], // Thomas Frey
-        [/\b\s*RR\b/g, "\u202FRR"], // Ratgeber-Redaktion
-        [/\b\s*akz/g, "\u202Fakz"], // Ratgeber-Redaktion
-        [/\b\s*BZfE/g, "\u202FBZfE"], // Ratgeber-Redaktion
-        [/\b\s*DEKRA Info\b/g, "\u202FDEKRA Info"], // Ratgeber-Redaktion
-        [/\b\s*djd\b/g, "\u202Fdjd"], // Ratgeber-Redaktion
-        [/\b\s*IPM\b/g, "\u202FIPM"], // Ratgeber-Redaktion
-        [/\b\s*IVH\b/g, "\u202FIVH"], // Ratgeber-Redaktion
-        [/\b\s*ProMotor/g, "\u202FProMotor"], // Ratgeber-Redaktion
-        [/\b\s*txn\b/g, "\u202Ftxn"], // Ratgeber-Redaktion
+        [/\s+\bcs\b/g, "\u202Fcs"], // Christian Sell
+        [/\s+\bFL\b/g, "\u202FL"], // Frank Luhn
+        [/\s+\bgo\b/g, "\u202Fgo"], // Simone Gogol-Grützner
+        [/\s+\bmv\b/g, "\u202Fmv"], // Michael Vogt
+        [/\s+\bmy\b/g, "\u202Fmy"], // Manuela Frey
+        [/\s+\bst\b/g, "\u202Fst"], // Hendrik Stein
+        [/\s+\bpam\b/g, "\u202Fpam"], // Pamela Rabe
+        [/\s+\bPR\b/g, "\u202FPR"], // Pamela Rabe
+        [/\s+\bpb\b/g, "\u202Fpb"], // Parvin Buchta
+        [/\s+\bpet\b/g, "\u202Fpet"], // Peter Erdmann
+        [/\s+\bsabka\b/g, "\u202Fsabka"], // Sabine Kalkus
+        [/\s+\bsus\b/g, "\u202Fsus"], // Susanne Schilp
+        [/\s+\btf\b/g, "\u202Ftf"], // Thomas Frey
+        [/\s+\bRR\b/g, "\u202FRR"], // Ratgeber-Redaktion
+        [/\s+\bakz/g, "\u202Fakz"], // Ratgeber-Redaktion
+        [/\s+\bBZfE/g, "\u202FBZfE"], // Ratgeber-Redaktion
+        [/\s+\bDEKRA Info\b/g, "\u202FDEKRA Info"], // Ratgeber-Redaktion
+        [/\s+\bdjd\b/g, "\u202Fdjd"], // Ratgeber-Redaktion
+        [/\s+\bIPM\b/g, "\u202FIPM"], // Ratgeber-Redaktion
+        [/\s+\bIVH\b/g, "\u202FIVH"], // Ratgeber-Redaktion
+        [/\s+\bProMotor/g, "\u202FProMotor"], // Ratgeber-Redaktion
+        [/\s+\btxn\b/g, "\u202Ftxn"], // Ratgeber-Redaktion
 
     // Shortcuts für Insttitutionen, Organisationen und Vereine
         [/#ABDA/g, "Bundesvereinigung Deutscher Apothekenverbände (ABDA)"],
