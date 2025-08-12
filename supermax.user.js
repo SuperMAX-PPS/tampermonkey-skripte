@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.8.10
+// @name         SuperMAX 2.8.11
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.8.10
+// @version      2.8.11
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.8.10 gestartet");
+    console.log("🚀 SuperMAX v2.8.11 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -148,7 +148,6 @@ console.log("SuperMAX läuft!");
         [/#StGB/g, "Strafgesetzbuch (StGB)"],
         [/#StVO/g, "Straßenverkehrs-Ordnung (StVO)"],
         [/#StVZO/g, "Straßenverkehrs-Zulassungs-Ordnung (StVZO)"],
-        [/#SV/g, "Sozialversicherung (SV)"],
         [/#SWP/g, "Stiftung Wissenschaft und Politik (SWP)"],
         [/#THW/g, "Technisches Hilfswerk (THW)"],
         [/#TU/g, "Technische Universität Berlin (TU Berlin)"],
@@ -376,6 +375,7 @@ console.log("SuperMAX läuft!");
         [/\bFFS\b/gi, "FUNKE Foto Services"],
         [/\s*?[,•/|]?\s*?Funke\s*?Foto\s*?Services?/gi, "\u202F/\u202FFUNKE\u202FFoto\u202FServices"],
         [/\s*?[,•/|]?\s*?Adobe\s*?Stock/g, "\u202F/\u202FAdobeStock"],
+        [/Foto:\s*\/\s*/gi, "Foto: "], // Fotonachweis von eingehenden Slash bereinigen
 
    // Lokales
         [/(^|\s)(in\s)?Berlin-Charlottenburg/g, ""],
@@ -408,6 +408,7 @@ console.log("SuperMAX läuft!");
         [/\bBroccoli/g, "Brokkoli"],
         [/\bBezirksbürgermeister/g, "Bürgermeister"],
         [/\bBezirkstadtr/g, "Stadtr"],
+        [/\bBVV-Vorsteh/g, "BV-Vorsteh"],
         [/(B|b?)üfett/g, "$1uffet"],
         [/\bCoffein/g, "Koffein"],
         [/\bdie Tickethotline lautet/g, "Eintrittskarten gibt es unter"],
