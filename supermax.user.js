@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 2.9.1
+// @name         SuperMAX 2.9.2
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.9.1
+// @version      2.9.2
 // @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,7 +17,7 @@ console.log("SuperMAX läuft!");
 (function () {
     'use strict';
 
-    console.log("🚀 SuperMAX v2.9.1 gestartet");
+    console.log("🚀 SuperMAX v2.9.2 gestartet");
 
     // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
      const replacements = [
@@ -909,5 +909,32 @@ console.log("SuperMAX läuft!");
             manualReplaceAll();
         }
     });
+
+    // SuperERASER für PPS in PEIQ (Unerwünschte Absätze entfernen mit STRG + E)
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === 'e') {
+    e.preventDefault();
+
+    const selection = window.getSelection();
+    const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+    if (range && selection.toString().length > 0) {
+      const selectedText = selection.toString();
+
+      // Ersetze Zeilenumbrüche und doppelte Leerzeichen
+      const cleanedText = selectedText
+        .replace(/(\r\n|\n|\r)/gm, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      // Ersetze den markierten Text durch die bereinigte Version
+      range.deleteContents();
+      range.insertNode(document.createTextNode(cleanedText));
+
+      // Auswahl aufheben
+      selection.removeAllRanges();
+    }
+  }
+});
 
 })();
