@@ -1,27 +1,54 @@
 // ==UserScript==
-// @name         SuperMAX 2.9.2
+// @name         SuperMAX 3.0.5
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      2.9.2
-// @description  Ersetzt Text in allen ProseMirror-Feldern, Artikelbeschreibung und Notizen bei STRG + S. Updates via GitHub.
+// @version      3.0.5
+// @description  Ersetzt Textphrasen per STRG + S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG + E. SuperLINK kürzt URLs per STRG + L. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @match        https://pps.berliner-woche.de/*
-// @grant        none
+// @connect      bwurl.de
+// @grant        GM_xmlhttpRequest
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
 // ==/UserScript==
+
+// Menüeintrag zum Setzen des Tokens
+GM_registerMenuCommand("YOURLS-Token setzen", () => {
+    const token = prompt("Bitte gib deinen YOURLS-Token ein:");
+    if (token) {
+        GM_setValue("yourlsToken", token);
+        alert("Token gespeichert!");
+    } else {
+        alert("Kein Token eingegeben.");
+    }
+});
+
+// Menüeintrag zum Anzeigen des Tokens
+GM_registerMenuCommand("YOURLS-Token anzeigen", () => {
+    const token = GM_getValue("yourlsToken", "(nicht gesetzt)");
+    alert("Gespeicherter Token:\n" + token);
+});
+
+// Menüeintrag zum Löschen des Tokens
+GM_registerMenuCommand("YOURLS-Token löschen", () => {
+    const confirmDelete = confirm("Möchtest du den gespeicherten Token wirklich löschen?");
+    if (confirmDelete) {
+        GM_setValue("yourlsToken", "");
+        alert("Token wurde gelöscht.");
+    }
+});
 
 console.log("SuperMAX läuft!");
 
-
-
 (function () {
-    'use strict';
+  'use strict';
+  console.log("🚀 SuperMAX v3.1 gestartet");
 
-    console.log("🚀 SuperMAX v2.9.2 gestartet");
-
-    // --- BEGIN: replacements Array (aus deinem Originalskript kopieren!) ---
-     const replacements = [
-
+  // === RegEx-Listen ===
+  // === STRG+S: Grundregeln ===
+  const baseReplacements = [
     // Opening
         [/(?<!Kar)(S|s)amstag/g, "$1onnabend"],
         [/\s+\b\t\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
@@ -51,127 +78,6 @@ console.log("SuperMAX läuft!");
         [/\bIVH\b/g, "\u202FIVH"], // Ratgeber-Redaktion
         [/\bProMotor/g, "\u202FProMotor"], // Ratgeber-Redaktion
         [/\btxn\b/g, "\u202Ftxn"], // Ratgeber-Redaktion
-
-    // Shortcuts für Insttitutionen, Organisationen und Vereine
-        [/#ABDA/g, "Bundesvereinigung Deutscher Apothekenverbände (ABDA)"],
-        [/#ADAC/g, "ADAC (Allgemeiner Deutscher Automobil-Club)"],
-        [/#ADFC/g, "ADFC (Allgemeiner Deutscher Fahrrad-Club)"],
-        [/#AGB/g, "Amerika-Gedenkbibliothek (AGB)"],
-        [/#ASB/g, "Arbeiter-Samariter-Bund (ASB)"],
-        [/#AvD/g, "AvD (Automobilclub von Deutschland)"],
-        [/#AVUS/g, "AVUS (Automobil-Verkehrs- und Übungsstraße)"],
-        [/#BA/g, "Bundesagentur für Arbeit (BA)"],
-        [/#BBAW/g, "Berlin-Brandenburgische Akademie der Wissenschaften (BBAW)"],
-        [/#BBB/g, "Berliner Bäder-Betriebe (BBB)"],
-        [/#BDI/g, "Bundesverband der deutschen Industrie (BDI)"],
-        [/#Behala/g, "Behala (Berliner Hafen- und Lagerhaus-Betriebe)"],
-        [/#BER/g, "Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)"],
-        [/#BerlAVG/g, "Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)"],
-        [/#BEW/g, "Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)"],
-        [/#BFD/g, "Bundesfreiwilligendienst (BFD)"],
-        [/#BfV/g, "Bundesamt für Verfassungsschutz (BfV)"],
-        [/#BGB/g, "Bürgerliches Gesetzbuch (BGB)"],
-        [/#BGBl\./g, "Bundesgesetzblatt (BGBl.)"],
-        [/#BHT/g, "Berliner Hochschule für Technik (BHT)"],
-        [/#BIS/g, "Berliner Institut für Sozialforschung (BIS)"],
-        [/#BMI/g, "BMI (Body-Mass-Index)"],
-        [/#BSW/g, "Bündnis Sahra Wagenknecht (BSW)"],
-        [/#BSR/g, "Berliner Stadtreinigung (BSR)"],
-        [/#BUND/g, "Bund für Umwelt und Naturschutz Deutschland (BUND)"],
-        [/#BuBS/g, "Berliner unabhängige Beschwerdestelle (BuBS)"],
-        [/#BVG/g, "Berliner Verkehrsbetriebe (BVG)"],
-        [/#BVV/g, "Bezirksverordnetenversammlung (BVV)"],
-        [/#BWB/g, "Berliner Wasserbetriebe (BWB)"],
-        [/#CSD/g, "Christopher Street Day (CSD)"],
-        [/#DAB/g, "Digital Audio Broadcasting (DAB)"],
-        [/#DB/g, "Deutsche Bahn (DB)"],
-        [/#DFB/g, "Deutsche Fußball-Bund (DFB)"],
-        [/#DFFB/g, "Deutsche Film- und Fernsehakademie Berlin (DFFB)"],
-        [/#DGB/g, "Deutscher Gewerkschaftsbund (DGB)"],
-        [/#DHZB/g, "Deutsches Herzzentrum Berlin (DHZB)"],
-        [/#DIHK/g, "Deutscher Industrie- und Handelskammertag (DIHK)"],
-        [/#DLF/g, "Deutschlandfunk (DLF)"],
-        [/#DLRG/g, "Deutsche Lebens-Rettungs-Gesellschaft (DLRG)"],
-        [/#DNR/g, "Deutsche Naturschutzring (DNR)"],
-        [/#DOSB/g, "Deutscher Olympischer Sportbund (DOSB)"],
-        [/#DRK/g, "Deutsches Rotes Kreuz (DRK)"],
-        [/#DSB/g, "Deutscher Sportbund (DSB)"],
-        [/#DVB/g, "Digital Video Broadcasting (DVB)"],
-        [/#DWD/g, "Deutscher Wetterdienst (DWD)"],
-        [/#EDEKA/g, "Edeka"],
-        [/#EHB/g, "Evangelische Hochschulen Berlin (EHB)"],
-        [/#EnEG/g, "Energieeinsparungsgesetz (EnEG)"],
-        [/#EnEV/g, "Energieeinsparverordnung (EnEV)"],
-        [/#EU/g, "Europäische Union (EU)"],
-        [/#EVZ/g, "Europäisches Verbraucherzentrum Deutschland (EVZ)"],
-        [/#EWG/g, "Europäischen Wirtschaftsgemeinschaft (EWG)"],
-        [/#EZB/g, "EZB (Europäische Zentralbank)"],
-        [/#FEZ/g, "Freizeit- und Erholungszentrum (FEZ-Berlin)"],
-        [/#FFS/g, "FUNKE Foto Service"],
-        [/#FÖJ/g, "FÖJ (Freiwilliges Ökologisches Jahr)"],
-        [/#FSJ/g, "FSJ (Freiwilliges Soziales Jahr)"],
-        [/#FU/g, "Freie Universität Berlin (FU Berlin)"],
-        [/#GKV/g, "Gesetzliche Krankenversicherung (GKV)"],
-        [/#HTW/g, "Hochschuhe für Technik und Wirtschaft Berlin (HTW)"],
-        [/#HU/g, "Humboldt-Universität zu Berlin (HU Berlin)"],
-        [/#HWK/g, "Handwerkskammer Berlin (HWK Berlin)"],
-        [/#HWR/g, "Hochschule für Wirtschaft und Recht Berlin (HWR)"],
-        [/#HZB/g, "Helmholtz-Zentrum Berlin (HZB)"],
-        [/#IBAN/g, "IBAN (International Bank Account Number)"],
-        [/#IFAF/g, "IFAF Berlin – Institut für angewandte Forschung Berlin "],
-        [/#IHK/g, "Industrie- und Handelskammer zu Berlin (IHK Berlin)"],
-        [/#IKEA/g, "Ikea"],
-        [/#ILA/g, "Internationale Luft- und Raumfahrtausstellung Berlin (ILA)"],
-        [/#IRT/g, "Institut für Rundfunktechnik (IRT)"],
-        [/#ISTAF/g, "ISTAF (Internationales Stadionfest Berlin)"],
-        [/#ITB/g, "ITB (Internationale Tourismus-Börse)"],
-        [/#JDZB/g, "Japanisch-Deutsches Zentrum Berlin (JDZB)"],
-        [/#KaDeWe/g, "KaDeWe (Kaufhaus des Westens)"],
-        [/#KI/g, "Künstliche Intelligenz (KI)"],
-        [/#KV/g, "Kassenärztliche Vereinigung (KV)"],
-        [/#KMV/g, "Krankenhaus des Maßregelvollzugs Berlin (KMV)"],
-        [/#LABO/g, "Landesamt für Bürger- und Ordnungsangelegenheiten (LABO)"],
-        [/#LAF/g, "Landesamt für Flüchtlingsangelegenheiten (LAF)"],
-        [/#Lageso/g, "Landesamt für Gesundheit und Soziales Berlin (Lageso)"],
-        [/#LEA/g, "Landesamt für Einwanderung (LEA)"],
-        [/#MABB/g, "Medienanstalt Berlin-Brandenburg (MABB)"],
-        [/#MDK/g, "Medizinischer Dienst der Krankenversicherung (MDK)"],
-        [/#NABU/g, "NABU (Naturschutzbund Deutschland)"],
-        [/#ÖPNV/g, "Öffentlicher Personennahverkehr (ÖPNV)"],
-        [/#QM/g, "Quartiersmanagement (QM)"],
-        [/#RAW/g, "RAW (Reichsbahnausbesserungswerk)"],
-        [/#RBB/g, "Rundfunk Berlin-Brandenburg (RBB)"],
-        [/#RDE/g, "Luftschadstoff-Emissionen im realen Betrieb (RDE)"],
-        [/#RV/g, "Rentenversicherung (RV)"],
-        [/#SGB/g, "Sozialgesetzbuch (SGB)"],
-        [/#SLZB/g, "Schul- und Leistungssportzentrum Berlin (SLZB)"],
-        [/#SPK/g, "Stiftung Preußischer Kulturbesitz (SPK)"],
-        [/#SPSG/g, "Stiftung Preußische Schlösser und Gärten Berlin-Brandenburg (SPSG)"],
-        [/#Stasi/g, "Ministerium für Staatssicherheit der DDR (MfS)"],
-        [/#StGB/g, "Strafgesetzbuch (StGB)"],
-        [/#StVO/g, "Straßenverkehrs-Ordnung (StVO)"],
-        [/#StVZO/g, "Straßenverkehrs-Zulassungs-Ordnung (StVZO)"],
-        [/#SWP/g, "Stiftung Wissenschaft und Politik (SWP)"],
-        [/#THW/g, "Technisches Hilfswerk (THW)"],
-        [/#TU/g, "Technische Universität Berlin (TU Berlin)"],
-        [/#UdK/g, "Universität der Künste Berlin (UdK Berlin)"],
-        [/#UKB/g, "Unfallkrankenhaus Berlin (ukb)"],
-        [/#VBB/g, "Verkehrsverbund Berlin-Brandenburg (VBB)"],
-        [/#VgV/g, "Vergabeverfahren nach der Vergabeverordnung (VgV)"],
-        [/#VHS/g, "Volkshochschule (VHS)"],
-        [/#VIZ/g, "Verkehrsinformationszentrale (VIZ)"],
-        [/#VÖBB/g, "Verbund der Öffentlichen Bibliotheken Berlins (VÖBB)"],
-        [/#ZEV/g, "Zentrum für Europäischen Verbraucherschutz (ZEV)"],
-        [/#ZIB/g, "Konrad-Zuse-Zentrum für Informationstechnik Berlin (ZIB)"],
-        [/#ZLB/g, "Zentral- und Landesbibliothek Berlin (ZLB)"],
-        [/#ZOB/g, "ZOB (Zentraler Omnibusbahnhof)"],
-
-    // Shortcuts für Textphrasen
-        [/#FRE/g, "Der Eintritt ist kostenfrei. Eine Anmeldung ist nicht erforderlich."],
-        [/#FRA/g, "Der Eintritt ist kostenfrei, um Anmeldung wird gebeten unter "],
-        [/#TIP/g, "Der Eintritt ist kostenfrei, Spenden werden erbeten."],
-        [/#WIA/g, "Weitere Informationen und Anmeldung unter "],
-        [/#WIU/g, "Weitere Informationen unter "],
 
     // Richtig Gendern (setzt automatisch weibliche Form voran)
         [/\bAnwohner und Anwohnerinnen/g, "Anwohnerinnen und Anwohner"],
@@ -402,6 +308,281 @@ console.log("SuperMAX läuft!");
         [/(^|\s)(in\s)?Berlin-Weißensee/g, ""],
         [/(^|\s)(in\s)?Berlin-Wilmersdorf/g, ""],
         [/(^|\s)(in\s)?Berlin-Zehlendorf/g, ""],
+
+   // Unwörter und Ungetüme
+        [/\bABC-Schütze(n?)\b/g, "Abc-Schütze$1"],
+        [/\bAlkopops/g, "Alcopops"],
+        [/\bAlptr(aum|äume)\\b/g, "Albtr$1"],
+        [/\bAntiaging/g, "Anti-Aging"],
+        [/\bBroccoli/g, "Brokkoli"],
+        [/\bBezirksbürgermeister/g, "Bürgermeister"],
+        [/\bBezirkstadtr/g, "Stadtr"],
+        [/\bBVV-Vorsteh/g, "BV-Vorsteh"],
+        [/(B|b?)üfett/g, "$1uffet"],
+        [/\bCoffein/g, "Koffein"],
+        [/\bdie Tickethotline lautet/g, "Eintrittskarten gibt es unter"],
+        [/\bDisko/g, "Disco"],
+        [/ehemalige(n?) DDR/g, "DDR"],
+        [/\bFahrkosten/g, "Fahrtkosten"],
+        [/\bFahrtzeit/g, "Fahrzeit"],
+        [/\bHandikap/g, "Handicap"],
+        [/\bHappyend/g, "Happy End"],
+        [/\bHighend/g, "High-End"],
+        [/\bHighheels/g, "High Heels"],
+        [/\bHiphop/g, "Hip-Hop"],
+        [/\b(Hot-Dog|Hot Dog)/g, "Hotdog"],
+        [/\bihre eigen(e|en?)/g, "ihre"],
+        [/\bihr eigen(er|es?)/g, "ihr"],
+        [/\bin keinster Weise/g, "in keiner Weise"],
+        [/\bJoga/g, "Yoga"],
+        [/\bJunk-Food/g, "Junkfood"],
+        [/\b(Kabrio|Caprio)/g, "Cabrio"],
+        [/\bKarsonnabend/g, "Karsamstag"],
+        [/\bKickoff/g, "Kick-off"],
+        [/\bKräcker/g, "Cracker"],
+        [/\b(Long Drink|Long-Drink)/g, "Longdrink"],
+        [/\bLoveparade/g, "Love-Parade"],
+        [/\bmacht keinen Sinn\b/g, "ergibt keinen Sinn"],
+        [/\bMund-zu-Mund-Propaganda\b/g, "Mundpropaganda"],
+        [/\bOstersonnabend/g, "Karsamstag"],
+        [/\bParagraph/g, "Paragraf"],
+        [/\bPlayoff/g, "Play-off"],
+        [/\bPoetryslam/g, "Poetry-Slam"],
+        [/\b(Prime-Time|Prime Time)/g, "Primetime"],
+        [/\bRiesterrente/g, "Riester-Rente"],
+        [/\bRock'n'Roll/g, "Rock 'n' Roll"],
+        [/\bRock-and-Roll/g, "Rock and Roll"],
+        [/\b(Rukola|Rukolla|Rukkolla|Rukkola)/g, "Rucola"],
+        [/\bscheinbar/g, "anscheinend"],
+        [/\bso genannte/g, "sogenannte"],
+        [/\b(so dass|so daß|sodaß)/g, "sodass"],
+        [/\bsorg(en|t|te|ten?)\\b\\s+für\\s+Streit/g, "führ$1 zu Streit"],
+        [/\bspiegelverkehrt/g, "seitenverkehrt"],
+        [/\b(Standby|Stand-By)/g, "Stand-by"],
+        [/\bvon Bernd Meyer\b/g, "von Bernd S. Meyer"],
+        [/\b(Voranmeldung|vorherige Anmeldung|vorheriger Anmeldung)/g, "Anmeldung"],
+        [/\bvorprogrammiert/g, "programmiert"],
+        [/\bWissens nach\b/g, "Wissens"],
+
+    // Online und Multimedia
+        [/\b(Email|EMail|eMail|e-Mail|E–Mail)/g, "E-Mail"],
+        [/\b(PDF-Datei|PDF-Dokument|PDF–Datei|PDF–Dokument)/g, "PDF"],
+        [/\b(PIN-Code|PIN-Nummer)/g, "PIN"],
+        [/\b(Spammail|Spam–Mail)/g, "Spam-Mail"],
+        [/\b(https:\/\/|http:\/\/)/g, ""],
+        [/(\.com|\.de|\.info)\/(?=\s|\.|$)(?![¬#%+\/])/gi, "$1"],
+
+    // Formatierung von Zahlen, Datums- und Zeitangaben
+        // Korrekte Maßstabsangaben
+        [/\bMaßstab(?:\s+von)?\s+(\d+)[\s.:]+(\d{2,3})\b/g, "Maßstab $1:$2"],
+
+        // Tausendertrennzeichen optimieren
+        [/\b(\d{2,3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3"],
+        [/\b(\d{1,3})((?:\s+|\.){1})(\d{3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3\u202F$5"],
+        [/\b(\d{1})(?:(?![\u202F])(?:\s+|\.))(\d{3})\b/g, "$1$2"],
+
+        // Kalendermonate mit Regeln zu 2025
+        [/(\d{1,2})\.\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\s*)(2025|25)/g, "$1. $2"],
+        [/\.\s*0?1\.(2025|25)\b/g, ". Januar"],
+        [/\.\s*0?2\.(2025|25)\b/g, ". Februar"],
+        [/\.\s*0?3\.(2025|25)\b/g, ". März"],
+        [/\.\s*0?4\.(2025|25)\b/g, ". April"],
+        [/\.\s*0?5\.(2025|25)\b/g, ". Mai"],
+        [/\.\s*0?6\.(2025|25)\b/g, ". Juni"],
+        [/\.\s*0?7\.(2025|25)\b/g, ". Juli"],
+        [/\.\s*0?8\.(2025|25)\b/g, ". August"],
+        [/\.\s*0?9\.(2025|25)\b/g, ". September"],
+        [/\.\s*10\.(2025|25)\b/g, ". Oktober"],
+        [/\.\s*11\.(2025|25)\b/g, ". November"],
+        [/\.\s*12\.(2025|25)\b/g, ". Dezember"],
+        [/\.\s*0?1\.(2026|26)\b/g, ". Januar"],
+        [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar $1"],
+        [/\.\s*0?2\.(\d{2,4})\b/g, ". Februar $1"],
+        [/\.\s*0?3\.(\d{2,4})\b/g, ". März $1"],
+        [/\.\s*0?4\.(\d{2,4})\b/g, ". April $1"],
+        [/\.\s*0?5\.(\d{2,4})\b/g, ". Mai $1"],
+        [/\.\s*0?6\.(\d{2,4})\b/g, ". Juni $1"],
+        [/\.\s*0?7\.(\d{2,4})\b/g, ". Juli $1"],
+        [/\.\s*0?8\.(\d{2,4})\b/g, ". August $1"],
+        [/\.\s*0?9\.(\d{2,4})\b/g, ". September"],
+        [/\.\s*10\.(\d{2,4})\b/g, ". Oktober"],
+        [/\.\s*11\.(\d{2,4})\b/g, ". November"],
+        [/\.\s*12\.(\d{2,4})\b/g, ". Dezember"],
+        [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar"],
+        [/\b0([1-9])\. (?=Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)/g, "$1. "],
+
+        // Wochentage und Datumsangaben formatieren
+        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\./g, "$1"], // Punkt bei abgekürztem Wochentag entfernen
+        [/\bvon\s+(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1"],
+        [/\s*(Mo|Di|Mi|Do|Fr|Sa|So)\s*zwischen\b/g, "$1"],
+        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s*(bis|und|–|-)\s*(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1-$3"],
+        [/\b(Mo)\s*(bis|und|–|-)\s*(Di)\b/g, "$1/$3"],
+        [/\b(Di)\s*(bis|und|–|-)\s*(Mi)\b/g, "$1/$3"],
+        [/\b(Mi)\s*(bis|und|–|-)\s*(Do)\b/g, "$1/$3"],
+        [/\b(Do)\s*(bis|und|–|-)\s*(Fr)\b/g, "$1/$3"],
+        [/\b(Fr)\s*(bis|und|–|-)\s*(Sa)\b/g, "$1/$3"],
+        [/\b(Sa)\s*(bis|und|–|-)\s*(So)\b/g, "$1/$3"],
+        [/\b(So)\s*(bis|und|–|-)\s*(Mo)\b/g, "$1/$3"],
+        [/\b(Mo(?:–Fr)?|Di|Mi|Do|Fr|Sa|So|Sa\/So)\s+von\s+(?=\d{1,2}[.:]\d{2})/g, "$1 "],
+        [/\b(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\s*[-–]\s*(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\b/g, "$1 bis $2"],
+        [/\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\s*[-–]\s*(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\b/g, "$1 bis $2"],
+        [/\b(Sonnabend)\s*(bis)\s*(Sonntag)\b/g, "$1 und $3"],
+        [/\b(sonnabends)\s*(bis)\s*(sonntags)\b/g, "$1 und $3"],
+        [/Montag,\s*de[nmr]/gi, "Montag,"],
+        [/Dienstag,\s*de[nmr]/gi, "Dienstag,"],
+        [/Mittwoch,\s*de[nmr]/gi, "Mittwoch,"],
+        [/Donnerstag,\s*de[nmr]/gi, "Donnerstag,"],
+        [/Freitag,\s*de[nmr]/gi, "Freitag,"],
+        [/Karsamstag,\s*de[nmr]/gi, "Karsamstag,"],
+        [/Sonnabend,\s*de[nmr]/gi, "Sonnabend,"],
+        [/Sonntag,\s*de[nmr]/gi, "Sonntag,"],
+
+        // Uhrzeiten und Öffnungszeiten einheitlich formatieren
+        [/\b(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})\b/g, "$1.$2"],
+        [/\b0(\d)\.(\d{2})\b/g, "$1.$2"],
+        [/\b(\d{1,2})\.00\b/g, "$1"],
+        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s+(\d{1,2}(?:[.:]\d{2})?)\s*(bis|und|–|-)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "$1 $2-$4"],
+        [/\bvon\s+(\d{1,2}(?:[.:]\d{2})?)\s*[-–]\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "von $1 bis $2"],
+        [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
+
+        // Finishing
+        [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
+        [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
+        [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
+        [/([!?.,:;])\1+/g, "$1"], // Zwei gleiche Satzzeichen auf eines reduzieren
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit optionalen Leerzeichen wird Gedankenstrich
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich
+        [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
+        [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
+        [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
+        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s+\/\s+(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern formatieren
+        [/(?<=\b[0-9])(\s*?)(\/)(\s*?)(?=\b[0-9])/g, "$3"], // Slash zwischen zwei Zahlen formatieren
+        [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
+        [/(?<=[.?!])\s+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
+    ];
+
+  // === STRG+ALT+S: #-Regeln ===
+  const hashtagReplacements = [
+        // Shortcuts für Insttitutionen, Organisationen und Vereine
+        [/#ABDA/g, "Bundesvereinigung Deutscher Apothekenverbände (ABDA)"],
+        [/#ADAC/g, "ADAC (Allgemeiner Deutscher Automobil-Club)"],
+        [/#ADFC/g, "ADFC (Allgemeiner Deutscher Fahrrad-Club)"],
+        [/#AGB/g, "Amerika-Gedenkbibliothek (AGB)"],
+        [/#ASB/g, "Arbeiter-Samariter-Bund (ASB)"],
+        [/#AvD/g, "AvD (Automobilclub von Deutschland)"],
+        [/#AVUS/g, "AVUS (Automobil-Verkehrs- und Übungsstraße)"],
+        [/#BA/g, "Bundesagentur für Arbeit (BA)"],
+        [/#BBAW/g, "Berlin-Brandenburgische Akademie der Wissenschaften (BBAW)"],
+        [/#BBB/g, "Berliner Bäder-Betriebe (BBB)"],
+        [/#BDI/g, "Bundesverband der deutschen Industrie (BDI)"],
+        [/#Behala/g, "Behala (Berliner Hafen- und Lagerhaus-Betriebe)"],
+        [/#BER/g, "Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)"],
+        [/#BerlAVG/g, "Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)"],
+        [/#BEW/g, "Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)"],
+        [/#BFD/g, "Bundesfreiwilligendienst (BFD)"],
+        [/#BfV/g, "Bundesamt für Verfassungsschutz (BfV)"],
+        [/#BGB/g, "Bürgerliches Gesetzbuch (BGB)"],
+        [/#BGBl\./g, "Bundesgesetzblatt (BGBl.)"],
+        [/#BHT/g, "Berliner Hochschule für Technik (BHT)"],
+        [/#BIS/g, "Berliner Institut für Sozialforschung (BIS)"],
+        [/#BMI/g, "BMI (Body-Mass-Index)"],
+        [/#BSW/g, "Bündnis Sahra Wagenknecht (BSW)"],
+        [/#BSR/g, "Berliner Stadtreinigung (BSR)"],
+        [/#BUND/g, "Bund für Umwelt und Naturschutz Deutschland (BUND)"],
+        [/#BuBS/g, "Berliner unabhängige Beschwerdestelle (BuBS)"],
+        [/#BVG/g, "Berliner Verkehrsbetriebe (BVG)"],
+        [/#BVV/g, "Bezirksverordnetenversammlung (BVV)"],
+        [/#BWB/g, "Berliner Wasserbetriebe (BWB)"],
+        [/#CSD/g, "Christopher Street Day (CSD)"],
+        [/#DAB/g, "Digital Audio Broadcasting (DAB)"],
+        [/#DB/g, "Deutsche Bahn (DB)"],
+        [/#DFB/g, "Deutsche Fußball-Bund (DFB)"],
+        [/#DFFB/g, "Deutsche Film- und Fernsehakademie Berlin (DFFB)"],
+        [/#DGB/g, "Deutscher Gewerkschaftsbund (DGB)"],
+        [/#DHZB/g, "Deutsches Herzzentrum Berlin (DHZB)"],
+        [/#DIHK/g, "Deutscher Industrie- und Handelskammertag (DIHK)"],
+        [/#DLF/g, "Deutschlandfunk (DLF)"],
+        [/#DLRG/g, "Deutsche Lebens-Rettungs-Gesellschaft (DLRG)"],
+        [/#DNR/g, "Deutsche Naturschutzring (DNR)"],
+        [/#DOSB/g, "Deutscher Olympischer Sportbund (DOSB)"],
+        [/#DRK/g, "Deutsches Rotes Kreuz (DRK)"],
+        [/#DSB/g, "Deutscher Sportbund (DSB)"],
+        [/#DVB/g, "Digital Video Broadcasting (DVB)"],
+        [/#DWD/g, "Deutscher Wetterdienst (DWD)"],
+        [/#EDEKA/g, "Edeka"],
+        [/#EHB/g, "Evangelische Hochschulen Berlin (EHB)"],
+        [/#EnEG/g, "Energieeinsparungsgesetz (EnEG)"],
+        [/#EnEV/g, "Energieeinsparverordnung (EnEV)"],
+        [/#EU/g, "Europäische Union (EU)"],
+        [/#EVZ/g, "Europäisches Verbraucherzentrum Deutschland (EVZ)"],
+        [/#EWG/g, "Europäischen Wirtschaftsgemeinschaft (EWG)"],
+        [/#EZB/g, "EZB (Europäische Zentralbank)"],
+        [/#FEZ/g, "Freizeit- und Erholungszentrum (FEZ-Berlin)"],
+        [/#FFS/g, "FUNKE Foto Service"],
+        [/#FÖJ/g, "FÖJ (Freiwilliges Ökologisches Jahr)"],
+        [/#FSJ/g, "FSJ (Freiwilliges Soziales Jahr)"],
+        [/#FU/g, "Freie Universität Berlin (FU Berlin)"],
+        [/#GKV/g, "Gesetzliche Krankenversicherung (GKV)"],
+        [/#HTW/g, "Hochschuhe für Technik und Wirtschaft Berlin (HTW)"],
+        [/#HU/g, "Humboldt-Universität zu Berlin (HU Berlin)"],
+        [/#HWK/g, "Handwerkskammer Berlin (HWK Berlin)"],
+        [/#HWR/g, "Hochschule für Wirtschaft und Recht Berlin (HWR)"],
+        [/#HZB/g, "Helmholtz-Zentrum Berlin (HZB)"],
+        [/#IBAN/g, "IBAN (International Bank Account Number)"],
+        [/#IFAF/g, "IFAF Berlin – Institut für angewandte Forschung Berlin "],
+        [/#IHK/g, "Industrie- und Handelskammer zu Berlin (IHK Berlin)"],
+        [/#IKEA/g, "Ikea"],
+        [/#ILA/g, "Internationale Luft- und Raumfahrtausstellung Berlin (ILA)"],
+        [/#IRT/g, "Institut für Rundfunktechnik (IRT)"],
+        [/#ISTAF/g, "ISTAF (Internationales Stadionfest Berlin)"],
+        [/#ITB/g, "ITB (Internationale Tourismus-Börse)"],
+        [/#JDZB/g, "Japanisch-Deutsches Zentrum Berlin (JDZB)"],
+        [/#KaDeWe/g, "KaDeWe (Kaufhaus des Westens)"],
+        [/#KI/g, "Künstliche Intelligenz (KI)"],
+        [/#KV/g, "Kassenärztliche Vereinigung (KV)"],
+        [/#KMV/g, "Krankenhaus des Maßregelvollzugs Berlin (KMV)"],
+        [/#LABO/g, "Landesamt für Bürger- und Ordnungsangelegenheiten (LABO)"],
+        [/#LAF/g, "Landesamt für Flüchtlingsangelegenheiten (LAF)"],
+        [/#Lageso/g, "Landesamt für Gesundheit und Soziales Berlin (Lageso)"],
+        [/#LEA/g, "Landesamt für Einwanderung (LEA)"],
+        [/#MABB/g, "Medienanstalt Berlin-Brandenburg (MABB)"],
+        [/#MDK/g, "Medizinischer Dienst der Krankenversicherung (MDK)"],
+        [/#NABU/g, "NABU (Naturschutzbund Deutschland)"],
+        [/#ÖPNV/g, "Öffentlicher Personennahverkehr (ÖPNV)"],
+        [/#QM/g, "Quartiersmanagement (QM)"],
+        [/#RAW/g, "RAW (Reichsbahnausbesserungswerk)"],
+        [/#RBB/g, "Rundfunk Berlin-Brandenburg (RBB)"],
+        [/#RDE/g, "Luftschadstoff-Emissionen im realen Betrieb (RDE)"],
+        [/#RV/g, "Rentenversicherung (RV)"],
+        [/#SGB/g, "Sozialgesetzbuch (SGB)"],
+        [/#SLZB/g, "Schul- und Leistungssportzentrum Berlin (SLZB)"],
+        [/#SPK/g, "Stiftung Preußischer Kulturbesitz (SPK)"],
+        [/#SPSG/g, "Stiftung Preußische Schlösser und Gärten Berlin-Brandenburg (SPSG)"],
+        [/#Stasi/g, "Ministerium für Staatssicherheit der DDR (MfS)"],
+        [/#StGB/g, "Strafgesetzbuch (StGB)"],
+        [/#StVO/g, "Straßenverkehrs-Ordnung (StVO)"],
+        [/#StVZO/g, "Straßenverkehrs-Zulassungs-Ordnung (StVZO)"],
+        [/#SWP/g, "Stiftung Wissenschaft und Politik (SWP)"],
+        [/#THW/g, "Technisches Hilfswerk (THW)"],
+        [/#TU/g, "Technische Universität Berlin (TU Berlin)"],
+        [/#UdK/g, "Universität der Künste Berlin (UdK Berlin)"],
+        [/#UKB/g, "Unfallkrankenhaus Berlin (ukb)"],
+        [/#VBB/g, "Verkehrsverbund Berlin-Brandenburg (VBB)"],
+        [/#VgV/g, "Vergabeverfahren nach der Vergabeverordnung (VgV)"],
+        [/#VHS/g, "Volkshochschule (VHS)"],
+        [/#VIZ/g, "Verkehrsinformationszentrale (VIZ)"],
+        [/#VÖBB/g, "Verbund der Öffentlichen Bibliotheken Berlins (VÖBB)"],
+        [/#ZEV/g, "Zentrum für Europäischen Verbraucherschutz (ZEV)"],
+        [/#ZIB/g, "Konrad-Zuse-Zentrum für Informationstechnik Berlin (ZIB)"],
+        [/#ZLB/g, "Zentral- und Landesbibliothek Berlin (ZLB)"],
+        [/#ZOB/g, "ZOB (Zentraler Omnibusbahnhof)"],
+
+        // Shortcuts für Textphrasen
+        [/#FRE/g, "Der Eintritt ist kostenfrei. Eine Anmeldung ist nicht erforderlich."],
+        [/#FRA/g, "Der Eintritt ist kostenfrei, um Anmeldung wird gebeten unter "],
+        [/#TIP/g, "Der Eintritt ist kostenfrei, Spenden werden erbeten."],
+        [/#WIA/g, "Weitere Informationen und Anmeldung unter "],
+        [/#WIU/g, "Weitere Informationen unter "],
 
         // Senatsmitglieder – www.berlin.de/rbmskzl/politik/senat/senatsmitglieder/
         [/##(?:Cansel Kiziltepe|Kiziltepe)\b/g, "Cansel Kiziltepe (SPD), Senatorin für Arbeit, Soziales, Gleichstellung, Integration, Vielfalt und Antidiskriminierung#+"],
@@ -635,306 +816,268 @@ console.log("SuperMAX läuft!");
         [/##(?:André Schubert|Schubert)\b/g, "Stellvertretende BV-Vorsteher André Schubert (Die Linke)#+"],
         [/#(?:André Schubert|Schubert)\b/g, "André Schubert (Die Linke)"],
 
-   // Unwörter und Ungetüme
-        [/\bABC-Schütze(n?)\b/g, "Abc-Schütze$1"],
-        [/\bAlkopops/g, "Alcopops"],
-        [/\bAlptr(aum|äume)\\b/g, "Albtr$1"],
-        [/\bAntiaging/g, "Anti-Aging"],
-        [/\bBroccoli/g, "Brokkoli"],
-        [/\bBezirksbürgermeister/g, "Bürgermeister"],
-        [/\bBezirkstadtr/g, "Stadtr"],
-        [/\bBVV-Vorsteh/g, "BV-Vorsteh"],
-        [/(B|b?)üfett/g, "$1uffet"],
-        [/\bCoffein/g, "Koffein"],
-        [/\bdie Tickethotline lautet/g, "Eintrittskarten gibt es unter"],
-        [/\bDisko/g, "Disco"],
-        [/ehemalige(n?) DDR/g, "DDR"],
-        [/\bFahrkosten/g, "Fahrtkosten"],
-        [/\bFahrtzeit/g, "Fahrzeit"],
-        [/\bHandikap/g, "Handicap"],
-        [/\bHappyend/g, "Happy End"],
-        [/\bHighend/g, "High-End"],
-        [/\bHighheels/g, "High Heels"],
-        [/\bHiphop/g, "Hip-Hop"],
-        [/\b(Hot-Dog|Hot Dog)/g, "Hotdog"],
-        [/\bihre eigen(e|en?)/g, "ihre"],
-        [/\bihr eigen(er|es?)/g, "ihr"],
-        [/\bin keinster Weise/g, "in keiner Weise"],
-        [/\bJoga/g, "Yoga"],
-        [/\bJunk-Food/g, "Junkfood"],
-        [/\b(Kabrio|Caprio)/g, "Cabrio"],
-        [/\bKickoff/g, "Kick-off"],
-        [/\bKräcker/g, "Cracker"],
-        [/\b(Long Drink|Long-Drink)/g, "Longdrink"],
-        [/\bLoveparade/g, "Love-Parade"],
-        [/\bmacht keinen Sinn\b/g, "ergibt keinen Sinn"],
-        [/\bMund-zu-Mund-Propaganda\b/g, "Mundpropaganda"],
-        [/\bParagraph/g, "Paragraf"],
-        [/\bPlayoff/g, "Play-off"],
-        [/\bPoetryslam/g, "Poetry-Slam"],
-        [/\b(Prime-Time|Prime Time)/g, "Primetime"],
-        [/\bRiesterrente/g, "Riester-Rente"],
-        [/\bRock'n'Roll/g, "Rock 'n' Roll"],
-        [/\bRock-and-Roll/g, "Rock and Roll"],
-        [/\b(Rukola|Rukolla|Rukkolla|Rukkola)/g, "Rucola"],
-        [/\bscheinbar/g, "anscheinend"],
-        [/\bso genannte/g, "sogenannte"],
-        [/\b(so dass|so daß|sodaß)/g, "sodass"],
-        [/\bsorg(en|t|te|ten?)\\b\\s+für\\s+Streit/g, "führ$1 zu Streit"],
-        [/\bspiegelverkehrt/g, "seitenverkehrt"],
-        [/\b(Standby|Stand-By)/g, "Stand-by"],
-        [/\bvon Bernd Meyer\b/g, "von Bernd S. Meyer"],
-        [/\b(Voranmeldung|vorherige Anmeldung|vorheriger Anmeldung)/g, "Anmeldung"],
-        [/\bvorprogrammiert/g, "programmiert"],
-        [/\bWissens nach\b/g, "Wissens"],
+        // Richtig Gendern (setzt automatisch weibliche Form voran)
+        [/\bAnwohner und Anwohnerinnen/g, "Anwohnerinnen und Anwohner"],
+        [/\bArbeitnehmer und Arbeitnehmerinnen/g, "Arbeitnehmerinnen und Arbeitnehmer"],
+        [/arbeitnehmer[\\*\\:\\|]innenfreundliche/gi, "arbeitnehmerfreundliche"],
+        [/\bÄrzte und Ärztinnen/g, "Ärztinnen und Ärzte"],
+        [/\bAussteller und Ausstellerinnen/g, "Ausstellerinnen und Aussteller"],
+        [/\bAutofahrer und Autofahrerinnen/g, "Autofahrerinnen und Autofahrer"],
+        [/\bAutoren und Autorinnen/g, "Autorinnen und Autoren"],
+        [/\bBesucher und Besucherinnen/g, "Besucherinnen und Besucher"],
+        [/\bBürger und Bürgerinnen/g, "Bürgerinnen und Bürger"],
+        [/\bErzieher und Erzieherinnen/g, "Erzieherinnen und Erzieher"],
+        [/\bExperten und Expertinnen/g, "Expertinnen und Experten"],
+        [/\bGärtner und Gärtnerinnen/g, "Gärtnerinnen und Gärtner"],
+        [/\bHändler und Händlerinnen/g, "Händlerinnen und Händler"],
+        [/\bHandwerker und Handwerkerinnen/g, "Handwerkerinnen und Handwerker"],
+        [/\bKollegen und Kolleginnen/g, "Kolleginnen und Kollegen"],
+        [/\bKunden und Kundinnen/g, "Kundinnen und Kunden"],
+        [/\bKünstler und Künstlerinnen/g, "Künstlerinnen und Künstler"],
+        [/\bLehrer und Lehrerinnen/g, "Lehrerinnen und Lehrer"],
+        [/\bLeser und Leserinnen/g, "Leserinnen und Leser"],
+        [/\bMediziner und Medizinerinnen/g, "Medizinerinnen und Mediziner"],
+        [/\bMieter und Mieterinnen/g, "Mieterinnen und Mieter"],
+        [/\bMitarbeiter und Mitarbeiterinnen/g, "Mitarbeiterinnen und Mitarbeiter"],
+        [/\bNutzer und Nutzerinnen/g, "Nutzerinnen und Nutzer"],
+        [/\bPatienten und Patientinnen/g, "Patientinnen und Patienten"],
+        [/\bPfleger und Pflegerinnen/g, "Pflegerinnen und Pfleger"],
+        [/\bPolitiker und Politikerinnen/g, "Politikerinnen und Politiker"],
+        [/\bRadfahrer und Radfahrerinnen/g, "Radfahrerinnen und Radfahrer"],
+        [/\bSchüler und Schülerinnen/g, "Schülerinnen und Schüler"],
+        [/\bSenioren und Seniorinnen/g, "Seniorinnen und Senioren"],
+        [/\bSpender und Spenderinnen/g, "Spenderinnen und Spender"],
+        [/\bStudenten und Studentinnen/g, "Studentinnen und Studenten"],
+        [/\bUnternehmer und Unternehmerinnen/g, "Unternehmerinnen und Unternehmer"],
+        [/\bUrlauber und Urlauberinnen/g, "Urlauberinnen und Urlauber"],
+        [/\bVerbraucher und Verbraucherinnen/g, "Verbraucherinnen und Verbraucher"],
+        [/\bWähler und Wählerinnen/g, "Wählerinnen und Wähler"],
+        [/\bZuhörer und Zuhörerinnen/g, "Zuhörerinnen und Zuhörer"],
 
-    // Online und Multimedia
-        [/\b(Email|EMail|eMail|e-Mail|E–Mail)/g, "E-Mail"],
-        [/\b(PDF-Datei|PDF-Dokument|PDF–Datei|PDF–Dokument)/g, "PDF"],
-        [/\b(PIN-Code|PIN-Nummer)/g, "PIN"],
-        [/\b(Spammail|Spam–Mail)/g, "Spam-Mail"],
-        [/\b(https:\/\/www\.|http:\/\/www\.)/g, "www."],
-        [/(\.com|\.de|\.info)\/(?=\s|\.|$)(?![¬#%+\/])/gi, "$1"],
+        // Genderfrei per Hashtag
+        [/#Anwohner(?:innen und Anwohner|en und Anwohnerinnen| und Anwohnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Anwohnende/gi, "Anwohner"],
+        [/#Arbeitnehmer(?:innen und Arbeitnehmer| und Arbeitnehmerinnen|[\\*\\:\\|]innen|Innen)/gi, "Arbeitnehmer"],
+        [/#Ärzt(?:e und Ärztinnen|innen und Ärzte|[\\*\\:\\|]innen|Innen)/gi, "Ärzte"],
+        [/#Aussteller(?:innen und Aussteller|en und Ausstellerinnen| und Ausstellerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Aussteller"],
+        [/#Autofahrer(?:innen und Autofahrer| und Autofahrerinnen|[\\*\\:\\|]innen|Innen)|#Autofahrende/gi, "Autofahrer"],
+        [/#Autor(?:innen und Autor|en und Autorinnen| und Autorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Autoren"],
+        [/#Berliner(?:innen und Berliner|en und Berlinerinnen| und Berlinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Berliner"],
+        [/#Besucher(?:innen und Besucher|en und Besucherinnen| und Besucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Besuchende/gi, "Besucher"],
+        [/#Bürger(?:innen und Bürger|en und Bürgerinnen| und Bürgerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Bürger"],
+        [/#Erzieher(?:innen und Erzieher|en und Erzieherinnen| und Erzieherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Erziehende/gi, "Erzieher"],
+        [/#Expert(?:innen und Experten|en und Expertinnen| und Expertinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Experten"],
+        [/#Gärtner(?:innen und Gärtner|en und Gärtnerinnen| und Gärtnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Gärtner"],
+        [/#Gäst(?:e und Gästinnen|innen und Gäste|[\\*\\:\\|]innen|Innen)?/gu, "Gäste"],
+        [/#Händler(?:innen und Händler|en und Händlerinnen| und Händlerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Händler"],
+        [/#Handwerker(?:innen und Handwerker|en und Handwerkerinnen| und Handwerkerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Handwerker"],
+        [/#Kolleg(?:innen und Kollegen|en und Kolleginnen| und Kolleginnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Kollegen"],
+        [/#Kund(?:innen und Kunden|en und Kundinnen| und Kundinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Kunden"],
+        [/#Künstler(?:innen und Künstler|en und Künstlerinnen| und Künstlerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Künstler"],
+        [/#Lehrer(?:innen und Lehrer|en und Lehrerinnen| und Lehrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Lehrende/gi, "Lehrer"],
+        [/#Leser(?:innen und Leser|en und Leserinnen| und Leserinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Lesende/gi, "Leser"],
+        [/#Mediziner(?:innen und Mediziner|en und Medizinerinnen| und Medizinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Mediziner"],
+        [/#Mieter(?:innen und Mieter|en und Mieterinnen| und Mieterinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Mietende/gi, "Mieter"],
+        [/#Mitarbeiter(?:innen und Mitarbeiter|en und Mitarbeiterinnen| und Mitarbeiterinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Mitarbeitende/gi, "Mitarbeiter"],
+        [/#Patient(?:innen und Patienten|en und Patientinnen| und Patientinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Patienten"],
+        [/#Pfleger(?:innen und Pfleger|en und Pflegerinnen| und Pflegerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Pflegende/gi, "Pfleger"],
+        [/#Politiker(?:innen und Politiker|en und Politikerinnen| und Politikerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Politiker"],
+        [/#Radfahrer(?:innen und Radfahrer|en und Radfahrerinnen| und Radfahrerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Radfahrende/gi, "Radfahrer"],
+        [/#Schüler(?:innen und Schüler|en und Schülerinnen| und Schülerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Schüler"],
+        [/#Senior(?:innen und Senioren|en und Seniorinnen| und Seniorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Senioren"],
+        [/#Spender(?:innen und Spender|en und Spenderinnen| und Spenderinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Spendende/gi, "Spender"],
+        [/#Student(?:innen und Studenten|en und Studentinnen| und Studentinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Studierende/gi, "Studenten"],
+        [/#Unternehmer(?:innen und Unternehmer|en und Unternehmerinnen| und Unternehmerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Unternehmer"],
+        [/#Urlauber(?:innen und Urlauber|en und Urlauberinnen| und Urlauberinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Urlauber"],
+        [/#Verbraucher(?:innen und Verbraucher|en und Verbraucherinnen| und Verbraucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Verbraucher"],
+        [/#Wähler(?:innen und Wähler|en und Wählerinnen| und Wählerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Wählende/gi, "Wähler"],
+        [/#Zuhörer(?:innen und Zuhörer|en und Zuhörerinnen| und Zuhörerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Zuhörende/gi, "Zuhörer"],
+  ];
 
-    // Formatierung von Zahlen, Datums- und Zeitangaben
-        // Korrekte Maßstabsangaben
-        [/\bMaßstab(?:\s+von)?\s+(\d+)[\s.:]+(\d{2,3})\b/g, "Maßstab $1:$2"],
-
-        // Tausendertrennzeichen optimieren
-        [/\b(\d{2,3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3"],
-        [/\b(\d{1,3})((?:\s+|\.){1})(\d{3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3\u202F$5"],
-        [/\b(\d{1})(?:(?![\u202F])(?:\s+|\.))(\d{3})\b/g, "$1$2"],
-
-        // Kalendermonate 2025
-        [/(\d{1,2})\.\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\s*)(2025|25)/g, "$1. $2"],
-        [/\.\s*0?1\.(2025|25)\b/g, ". Januar"],
-        [/\.\s*0?2\.(2025|25)\b/g, ". Februar"],
-        [/\.\s*0?3\.(2025|25)\b/g, ". März"],
-        [/\.\s*0?4\.(2025|25)\b/g, ". April"],
-        [/\.\s*0?5\.(2025|25)\b/g, ". Mai"],
-        [/\.\s*0?6\.(2025|25)\b/g, ". Juni"],
-        [/\.\s*0?7\.(2025|25)\b/g, ". Juli"],
-        [/\.\s*0?8\.(2025|25)\b/g, ". August"],
-        [/\.\s*0?9\.(2025|25)\b/g, ". September"],
-        [/\.\s*10\.(2025|25)\b/g, ". Oktober"],
-        [/\.\s*11\.(2025|25)\b/g, ". November"],
-        [/\.\s*12\.(2025|25)\b/g, ". Dezember"],
-        [/\bletzt(e|en?) Woche\b/g, "vergangen$1 Woche"],
-        [/\bletzt(e|em|en?) Monat\b/g, "vergangen$1 Monat"],
-        [/\bletzt(e|em|en|es?) Quartal\b/g, "vergangen$1 Quartal"],
-        [/\bletzt(e|em|en|es?) Jahr\b/g, "vergangen$1 Jahr"],
-
-        // Wochentage und Datumsangaben formatieren
-        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\./g, "$1"], // Punkt bei abgekürztem Wochentag entfernen
-        [/\bvon\s+(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1"],
-        [/\s*(Mo|Di|Mi|Do|Fr|Sa|So)\s*zwischen\b/g, "$1"],
-        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s*(bis|und|–|-)\s*(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1-$3"],
-        [/\b(Mo)\s*(bis|und|–|-)\s*(Di)\b/g, "$1/$3"],
-        [/\b(Di)\s*(bis|und|–|-)\s*(Mi)\b/g, "$1/$3"],
-        [/\b(Mi)\s*(bis|und|–|-)\s*(Do)\b/g, "$1/$3"],
-        [/\b(Do)\s*(bis|und|–|-)\s*(Fr)\b/g, "$1/$3"],
-        [/\b(Fr)\s*(bis|und|–|-)\s*(Sa)\b/g, "$1/$3"],
-        [/\b(Sa)\s*(bis|und|–|-)\s*(So)\b/g, "$1/$3"],
-        [/\b(So)\s*(bis|und|–|-)\s*(Mo)\b/g, "$1/$3"],
-        [/\b(Mo(?:–Fr)?|Di|Mi|Do|Fr|Sa|So|Sa\/So)\s+von\s+(?=\d{1,2}[.:]\d{2})/g, "$1 "],
-        [/\b(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\s*[-–]\s*(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\b/g, "$1 bis $2"],
-        [/\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\s*[-–]\s*(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\b/g, "$1 bis $2"],
-        [/\b(Sonnabend)\s*(bis)\s*(Sonntag)\b/g, "$1 und $3"],
-        [/\b(sonnabends)\s*(bis)\s*(sonntags)\b/g, "$1 und $3"],
-        [/Montag,\s*de[nmr]/gi, "Montag,"],
-        [/Dienstag,\s*de[nmr]/gi, "Dienstag,"],
-        [/Mittwoch,\s*de[nmr]/gi, "Mittwoch,"],
-        [/Donnerstag,\s*de[nmr]/gi, "Donnerstag,"],
-        [/Freitag,\s*de[nmr]/gi, "Freitag,"],
-        [/Karsamstag,\s*de[nmr]/gi, "Karsamstag,"],
-        [/Sonnabend,\s*de[nmr]/gi, "Sonnabend,"],
-        [/Sonntag,\s*de[nmr]/gi, "Sonntag,"],
-
-        // Uhrzeiten und Öffnungszeiten einheitlich formatieren
-        [/\b(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})\b/g, "$1.$2"],
-        [/\b0(\d)\.(\d{2})\b/g, "$1.$2"],
-        [/\b(\d{1,2})\.00\b/g, "$1"],
-        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s+(\d{1,2}(?:[.:]\d{2})?)\s*(bis|und|–|-)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "$1 $2-$4"],
-        [/\bvon\s+(\d{1,2}(?:[.:]\d{2})?)\s*[-–]\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "von $1 bis $2"],
-        [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
-
-        // Finishing
-        [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
-        [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
-        [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
-        [/([!?.,:;])\1+/g, "$1"], // Zwei gleiche Satzzeichen auf eines reduzieren
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit optionalen Leerzeichen wird Gedankenstrich
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich
-        [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
-        [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
-        [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
-        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s+\/\s+(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern formatieren
-        [/(?<=\b[0-9])(\s*?)(\/)(\s*?)(?=\b[0-9])/g, "$3"], // Slash zwischen zwei Zahlen formatieren
-        [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
-        [/(?<=[.?!])\s+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
-
-    ];
-    // --- END: replacements Array ---
-
-    function applyReplacementsWithCursorTracking(text, cursorPos) {
-        let beforeCursor = text.slice(0, cursorPos);
-        let afterCursor = text.slice(cursorPos);
-
-        let newBefore = beforeCursor;
-        let newAfter = afterCursor;
-
-        replacements.forEach(([pattern, replacement]) => {
-            newBefore = newBefore.replace(pattern, (...args) => {
-                return replacement.replace(/\$(\d+)/g, (_, n) => args[parseInt(n)]);
-            });
-            newAfter = newAfter.replace(pattern, (...args) => {
-                return replacement.replace(/\$(\d+)/g, (_, n) => args[parseInt(n)]);
-            });
-        });
-
-        const newText = newBefore + newAfter;
-        const newCursorPos = newBefore.length;
-
-        return { result: newText, newCursorPos };
-    }
-
-    // Ersetzt nur Textknoten, erhält alle Formatierungen!
-    function replaceTextNodes(el) {
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-        let node;
-        while ((node = walker.nextNode())) {
-            let original = node.nodeValue;
-            let replaced = original;
-            replacements.forEach(([pattern, replacement]) => {
-                replaced = replaced.replace(pattern, (...args) => {
-                    return replacement.replace(/\$(\d+)/g, (_, n) => args[parseInt(n)]);
-                });
-            });
-            if (replaced !== original) {
-                node.nodeValue = replaced;
-            }
-        }
-    }
-
-    // Für alle ProseMirror-Felder
-    function replaceInProseMirror(el) {
-        if (!el || !el.isContentEditable || !el.classList.contains('ProseMirror')) return;
-        replaceTextNodes(el);
-        console.log("✏️ Ersetzung (ProseMirror, TreeWalker): Formatierungen erhalten");
-    }
-
-    // Für Inputs/Textareas
-    function replaceInInput(input) {
-        if (!input || typeof input.value !== 'string') return;
-        const original = input.value;
-        const updated = applyReplacementsWithCursorTracking(original, original.length).result;
-        if (updated !== original) {
-            input.value = updated;
-            console.log("✏️ Ersetzung (input/textarea):", updated);
-        }
-    }
-
-    // Cursor ans Ende setzen (für ProseMirror)
-    function setCursorToEnd(el) {
-        if (!el || !el.isContentEditable) return;
-        let range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false); // ans Ende
-        let sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }
-
-    function manualReplaceAll() {
-        console.log("🧰 Manuelle Ersetzung ausgelöst (STRG+S, ALLE Felder)");
-
-        // Aktives Feld merken (für Cursor)
-        let active = document.activeElement;
-
-        // Alle ProseMirror-Editoren (alle relevanten Felder)
-        const proseMirrors = document.querySelectorAll('.ProseMirror[contenteditable="true"]');
-        proseMirrors.forEach(el => {
-            replaceInProseMirror(el);
-        });
-
-        // Artikelbeschreibung (Dateiname)
-        const moduleTitle = document.querySelector('#moduleTitle');
-        if (moduleTitle) replaceInInput(moduleTitle);
-
-        // Notizen
-        const positionInfo = document.querySelector('#positionInfo');
-        if (positionInfo) replaceInInput(positionInfo);
-
-        // Cursor im aktiven ProseMirror ans Ende setzen
-        if (active && active.isContentEditable && active.classList.contains('ProseMirror')) {
-            setCursorToEnd(active);
-        }
-    }
-
-    // Automatische Listener für Inputs/Textareas (optional, falls noch benötigt)
-    function attachListeners(root = document.body) {
-        const inputs = root.querySelectorAll('input[type="text"], textarea');
-        inputs.forEach(input => {
-            if (input.id === 'moduleTitle' || input.id === 'positionInfo') return;
-            if (input.dataset.replacerAttached) return;
-            input.dataset.replacerAttached = "true";
-            input.addEventListener('blur', () => {
-                const original = input.value;
-                const updated = applyReplacementsWithCursorTracking(original, original.length).result;
-                if (updated !== original) {
-                    input.value = updated;
-                    console.log("✏️ Ersetzung (input/textarea):", updated);
-                }
-            });
-        });
-    }
-
-    attachListeners();
-
-    const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-            mutation.addedNodes.forEach(node => {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                    attachListeners(node);
-                }
-            });
-        });
+  // === Ersetzungsfunktionen ===
+  function applyReplacements(text, rules) {
+    let result = text;
+    rules.forEach(([pattern, replacement]) => {
+      result = result.replace(pattern, (...args) =>
+        replacement.replace(/\$(\d+)/g, (_, n) => args[parseInt(n)])
+      );
     });
+    return result;
+  }
 
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key.toLowerCase() === 's') {
-            e.preventDefault();
-            manualReplaceAll();
-        }
-    });
-
-    // SuperERASER für PPS in PEIQ (Unerwünschte Absätze entfernen mit STRG + E)
-document.addEventListener('keydown', function(e) {
-  if (e.ctrlKey && e.key === 'e') {
-    e.preventDefault();
-
-    const selection = window.getSelection();
-    const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-
-    if (range && selection.toString().length > 0) {
-      const selectedText = selection.toString();
-
-      // Ersetze Zeilenumbrüche und doppelte Leerzeichen
-      const cleanedText = selectedText
-        .replace(/(\r\n|\n|\r)/gm, ' ')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
-
-      // Ersetze den markierten Text durch die bereinigte Version
-      range.deleteContents();
-      range.insertNode(document.createTextNode(cleanedText));
-
-      // Auswahl aufheben
-      selection.removeAllRanges();
+  function replaceTextNodesWithRules(el, rules) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+    while ((node = walker.nextNode())) {
+      const original = node.nodeValue;
+      const replaced = applyReplacements(original, rules);
+      if (replaced !== original) node.nodeValue = replaced;
     }
   }
+
+  function replaceInputWithRules(input, rules) {
+    if (!input || typeof input.value !== 'string') return;
+    const original = input.value;
+    const updated = applyReplacements(original, rules);
+    if (updated !== original) input.value = updated;
+  }
+
+  function setCursorToEnd(el) {
+    if (!el || !el.isContentEditable) return;
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  // === STRG+S: Grundregeln ===
+  function manualReplaceBase() {
+    console.log("🧠 STRG+S: Grundregeln");
+    const active = document.activeElement;
+    document.querySelectorAll('.ProseMirror[contenteditable="true"]').forEach(el =>
+      replaceTextNodesWithRules(el, baseReplacements)
+    );
+    replaceInputWithRules(document.querySelector('#moduleTitle'), baseReplacements);
+    replaceInputWithRules(document.querySelector('#positionInfo'), baseReplacements);
+    if (active?.isContentEditable) setCursorToEnd(active);
+  }
+
+  // === STRG+ALT+S: #-Regeln ===
+  function manualReplaceHashtags() {
+    console.log("🔍 STRG+ALT+S: Hashtag-Regeln");
+    const active = document.activeElement;
+    document.querySelectorAll('.ProseMirror[contenteditable="true"]').forEach(el =>
+      replaceTextNodesWithRules(el, hashtagReplacements)
+    );
+    replaceInputWithRules(document.querySelector('#moduleTitle'), hashtagReplacements);
+    replaceInputWithRules(document.querySelector('#positionInfo'), hashtagReplacements);
+    if (active?.isContentEditable) setCursorToEnd(active);
+  }
+
+  // === Tastenkombinationen ===
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      manualReplaceBase();
+    }
+    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      manualReplaceHashtags();
+    }
+  });
+
+    // SuperERASER für PPS in PEIQ (Unerwünschte Absätze und Makros entfernen mit STRG + E)
+
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'e') {
+            e.preventDefault();
+
+            const selection = window.getSelection();
+            const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+            if (range && selection.toString().length > 0) {
+                const selectedText = selection.toString();
+
+                // Bereinigung: Zeilenumbrüche, doppelte Leerzeichen, unsichtbare Zeichen, Word-Makros
+                const cleanedText = selectedText
+                .replace(/(\r\n|\n|\r)/gm, ' ') // Zeilenumbrüche → Leerzeichen
+                .replace(/\u200B|\uFEFF/g, '') // Zero Width Space & BOM
+                .replace(/<o:p>.*?<\/o:p>/gi, '') // Word-Makro-Tags
+                .replace(/<span[^>]*mso-[^>]*>.*?<\/span>/gi, '') // Word-Formatierungen
+                .replace(/&nbsp;|&shy;/gi, ' ') // Sonderzeichen → Leerzeichen
+                .replace(/\s{2,}/g, ' ') // doppelte Leerzeichen
+                .trim();
+
+                // Ersetze den markierten Text durch die bereinigte Version
+                range.deleteContents();
+                range.insertNode(document.createTextNode(cleanedText));
+
+                // Auswahl aufheben
+                selection.removeAllRanges();
+            }
+        }
+    });
+
+// SuperLINK für PPS in PEIQ (YOURLS-Tool-Integration für ShortLinks per STRG + L)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+
+        const active = document.activeElement;
+        if (!active || !active.isContentEditable || !active.classList.contains('ProseMirror')) {
+            alert("Bitte zuerst eine URL im Fließtext markieren.");
+            return;
+        }
+
+        const selection = window.getSelection();
+        const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+        const selectedText = selection.toString().trim();
+
+        if (!range || selectedText.length === 0) {
+            alert("Bitte eine gültige URL markieren.");
+            return;
+        }
+
+        let longUrl = selectedText;
+        if (!longUrl.match(/^https?:\/\//)) {
+            longUrl = 'https://' + longUrl;
+            console.log("🔧 Protokoll ergänzt:", longUrl);
+        }
+
+        if (!longUrl.match(/^https?:\/\/\S+$/)) {
+            alert("Bitte eine gültige URL markieren.");
+            return;
+        }
+
+        const apiEndpoint = 'https://bwurl.de/yourls-api.php';
+        const signature = GM_getValue("yourlsToken", "");
+
+        if (!signature || signature.trim() === "") {
+            alert("Fehler: Kein YOURLS-Token gefunden.\nBitte über das Tampermonkey-Menü → 'YOURLS-Token setzen' eingeben.");
+            return;
+        }
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: `${apiEndpoint}?signature=${signature}&action=shorturl&format=simple&url=${encodeURIComponent(longUrl)}`,
+            onload: function(response) {
+                const shortUrl = response.responseText.trim();
+                console.log("YOURLS-Rohantwort:", shortUrl);
+
+                if (shortUrl.match(/^https?:\/\/\S+$/)) {
+                    try {
+                        range.deleteContents();
+                        range.insertNode(document.createTextNode(shortUrl));
+                        window.getSelection().removeAllRanges();
+                        console.log("✅ ShortURL eingefügt:", shortUrl);
+                    } catch (err) {
+                        console.warn("⚠️ Fallback wird verwendet:", err);
+                        document.execCommand('insertText', false, shortUrl);
+                    }
+                } else {
+                    console.error("❌ Ungültige YOURLS-Antwort:", shortUrl);
+                    alert("Fehler: YOURLS-Antwort ist ungültig.");
+                }
+            },
+            onerror: function(err) {
+                console.error("❌ Fehler bei YOURLS-Anfrage:", err);
+                alert("Verbindungsfehler zu YOURLS.");
+            }
+        });
+    }
 });
+
+
+GM_registerMenuCommand("📋 SuperMAX-Shortcuts anzeigen", () => {
+    alert(
+        "🔧 SuperMAX Tastaturkürzel:\n\n" +
+        "📝 STRG + S → Textphrasen ersetzen\n" +
+        "🧹 STRG + E → Umbrüche, Makros und Links entfernen\n" +
+        "🔗 STRG + SHIFT + L → URL kürzen mit YOURLS\n" +
+        "🔑 Menü → YOURLS-Token setzen/anzeigen/löschen\n"
+    );
+});
+
 
 })();
