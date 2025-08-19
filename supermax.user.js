@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.0.5
+// @name         SuperMAX
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.0.5
+// @version      3.1.1
 // @description  Ersetzt Textphrasen per STRG + S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG + E. SuperLINK kürzt URLs per STRG + L. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("🚀 SuperMAX v3.1 gestartet");
+  console.log("🚀 SuperMAX v3.1.1 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
