@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.2
+// @name         SuperMAX 3.1.3
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.2
-// @description  Standardregelwerk per STRG + S. #-Textphrasen per STRG + ALT + S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG + E. SuperLINK kürzt URLs per STRG + L. Token-Verwaltung. Updates via GitHub.
+// @version      3.1.3
+// @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @match        https://pps.berliner-woche.de/*
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.2 gestartet");
+  console.log("SuperMAX v3.1.3 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -57,7 +57,7 @@ console.log("SuperMAX läuft!");
 
    // Autorenkürzel Debugging
         [/\bcs\b/g, "\u202Fcs"], // Christian Sell
-        [/\bFL\b/g, "\u202FL"], // Frank Luhn
+        [/\bFL\b/g, "\u202FFL"], // Frank Luhn
         [/\bgo\b/g, "\u202Fgo"], // Simone Gogol-Grützner
         [/\bmv\b/g, "\u202Fmv"], // Michael Vogt
         [/\bmy\b/g, "\u202Fmy"], // Manuela Frey
@@ -78,6 +78,110 @@ console.log("SuperMAX läuft!");
         [/\bIVH\b/g, "\u202FIVH"], // Ratgeber-Redaktion
         [/\bProMotor/g, "\u202FProMotor"], // Ratgeber-Redaktion
         [/\btxn\b/g, "\u202Ftxn"], // Ratgeber-Redaktion
+
+     // Ortsmarken Debugging
+        [/\bAdlershof\.\s/g, "Adlershof.\u202F"],
+        [/\bAltglienicke\.\s/g, "Altglienicke.\u202F"],
+        [/\bAlt-Hohenschönhausen\.\s/g, "Alt-Hohenschönhausen.\u202F"],
+        [/\bAlt-Treptow\.\s/g, "Alt-Treptow.\u202F"],
+        [/\bBaumschulenweg\.\s/g, "Baumschulenweg.\u202F"],
+        [/\bBerlin\.\s/g, "Berlin.\u202F"],
+        [/\bBiesdorf\.\s/g, "Biesdorf.\u202F"],
+        [/\bBlankenburg\.\s/g, "Blankenburg.\u202F"],
+        [/\bBlankenfelde\.\s/g, "Blankenfelde.\u202F"],
+        [/\bBohnsdorf\.\s/g, "Bohnsdorf.\u202F"],
+        [/\bBorsigwalde\.\s/g, "Borsigwalde.\u202F"],
+        [/\bBritz\.\s/g, "Britz.\u202F"],
+        [/\bBuch\.\s/g, "Buch.\u202F"],
+        [/\bBuckow\.\s/g, "Buckow.\u202F"],
+        [/\bCharlottenburg\.\s/g, "Charlottenburg.\u202F"],
+        [/\bCharlottenburg-Nord\.\s/g, "Charlottenburg-Nord.\u202F"],
+        [/\bCharlottenburg-Wilmersdorf\.\s/g, "Charlottenburg-Wilmersdorf.\u202F"],
+        [/\bDahlem\.\s/g, "Dahlem.\u202F"],
+        [/\bFalkenberg\.\s/g, "Falkenberg.\u202F"],
+        [/\bFalkenhagener Feld\.\s/g, "Falkenhagener Feld.\u202F"],
+        [/\bFennpfuhl\.\s/g, "Fennpfuhl.\u202F"],
+        [/\bFranzösisch Buchholz\.\s/g, "Französisch Buchholz.\u202F"],
+        [/\bFriedenau\.\s/g, "Friedenau.\u202F"],
+        [/\bFriedrichsfelde\.\s/g, "Friedrichsfelde.\u202F"],
+        [/\bFriedrichshagen\.\s/g, "Friedrichshagen.\u202F"],
+        [/\bFriedrichshain\.\s/g, "Friedrichshain.\u202F"],
+        [/\bFriedrichshain-Kreuzberg\.\s/g, "Friedrichshain-Kreuzberg.\u202F"],
+        [/\bFrohnau\.\s/g, "Frohnau.\u202F"],
+        [/\bGatow\.\s/g, "Gatow.\u202F"],
+        [/\bGesundbrunnen\.\s/g, "Gesundbrunnen.\u202F"],
+        [/\bGropiusstadt\.\s/g, "Gropiusstadt.\u202F"],
+        [/\bGrünau\.\s/g, "Grünau.\u202F"],
+        [/\bGrunewald\.\s/g, "Grunewald.\u202F"],
+        [/\bHakenfelde\.\s/g, "Hakenfelde.\u202F"],
+        [/\bHalensee\.\s/g, "Halensee.\u202F"],
+        [/\bHansaviertel\.\s/g, "Hansaviertel.\u202F"],
+        [/\bHaselhorst\.\s/g, "Haselhorst.\u202F"],
+        [/\bHeiligensee\.\s/g, "Heiligensee.\u202F"],
+        [/\bHeinersdorf\.\s/g, "Heinersdorf.\u202F"],
+        [/\bHellersdorf\.\s/g, "Hellersdorf.\u202F"],
+        [/\bHermsdorf\.\s/g, "Hermsdorf.\u202F"],
+        [/\bJohannisthal\.\s/g, "Johannisthal.\u202F"],
+        [/\bKarlshorst\.\s/g, "Karlshorst.\u202F"],
+        [/\bKarow\.\s/g, "Karow.\u202F"],
+        [/\bKaulsdorf\.\s/g, "Kaulsdorf.\u202F"],
+        [/\bKladow\.\s/g, "Kladow.\u202F"],
+        [/\bKonradshöhe\.\s/g, "Konradshöhe.\u202F"],
+        [/\bKöpenick\.\s/g, "Köpenick.\u202F"],
+        [/\bKreuzberg\.\s/g, "Kreuzberg.\u202F"],
+        [/\bLankwitz\.\s/g, "Lankwitz.\u202F"],
+        [/\bLichtenberg\.\s/g, "Lichtenberg.\u202F"],
+        [/\bLichtenrade\.\s/g, "Lichtenrade.\u202F"],
+        [/\bLichterfelde\.\s/g, "Lichterfelde.\u202F"],
+        [/\bLübars\.\s/g, "Lübars.\u202F"],
+        [/\bMahlsdorf\.\s/g, "Mahlsdorf.\u202F"],
+        [/\bMalchow\.\s/g, "Malchow.\u202F"],
+        [/\bMariendorf\.\s/g, "Mariendorf.\u202F"],
+        [/\bMarienfelde\.\s/g, "Marienfelde.\u202F"],
+        [/\bMärkisches Viertel\.\s/g, "Märkisches Viertel.\u202F"],
+        [/\bMarzahn\.\s/g, "Marzahn.\u202F"],
+        [/\bMarzahn-Hellersdorf\.\s/g, "Marzahn-Hellersdorf.\u202F"],
+        [/\bMitte\.\s/g, "Mitte.\u202F"],
+        [/\bMoabit\.\s/g, "Moabit.\u202F"],
+        [/\bMüggelheim\.\s/g, "Müggelheim.\u202F"],
+        [/\bNeu-Hohenschönhausen\.\s/g, "Neu-Hohenschönhausen.\u202F"],
+        [/\bNeukölln\.\s/g, "Neukölln.\u202F"],
+        [/\bNiederschöneweide\.\s/g, "Niederschöneweide.\u202F"],
+        [/\bNiederschönhausen\.\s/g, "Niederschönhausen.\u202F"],
+        [/\bNikolassee\.\s/g, "Nikolassee.\u202F"],
+        [/\bOberschöneweide\.\s/g, "Oberschöneweide.\u202F"],
+        [/\bPankow\.\s/g, "Pankow.\u202F"],
+        [/\bPlänterwald\.\s/g, "Plänterwald.\u202F"],
+        [/\bPrenzlauer Berg\.\s/g, "Prenzlauer Berg.\u202F"],
+        [/\bRahnsdorf\.\s/g, "Rahnsdorf.\u202F"],
+        [/\bReinickendorf\.\s/g, "Reinickendorf.\u202F"],
+        [/\bRosenthal\.\s/g, "Rosenthal.\u202F"],
+        [/\bRudow\.\s/g, "Rudow.\u202F"],
+        [/\bRummelsburg\.\s/g, "Rummelsburg.\u202F"],
+        [/\bSchlachtensee\.\s/g, "Schlachtensee.\u202F"],
+        [/\bSchmargendorf\.\s/g, "Schmargendorf.\u202F"],
+        [/\bSchmöckwitz\.\s/g, "Schmöckwitz.\u202F"],
+        [/\bSchöneberg\.\s/g, "Schöneberg.\u202F"],
+        [/\bSiemensstadt\.\s/g, "Siemensstadt.\u202F"],
+        [/\bSpandau\.\s/g, "Spandau.\u202F"],
+        [/\bStadtrandsiedlung Malchow\.\s/g, "Stadtrandsiedlung Malchow.\u202F"],
+        [/\bSteglitz\.\s/g, "Steglitz.\u202F"],
+        [/\bSteglitz-Zehlendorf\.\s/g, "Steglitz-Zehlendorf.\u202F"],
+        [/\bTegel\.\s/g, "Tegel.\u202F"],
+        [/\bTempelhof\.\s/g, "Tempelhof.\u202F"],
+        [/\bTempelhof-Schöneberg\.\s/g, "Tempelhof-Schöneberg.\u202F"],
+        [/\bTiergarten\.\s/g, "Tiergarten.\u202F"],
+        [/\bTreptow-Köpenick\.\s/g, "Treptow-Köpenick.\u202F"],
+        [/\bWaidmannslust\.\s/g, "Waidmannslust.\u202F"],
+        [/\bWartenberg\.\s/g, "Wartenberg.\u202F"],
+        [/\bWedding\.\s/g, "Wedding.\u202F"],
+        [/\bWeißensee\.\s/g, "Weißensee.\u202F"],
+        [/\bWestend\.\s/g, "Westend.\u202F"],
+        [/\bWilhelmsruh\.\s/g, "Wilhelmsruh.\u202F"],
+        [/\bWilhelmstadt\.\s/g, "Wilhelmstadt.\u202F"],
+        [/\bWilmersdorf\.\s/g, "Wilmersdorf.\u202F"],
+        [/\bWittenau\.\s/g, "Wittenau.\u202F"],
+        [/\bZehlendorf\.\s/g, "Zehlendorf.\u202F"],
 
     // Richtig Gendern (setzt automatisch weibliche Form voran)
         [/\bAnwohner und Anwohnerinnen/g, "Anwohnerinnen und Anwohner"],
@@ -458,7 +562,7 @@ console.log("SuperMAX läuft!");
         [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s+\/\s+(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern formatieren
         [/(?<=\b[0-9])(\s*?)(\/)(\s*?)(?=\b[0-9])/g, "$3"], // Slash zwischen zwei Zahlen formatieren
         [/(?<=\w|\d)\s+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
-        [/(?<=[.?!])\s+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
+        [/(?<=[.?!])(?!\u202F)\s+(?=(?![\p{L}\p{N}#„“"]).*$)/g, ""], // Leerzeichen nach Satzzeichen entfernen
     ];
 
   // === STRG+ALT+S: #-Regeln ===
@@ -1071,10 +1175,12 @@ document.addEventListener('keydown', function(e) {
 
 GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     alert(
-        "SuperMAX Tastaturkürzel:\n\n" +
-        "STRG + S → Standardregelwerk anwenden\n" +
-        "STRG + ALT + S → #-Textphrasen ersetzen\n" +
-        "STRG + E → Umbrüche, Makros und Links entfernen\n" +
+        "SuperMAX Tastaturkürzel:\n" +
+        "STRG + S → Grundregeln anwenden\n" +
+        "STRG + ALT + S → #-Textphrasen ersetzen\n\n" +
+        "SuperERASER Tastaturkürzel:\n" +
+        "STRG + E → Umbrüche, Makros und Links entfernen\n\n" +
+        "SuperLINK Tastaturkürzel:\n" +
         "STRG + SHIFT + L → URL kürzen mit YOURLS\n" +
         "Menü → YOURLS-Token setzen/anzeigen/löschen\n"
     );
