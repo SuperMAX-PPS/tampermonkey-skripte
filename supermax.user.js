@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         SuperMAX
+// @name         SuperMAX 3.1.2
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.1
-// @description  Ersetzt Textphrasen per STRG + S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG + E. SuperLINK kürzt URLs per STRG + L. Updates via GitHub.
+// @version      3.1.2
+// @description  Standardregelwerk per STRG + S. #-Textphrasen per STRG + ALT + S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG + E. SuperLINK kürzt URLs per STRG + L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @match        https://pps.berliner-woche.de/*
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("🚀 SuperMAX v3.1.1 gestartet");
+  console.log("SuperMAX v3.1.2 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -933,7 +933,7 @@ console.log("SuperMAX läuft!");
 
   // === STRG+S: Grundregeln ===
   function manualReplaceBase() {
-    console.log("🧠 STRG+S: Grundregeln");
+    console.log("STRG+S: Grundregeln");
     const active = document.activeElement;
     document.querySelectorAll('.ProseMirror[contenteditable="true"]').forEach(el =>
       replaceTextNodesWithRules(el, baseReplacements)
@@ -945,7 +945,7 @@ console.log("SuperMAX läuft!");
 
   // === STRG+ALT+S: #-Regeln ===
   function manualReplaceHashtags() {
-    console.log("🔍 STRG+ALT+S: Hashtag-Regeln");
+    console.log("STRG+ALT+S: Hashtag-Regeln");
     const active = document.activeElement;
     document.querySelectorAll('.ProseMirror[contenteditable="true"]').forEach(el =>
       replaceTextNodesWithRules(el, hashtagReplacements)
@@ -1022,7 +1022,7 @@ document.addEventListener('keydown', function(e) {
         let longUrl = selectedText;
         if (!longUrl.match(/^https?:\/\//)) {
             longUrl = 'https://' + longUrl;
-            console.log("🔧 Protokoll ergänzt:", longUrl);
+            console.log("Protokoll ergänzt:", longUrl);
         }
 
         if (!longUrl.match(/^https?:\/\/\S+$/)) {
@@ -1050,18 +1050,18 @@ document.addEventListener('keydown', function(e) {
                         range.deleteContents();
                         range.insertNode(document.createTextNode(shortUrl));
                         window.getSelection().removeAllRanges();
-                        console.log("✅ ShortURL eingefügt:", shortUrl);
+                        console.log("ShortURL eingefügt:", shortUrl);
                     } catch (err) {
-                        console.warn("⚠️ Fallback wird verwendet:", err);
+                        console.warn("Fallback wird verwendet:", err);
                         document.execCommand('insertText', false, shortUrl);
                     }
                 } else {
-                    console.error("❌ Ungültige YOURLS-Antwort:", shortUrl);
+                    console.error("Ungültige YOURLS-Antwort:", shortUrl);
                     alert("Fehler: YOURLS-Antwort ist ungültig.");
                 }
             },
             onerror: function(err) {
-                console.error("❌ Fehler bei YOURLS-Anfrage:", err);
+                console.error("Fehler bei YOURLS-Anfrage:", err);
                 alert("Verbindungsfehler zu YOURLS.");
             }
         });
@@ -1069,13 +1069,14 @@ document.addEventListener('keydown', function(e) {
 });
 
 
-GM_registerMenuCommand("📋 SuperMAX-Shortcuts anzeigen", () => {
+GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     alert(
-        "🔧 SuperMAX Tastaturkürzel:\n\n" +
-        "📝 STRG + S → Textphrasen ersetzen\n" +
-        "🧹 STRG + E → Umbrüche, Makros und Links entfernen\n" +
-        "🔗 STRG + SHIFT + L → URL kürzen mit YOURLS\n" +
-        "🔑 Menü → YOURLS-Token setzen/anzeigen/löschen\n"
+        "SuperMAX Tastaturkürzel:\n\n" +
+        "STRG + S → Standardregelwerk anwenden\n" +
+        "STRG + ALT + S → #-Textphrasen ersetzen\n" +
+        "STRG + E → Umbrüche, Makros und Links entfernen\n" +
+        "STRG + SHIFT + L → URL kürzen mit YOURLS\n" +
+        "Menü → YOURLS-Token setzen/anzeigen/löschen\n"
     );
 });
 
