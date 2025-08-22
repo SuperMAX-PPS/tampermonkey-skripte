@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.9
+// @name         SuperMAX 3.1.10
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.9
+// @version      3.1.10
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.9 gestartet");
+  console.log("SuperMAX v3.1.10 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -556,8 +556,7 @@ console.log("SuperMAX läuft!");
         [/\b(Email|EMail|eMail|e-Mail|E–Mail)/g, "E-Mail"],
         [/\b(Spammail|Spam–Mail)/g, "Spam-Mail"],
         [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
-        [/\b(https:\/\/\s|http:\/\/\s)/g, ""],
-        [/\b(https:\/\/|http:\/\/)/g, ""],
+        [/\b(https:\s*\/\/\s*|http:\s*\/\/\s*)/g, ""],
         [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, "/$2/$4"], // zwei Slashs in URL ohne Leerzeichen
         [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)/g, "/$2/"], // zwei Slashs in URL ohne Leerzeichen
         [/(\.)([a-zA-Z]{2,6})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, ".$2/$4"], // ein Slash nach Domainendung ohne Leerzeichen
