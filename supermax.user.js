@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.7
+// @name         SuperMAX 3.1.9
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.7
+// @version      3.1.9
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.7 gestartet");
+  console.log("SuperMAX v3.1.9 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -53,13 +53,10 @@ console.log("SuperMAX läuft!");
         [/(?<!Kar)(S|s)amstag/g, "$1onnabend"], // Samstag wird Sonnabend inklusive Feiertagsregelung
         [/Die drei \?{3}/g, "DREI_FRAGE"], // Debugging
         [/Die drei !{3}/g, "DREI_AUSRUFE"], // Debugging
-        [/\s+\b\t\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
-        [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"], // Telefonzeichen in PPS unter PEIQ
-        [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
         [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"], // Gedankenstrich zwischen zwei Zahlen wird Bindestrich
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Gedankenstrich mit optionalen Leerzeichen wird Gedankenstrich mit schmales Leerzeichen
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich mit schmales Leerzeichen
-        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s*\/\s*(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern mit schmalen Leerzeichen
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Gedankenstrich mit optionalen Leerzeichen wird Gedankenstrich mit geschütztem Leerzeichen
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich mit geschütztem Leerzeichen
+        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s*\/\s*(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern mit geschützten Leerzeichen
         [/(\(?\d+)(\s*)(\/)(\s*)(\(?\d+)/g, "$1$3$5"], // Slash zwischen zwei Zahlen ohne Leerzeichen
 
    // Autorenkürzel Debugging
@@ -265,6 +262,84 @@ console.log("SuperMAX läuft!");
         [/#Verbraucher(?:innen und Verbraucher|en und Verbraucherinnen| und Verbraucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Verbraucher"],
         [/#Wähler(?:innen und Wähler|en und Wählerinnen| und Wählerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Wählende/gi, "Wähler"],
         [/#Zuhörer(?:innen und Zuhörer|en und Zuhörerinnen| und Zuhörerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Zuhörende/gi, "Zuhörer"],
+
+    // Formatierung von Zahlen, Datums- und Zeitangaben
+        // Korrekte Maßstabsangaben
+        [/\bMaßstab(?:\s+von)?\s+(\d+)[\s.:]+(\d{2,3})\b/g, "Maßstab $1:$2"],
+
+        // Tausendertrennzeichen optimieren
+        [/\b(\d{2,3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3"],
+        [/\b(\d{1,3})((?:\s+|\.){1})(\d{3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3\u202F$5"],
+        [/\b(\d{1})(?:(?![\u202F])(?:\s+|\u0020|\.))(\d{3})\b/g, "$1$2"],
+
+        // Telefonnummern
+        [/\b(t|Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"], // Telefonzeichen in PPS unter PEIQ
+        [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
+
+        // Kalendermonate mit Regeln zu 2025
+        [/(\d{1,2})\.\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\s*)(2025|25)/g, "$1. $2"],
+        [/\.\s*0?1\.(2025|25)\b/g, ". Januar"],
+        [/\.\s*0?2\.(2025|25)\b/g, ". Februar"],
+        [/\.\s*0?3\.(2025|25)\b/g, ". März"],
+        [/\.\s*0?4\.(2025|25)\b/g, ". April"],
+        [/\.\s*0?5\.(2025|25)\b/g, ". Mai"],
+        [/\.\s*0?6\.(2025|25)\b/g, ". Juni"],
+        [/\.\s*0?7\.(2025|25)\b/g, ". Juli"],
+        [/\.\s*0?8\.(2025|25)\b/g, ". August"],
+        [/\.\s*0?9\.(2025|25)\b/g, ". September"],
+        [/\.\s*10\.(2025|25)\b/g, ". Oktober"],
+        [/\.\s*11\.(2025|25)\b/g, ". November"],
+        [/\.\s*12\.(2025|25)\b/g, ". Dezember"],
+        [/\.\s*0?1\.(2026|26)\b/g, ". Januar"],
+        [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar $1"],
+        [/\.\s*0?2\.(\d{2,4})\b/g, ". Februar $1"],
+        [/\.\s*0?3\.(\d{2,4})\b/g, ". März $1"],
+        [/\.\s*0?4\.(\d{2,4})\b/g, ". April $1"],
+        [/\.\s*0?5\.(\d{2,4})\b/g, ". Mai $1"],
+        [/\.\s*0?6\.(\d{2,4})\b/g, ". Juni $1"],
+        [/\.\s*0?7\.(\d{2,4})\b/g, ". Juli $1"],
+        [/\.\s*0?8\.(\d{2,4})\b/g, ". August $1"],
+        [/\.\s*0?9\.(\d{2,4})\b/g, ". September"],
+        [/\.\s*10\.(\d{2,4})\b/g, ". Oktober"],
+        [/\.\s*11\.(\d{2,4})\b/g, ". November"],
+        [/\.\s*12\.(\d{2,4})\b/g, ". Dezember"],
+        [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar"],
+        [/\b0([1-9])\. (?=Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)/g, "$1. "],
+        [/\b(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*[-–]\s*(\d{1,2})/g, "$1 bis $2"],
+
+        // Wochentage und Datumsangaben formatieren
+        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\./g, "$1"], // Punkt bei abgekürztem Wochentag entfernen
+        [/\bvon\s+(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1"],
+        [/\s*(Mo|Di|Mi|Do|Fr|Sa|So)\s*zwischen\b/g, "$1"],
+        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s*(bis|und|–|-)\s*(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1-$3"],
+        [/\b(Mo)\s*(bis|und|–|-)\s*(Di)\b/g, "$1/$3"],
+        [/\b(Di)\s*(bis|und|–|-)\s*(Mi)\b/g, "$1/$3"],
+        [/\b(Mi)\s*(bis|und|–|-)\s*(Do)\b/g, "$1/$3"],
+        [/\b(Do)\s*(bis|und|–|-)\s*(Fr)\b/g, "$1/$3"],
+        [/\b(Fr)\s*(bis|und|–|-)\s*(Sa)\b/g, "$1/$3"],
+        [/\b(Sa)\s*(bis|und|–|-)\s*(So)\b/g, "$1/$3"],
+        [/\b(So)\s*(bis|und|–|-)\s*(Mo)\b/g, "$1/$3"],
+        [/\b(Mo(?:–Fr)?|Di|Mi|Do|Fr|Sa|So|Sa\/So)\s+von\s+(?=\d{1,2}[.:]\d{2})/g, "$1 "],
+        [/\b(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\s*[-–]\s*(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\b/g, "$1 bis $2"],
+        [/\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\s*[-–]\s*(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\b/g, "$1 bis $2"],
+        [/\b(Sonnabend)\s*(bis)\s*(Sonntag)\b/g, "$1 und $3"],
+        [/\b(sonnabends)\s*(bis)\s*(sonntags)\b/g, "$1 und $3"],
+        [/Montag,\s*de[nmr]/gi, "Montag,"],
+        [/Dienstag,\s*de[nmr]/gi, "Dienstag,"],
+        [/Mittwoch,\s*de[nmr]/gi, "Mittwoch,"],
+        [/Donnerstag,\s*de[nmr]/gi, "Donnerstag,"],
+        [/Freitag,\s*de[nmr]/gi, "Freitag,"],
+        [/Karsamstag,\s*de[nmr]/gi, "Karsamstag,"],
+        [/Sonnabend,\s*de[nmr]/gi, "Sonnabend,"],
+        [/Sonntag,\s*de[nmr]/gi, "Sonntag,"],
+
+        // Uhrzeiten und Öffnungszeiten einheitlich formatieren
+        [/\b(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})\b/g, "$1.$2"], // Funktioniert nur in PPS von PEIQ!
+        [/\b0(\d)\.(\d{2})\b/g, "$1.$2"],
+        [/\b(\d{1,2})\.00\b/g, "$1"],
+        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s+(\d{1,2}(?:[.:]\d{2})?)\s*(bis|und|–|-)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "$1 $2-$4"],
+        [/\bvon\s+(\d{1,2}(?:[.:]\d{2})?)\s*[-–]\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "von $1 bis $2"],
+        [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
 
     // Technische Größen
         // Prozentangaben in Worte fassen
@@ -488,82 +563,14 @@ console.log("SuperMAX läuft!");
         [/(\.)([a-zA-Z]{2,6})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, ".$2/$4"], // ein Slash nach Domainendung ohne Leerzeichen
         [/(\.com|\.de|\.info|\.berlin)(\/\s|\/\.)/g, "$1"],
 
-    // Formatierung von Zahlen, Datums- und Zeitangaben
-        // Korrekte Maßstabsangaben
-        [/\bMaßstab(?:\s+von)?\s+(\d+)[\s.:]+(\d{2,3})\b/g, "Maßstab $1:$2"],
-
-        // Tausendertrennzeichen optimieren
-        [/\b(\d{2,3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3"],
-        [/\b(\d{1,3})((?:\s+|\.){1})(\d{3})((?:\s+|\.){1})(\d{3})\b/g, "$1\u202F$3\u202F$5"],
-        [/\b(\d{1})(?:(?![\u202F])(?:\s+|\.))(\d{3})\b/g, "$1$2"],
-
-        // Kalendermonate mit Regeln zu 2025
-        [/(\d{1,2})\.\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\s*)(2025|25)/g, "$1. $2"],
-        [/\.\s*0?1\.(2025|25)\b/g, ". Januar"],
-        [/\.\s*0?2\.(2025|25)\b/g, ". Februar"],
-        [/\.\s*0?3\.(2025|25)\b/g, ". März"],
-        [/\.\s*0?4\.(2025|25)\b/g, ". April"],
-        [/\.\s*0?5\.(2025|25)\b/g, ". Mai"],
-        [/\.\s*0?6\.(2025|25)\b/g, ". Juni"],
-        [/\.\s*0?7\.(2025|25)\b/g, ". Juli"],
-        [/\.\s*0?8\.(2025|25)\b/g, ". August"],
-        [/\.\s*0?9\.(2025|25)\b/g, ". September"],
-        [/\.\s*10\.(2025|25)\b/g, ". Oktober"],
-        [/\.\s*11\.(2025|25)\b/g, ". November"],
-        [/\.\s*12\.(2025|25)\b/g, ". Dezember"],
-        [/\.\s*0?1\.(2026|26)\b/g, ". Januar"],
-        [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar $1"],
-        [/\.\s*0?2\.(\d{2,4})\b/g, ". Februar $1"],
-        [/\.\s*0?3\.(\d{2,4})\b/g, ". März $1"],
-        [/\.\s*0?4\.(\d{2,4})\b/g, ". April $1"],
-        [/\.\s*0?5\.(\d{2,4})\b/g, ". Mai $1"],
-        [/\.\s*0?6\.(\d{2,4})\b/g, ". Juni $1"],
-        [/\.\s*0?7\.(\d{2,4})\b/g, ". Juli $1"],
-        [/\.\s*0?8\.(\d{2,4})\b/g, ". August $1"],
-        [/\.\s*0?9\.(\d{2,4})\b/g, ". September"],
-        [/\.\s*10\.(\d{2,4})\b/g, ". Oktober"],
-        [/\.\s*11\.(\d{2,4})\b/g, ". November"],
-        [/\.\s*12\.(\d{2,4})\b/g, ". Dezember"],
-        [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar"],
-        [/\b0([1-9])\. (?=Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)/g, "$1. "],
-
-        // Wochentage und Datumsangaben formatieren
-        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\./g, "$1"], // Punkt bei abgekürztem Wochentag entfernen
-        [/\bvon\s+(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1"],
-        [/\s*(Mo|Di|Mi|Do|Fr|Sa|So)\s*zwischen\b/g, "$1"],
-        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s*(bis|und|–|-)\s*(Mo|Di|Mi|Do|Fr|Sa|So)\b/g, "$1-$3"],
-        [/\b(Mo)\s*(bis|und|–|-)\s*(Di)\b/g, "$1/$3"],
-        [/\b(Di)\s*(bis|und|–|-)\s*(Mi)\b/g, "$1/$3"],
-        [/\b(Mi)\s*(bis|und|–|-)\s*(Do)\b/g, "$1/$3"],
-        [/\b(Do)\s*(bis|und|–|-)\s*(Fr)\b/g, "$1/$3"],
-        [/\b(Fr)\s*(bis|und|–|-)\s*(Sa)\b/g, "$1/$3"],
-        [/\b(Sa)\s*(bis|und|–|-)\s*(So)\b/g, "$1/$3"],
-        [/\b(So)\s*(bis|und|–|-)\s*(Mo)\b/g, "$1/$3"],
-        [/\b(Mo(?:–Fr)?|Di|Mi|Do|Fr|Sa|So|Sa\/So)\s+von\s+(?=\d{1,2}[.:]\d{2})/g, "$1 "],
-        [/\b(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\s*[-–]\s*(montags|dienstags|mittwochs|donnerstags|freitags|sonnabends|sonntags)\b/g, "$1 bis $2"],
-        [/\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\s*[-–]\s*(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)\b/g, "$1 bis $2"],
-        [/\b(Sonnabend)\s*(bis)\s*(Sonntag)\b/g, "$1 und $3"],
-        [/\b(sonnabends)\s*(bis)\s*(sonntags)\b/g, "$1 und $3"],
-        [/Montag,\s*de[nmr]/gi, "Montag,"],
-        [/Dienstag,\s*de[nmr]/gi, "Dienstag,"],
-        [/Mittwoch,\s*de[nmr]/gi, "Mittwoch,"],
-        [/Donnerstag,\s*de[nmr]/gi, "Donnerstag,"],
-        [/Freitag,\s*de[nmr]/gi, "Freitag,"],
-        [/Karsamstag,\s*de[nmr]/gi, "Karsamstag,"],
-        [/Sonnabend,\s*de[nmr]/gi, "Sonnabend,"],
-        [/Sonntag,\s*de[nmr]/gi, "Sonntag,"],
-
-        // Uhrzeiten und Öffnungszeiten einheitlich formatieren
-        [/\b(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})\b/g, "$1.$2"], // Funktioniert nur in PPS von PEIQ!
-        [/\b0(\d)\.(\d{2})\b/g, "$1.$2"],
-        [/\b(\d{1,2})\.00\b/g, "$1"],
-        [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s+(\d{1,2}(?:[.:]\d{2})?)\s*(bis|und|–|-)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "$1 $2-$4"],
-        [/\bvon\s+(\d{1,2}(?:[.:]\d{2})?)\s*[-–]\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "von $1 bis $2"],
-        [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
-
         // Finishing
         [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
         [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
+        [/(\b[…]{1})\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "…\u202F$2"], // Auslassungszeichen mit geschütztem Leerzeichen zum Satzbeginn
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*…/g, "$1\u202F…"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende
+        [/\u202F…\s*\./g, "\u202F…"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende ohne Punkt
+        [/\u202F…\s*!/g, "\u202F…!"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende mit Ausrufezeichen
+        [/\u202F…\s*\?/g, "\u202F…?"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende mit Fragezeichen
         [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
         [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
         [/(?<=\w|\d)\u0020+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
