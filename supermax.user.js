@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.6
+// @name         SuperMAX 3.1.7
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.6
+// @version      3.1.7
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.6 gestartet");
+  console.log("SuperMAX v3.1.7 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -568,7 +568,7 @@ console.log("SuperMAX läuft!");
         [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
         [/(?<=\w|\d)\u0020+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
         [/(?<=[.?!])\u0020+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
-        // [/([…!?.,:;])\1+/g, "$1"], // PRÜFEN
+        [/([…!?.,:;])\1+/g, "$1"],
         // [/(?<=\w)[\u0020\u00A0\u2005\u2009\u200B]+(?=[;,:.?!])/g, ""], //PRÜFEN
         [/DREI_FRAGE/g, "Die drei ???"], // Debugging
         [/DREI_AUSRUFE/g, "Die drei !!!"], // Debugging
