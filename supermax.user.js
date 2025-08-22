@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.4
+// @name         SuperMAX 3.1.6
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.4
+// @version      3.1.6
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,16 +44,23 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.4 gestartet");
+  console.log("SuperMAX v3.1.6 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
   const baseReplacements = [
     // Opening
-        [/(?<!Kar)(S|s)amstag/g, "$1onnabend"],
+        [/(?<!Kar)(S|s)amstag/g, "$1onnabend"], // Samstag wird Sonnabend inklusive Feiertagsregelung
+        [/Die drei \?{3}/g, "DREI_FRAGE"], // Debugging
+        [/Die drei !{3}/g, "DREI_AUSRUFE"], // Debugging
         [/\s+\b\t\s*(\(?\d+)/g, "¿$1"], // Telefonzeichen in PPS unter PEIQ
-        [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"],
-        [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"],
+        [/\b(Telefon|Tel\.)\s*(\(?\d+)/g, "¿$2"], // Telefonzeichen in PPS unter PEIQ
+        [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
+        [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"], // Gedankenstrich zwischen zwei Zahlen wird Bindestrich
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Gedankenstrich mit optionalen Leerzeichen wird Gedankenstrich mit schmales Leerzeichen
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich mit schmales Leerzeichen
+        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s*\/\s*(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern mit schmalen Leerzeichen
+        [/(\(?\d+)(\s*)(\/)(\s*)(\(?\d+)/g, "$1$3$5"], // Slash zwischen zwei Zahlen ohne Leerzeichen
 
    // Autorenkürzel Debugging
         [/\bcs\b/g, "\u202Fcs"], // Christian Sell
@@ -384,7 +391,7 @@ console.log("SuperMAX läuft!");
         [/\(m\.\)/g, "(mittig)"],
         [/\(l\.\)/g, "(links)"],
         [/\(r\.\)/g, "(rechts)"],
-        [/\s*[,•/|]?\s*FFS\s*$/gi, " / FUNKE\u202FFoto\u202FServices"],
+        [/\s*[,•/|]?\s*FFS\s*$/gi, "\u202F/\u202FFUNKE\u202FFoto\u202FServices"],
         [/\bFFS\b/gi, "FUNKE Foto Services"],
         [/\s*?[,•/|]?\s*?Funke\s*?Foto\s*?Services?/gi, "\u202F/\u202FFUNKE\u202FFoto\u202FServices"],
         [/\s*?[,•/|]?\s*?Adobe\s*?Stock/g, "\u202F/\u202FAdobeStock"],
@@ -469,12 +476,17 @@ console.log("SuperMAX läuft!");
         [/\bWissens nach\b/g, "Wissens"],
 
     // Online und Multimedia
-        [/\b(Email|EMail|eMail|e-Mail|E–Mail)/g, "E-Mail"],
         [/\b(PDF-Datei|PDF-Dokument|PDF–Datei|PDF–Dokument)/g, "PDF"],
         [/\b(PIN-Code|PIN-Nummer)/g, "PIN"],
+        [/\b(Email|EMail|eMail|e-Mail|E–Mail)/g, "E-Mail"],
         [/\b(Spammail|Spam–Mail)/g, "Spam-Mail"],
+        [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
+        [/\b(https:\/\/\s|http:\/\/\s)/g, ""],
         [/\b(https:\/\/|http:\/\/)/g, ""],
-        [/(\.com|\.de|\.info)\/(?=\s|\.|$)(?![¬#%+\/])/gi, "$1"],
+        [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, "/$2/$4"], // zwei Slashs in URL ohne Leerzeichen
+        [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)/g, "/$2/"], // zwei Slashs in URL ohne Leerzeichen
+        [/(\.)([a-zA-Z]{2,6})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, ".$2/$4"], // ein Slash nach Domainendung ohne Leerzeichen
+        [/(\.com|\.de|\.info|\.berlin)(\/\s|\/\.)/g, "$1"],
 
     // Formatierung von Zahlen, Datums- und Zeitangaben
         // Korrekte Maßstabsangaben
@@ -542,7 +554,7 @@ console.log("SuperMAX läuft!");
         [/Sonntag,\s*de[nmr]/gi, "Sonntag,"],
 
         // Uhrzeiten und Öffnungszeiten einheitlich formatieren
-        [/\b(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})\b/g, "$1.$2"],
+        [/\b(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})\b/g, "$1.$2"], // Funktioniert nur in PPS von PEIQ!
         [/\b0(\d)\.(\d{2})\b/g, "$1.$2"],
         [/\b(\d{1,2})\.00\b/g, "$1"],
         [/\b(Mo|Di|Mi|Do|Fr|Sa|So)\s+(\d{1,2}(?:[.:]\d{2})?)\s*(bis|und|–|-)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "$1 $2-$4"],
@@ -550,19 +562,16 @@ console.log("SuperMAX läuft!");
         [/\bzwischen\s+(\d{1,2}(?:[.:]\d{2})?)\s*(?:[-–]|bis)\s*(\d{1,2}(?:[.:]\d{2})?)\b/g, "zwischen $1 und $2"],
 
         // Finishing
-        [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
         [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
         [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
-        [/([!?.,:;])\1+/g, "$1"], // Zwei gleiche Satzzeichen auf eines reduzieren
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u2009–\u2009$2"], // Bindestrich mit optionalen Leerzeichen wird Gedankenstrich
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u2009–\u2009$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich
         [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
-        [/(\d)(\s+)(\d)/g, "$1\u202F$3"], // Geschützte Leerzeichen in Telefonnummern
         [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
-        [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s+\/\s+(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u2009/\u2009"], // Slash zwischen zwei Wörtern formatieren
-        [/(?<=\b[0-9])(\s*?)(\/)(\s*?)(?=\b[0-9])/g, "$3"], // Slash zwischen zwei Zahlen formatieren
         [/(?<=\w|\d)\u0020+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
         [/(?<=[.?!])\u0020+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
+        // [/([…!?.,:;])\1+/g, "$1"], // PRÜFEN
+        // [/(?<=\w)[\u0020\u00A0\u2005\u2009\u200B]+(?=[;,:.?!])/g, ""], //PRÜFEN
+        [/DREI_FRAGE/g, "Die drei ???"], // Debugging
+        [/DREI_AUSRUFE/g, "Die drei !!!"], // Debugging
     ];
 
   // === STRG+ALT+S: #-Regeln ===
