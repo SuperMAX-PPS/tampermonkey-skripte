@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.10
+// @name         SuperMAX 3.1.11
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.10
+// @version      3.1.11
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.10 gestartet");
+  console.log("SuperMAX v3.1.11 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -1197,7 +1197,15 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
         "STRG + E → Umbrüche, Makros und Links entfernen\n\n" +
         "SuperLINK Tastaturkürzel:\n" +
         "STRG + SHIFT + L → URL kürzen mit YOURLS\n" +
-        "Menü → YOURLS-Token setzen/anzeigen/löschen\n"
+        "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
+        "Auch hilfreich im PPS Texteditor:\n" +
+        "STRG+A > Alles markieren\n" +
+        "STRG+C > Auswahl kopieren\n" +
+        "STRG+X > Auswahl ausschneiden\n" +
+        "STRG+V > Auswahl einfügen\n" +
+        "STRG+Z > Aktion rückgängig machen\n" +
+        "STRG+Y > Aktion wieder herstellen\n" +
+        "STRG+SHIFT+S > Speichern und schließen\n"
     );
 });
 
