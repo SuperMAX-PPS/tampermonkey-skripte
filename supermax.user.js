@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.11
+// @name         SuperMAX 3.1.12
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.11
+// @version      3.1.12
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.11 gestartet");
+  console.log("SuperMAX v3.1.12 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -60,132 +60,132 @@ console.log("SuperMAX läuft!");
         [/(\(?\d+)(\s*)(\/)(\s*)(\(?\d+)/g, "$1$3$5"], // Slash zwischen zwei Zahlen ohne Leerzeichen
 
    // Autorenkürzel Debugging
-        [/\bcs\b/g, "\u202Fcs"], // Christian Sell
-        [/\bFL\b/g, "\u202FFL"], // Frank Luhn
-        [/\bgo\b/g, "\u202Fgo"], // Simone Gogol-Grützner
-        [/\bmv\b/g, "\u202Fmv"], // Michael Vogt
-        [/\bmy\b/g, "\u202Fmy"], // Manuela Frey
-        [/\bst\b/g, "\u202Fst"], // Hendrik Stein
-        [/\bpam\b/g, "\u202Fpam"], // Pamela Rabe
-        [/\bPR\b/g, "\u202FPR"], // Pamela Rabe
-        [/\bpb\b/g, "\u202Fpb"], // Parvin Buchta
-        [/\bpet\b/g, "\u202Fpet"], // Peter Erdmann
-        [/\bsabka\b/g, "\u202Fsabka"], // Sabine Kalkus
-        [/\bsus\b/g, "\u202Fsus"], // Susanne Schilp
-        [/\btf\b/g, "\u202Ftf"], // Thomas Frey
-        [/\bRR\b/g, "\u202FRR"], // Ratgeber-Redaktion
-        [/\bakz/g, "\u202Fakz"], // Ratgeber-Redaktion
-        [/\bBZfE/g, "\u202FBZfE"], // Ratgeber-Redaktion
-        [/\bDEKRA Info\b/g, "\u202FDEKRA Info"], // Ratgeber-Redaktion
-        [/\bdjd\b/g, "\u202Fdjd"], // Ratgeber-Redaktion
-        [/\bIPM\b/g, "\u202FIPM"], // Ratgeber-Redaktion
-        [/\bIVH\b/g, "\u202FIVH"], // Ratgeber-Redaktion
-        [/\bProMotor/g, "\u202FProMotor"], // Ratgeber-Redaktion
-        [/\btxn\b/g, "\u202Ftxn"], // Ratgeber-Redaktion
+        [/(^|\s)cs(?=\s|$)/g, "\u202Fcs"], // Christian Sell
+        [/(^|\s)FL(?=\s|$)/g, "\u202FFL"], // Frank Luhn
+        [/(^|\s)go(?=\s|$)/g, "\u202Fgo"], // Simone Gogol-Grützner
+        [/(^|\s)mv(?=\s|$)/g, "\u202Fmv"], // Michael Vogt
+        [/(^|\s)my(?=\s|$)/g, "\u202Fmy"], // Manuela Frey
+        [/(^|\s)st(?=\s|$)/g, "\u202Fst"], // Hendrik Stein
+        [/(^|\s)pam(?=\s|$)/g, "\u202Fpam"], // Pamela Rabe
+        [/(^|\s)PR(?=\s|$)/g, "\u202FPR"], // Pamela Rabe
+        [/(^|\s)pb(?=\s|$)/g, "\u202Fpb"], // Parvin Buchta
+        [/(^|\s)pet(?=\s|$)/g, "\u202Fpet"], // Peter Erdmann
+        [/(^|\s)sabka(?=\s|$)/g, "\u202Fsabka"], // Sabine Kalkus
+        [/(^|\s)sus(?=\s|$)/g, "\u202Fsus"], // Susanne Schilp
+        [/(^|\s)tf(?=\s|$)/g, "\u202Ftf"], // Thomas Frey
+        [/(^|\s)RR(?=\s|$)/g, "\u202FRR"], // Ratgeber-Redaktion
+        [/(^|\s)akz(?=\s|$)/g, "\u202Fakz"], // Ratgeber-Redaktion
+        [/(^|\s)BZfE(?=\s|$)/g, "\u202FBZfE"], // Ratgeber-Redaktion
+        [/(^|\s)DEKRA info(?=\s|$)/g, "\u202FDEKRA info"], // Ratgeber-Redaktion
+        [/(^|\s)djd(?=\s|$)/g, "\u202Fdjd"], // Ratgeber-Redaktion
+        [/(^|\s)PM(?=\s|$)/g, "\u202FPM"], // Ratgeber-Redaktion
+        [/(^|\s)IVH(?=\s|$)/g, "\u202FIVH"], // Ratgeber-Redaktion
+        [/(^|\s)ProMotor(?=\s|$)/g, "\u202FProMotor"], // Ratgeber-Redaktion
+        [/(^|\s)txn(?=\s|$)/g, "\u202Ftxn"], // Ratgeber-Redaktion
 
      // Ortsmarken Debugging
-        [/\bAdlershof\.\s/g, "Adlershof.\u202F"],
-        [/\bAltglienicke\.\s/g, "Altglienicke.\u202F"],
-        [/\bAlt-Hohenschönhausen\.\s/g, "Alt-Hohenschönhausen.\u202F"],
-        [/\bAlt-Treptow\.\s/g, "Alt-Treptow.\u202F"],
-        [/\bBaumschulenweg\.\s/g, "Baumschulenweg.\u202F"],
-        [/\bBerlin\.\s/g, "Berlin.\u202F"],
-        [/\bBiesdorf\.\s/g, "Biesdorf.\u202F"],
-        [/\bBlankenburg\.\s/g, "Blankenburg.\u202F"],
-        [/\bBlankenfelde\.\s/g, "Blankenfelde.\u202F"],
-        [/\bBohnsdorf\.\s/g, "Bohnsdorf.\u202F"],
-        [/\bBorsigwalde\.\s/g, "Borsigwalde.\u202F"],
-        [/\bBritz\.\s/g, "Britz.\u202F"],
-        [/\bBuch\.\s/g, "Buch.\u202F"],
-        [/\bBuckow\.\s/g, "Buckow.\u202F"],
-        [/\bCharlottenburg\.\s/g, "Charlottenburg.\u202F"],
-        [/\bCharlottenburg-Nord\.\s/g, "Charlottenburg-Nord.\u202F"],
-        [/\bCharlottenburg-Wilmersdorf\.\s/g, "Charlottenburg-Wilmersdorf.\u202F"],
-        [/\bDahlem\.\s/g, "Dahlem.\u202F"],
-        [/\bFalkenberg\.\s/g, "Falkenberg.\u202F"],
-        [/\bFalkenhagener Feld\.\s/g, "Falkenhagener Feld.\u202F"],
-        [/\bFennpfuhl\.\s/g, "Fennpfuhl.\u202F"],
-        [/\bFranzösisch Buchholz\.\s/g, "Französisch Buchholz.\u202F"],
-        [/\bFriedenau\.\s/g, "Friedenau.\u202F"],
-        [/\bFriedrichsfelde\.\s/g, "Friedrichsfelde.\u202F"],
-        [/\bFriedrichshagen\.\s/g, "Friedrichshagen.\u202F"],
-        [/\bFriedrichshain\.\s/g, "Friedrichshain.\u202F"],
-        [/\bFriedrichshain-Kreuzberg\.\s/g, "Friedrichshain-Kreuzberg.\u202F"],
-        [/\bFrohnau\.\s/g, "Frohnau.\u202F"],
-        [/\bGatow\.\s/g, "Gatow.\u202F"],
-        [/\bGesundbrunnen\.\s/g, "Gesundbrunnen.\u202F"],
-        [/\bGropiusstadt\.\s/g, "Gropiusstadt.\u202F"],
-        [/\bGrünau\.\s/g, "Grünau.\u202F"],
-        [/\bGrunewald\.\s/g, "Grunewald.\u202F"],
-        [/\bHakenfelde\.\s/g, "Hakenfelde.\u202F"],
-        [/\bHalensee\.\s/g, "Halensee.\u202F"],
-        [/\bHansaviertel\.\s/g, "Hansaviertel.\u202F"],
-        [/\bHaselhorst\.\s/g, "Haselhorst.\u202F"],
-        [/\bHeiligensee\.\s/g, "Heiligensee.\u202F"],
-        [/\bHeinersdorf\.\s/g, "Heinersdorf.\u202F"],
-        [/\bHellersdorf\.\s/g, "Hellersdorf.\u202F"],
-        [/\bHermsdorf\.\s/g, "Hermsdorf.\u202F"],
-        [/\bJohannisthal\.\s/g, "Johannisthal.\u202F"],
-        [/\bKarlshorst\.\s/g, "Karlshorst.\u202F"],
-        [/\bKarow\.\s/g, "Karow.\u202F"],
-        [/\bKaulsdorf\.\s/g, "Kaulsdorf.\u202F"],
-        [/\bKladow\.\s/g, "Kladow.\u202F"],
-        [/\bKonradshöhe\.\s/g, "Konradshöhe.\u202F"],
-        [/\bKöpenick\.\s/g, "Köpenick.\u202F"],
-        [/\bKreuzberg\.\s/g, "Kreuzberg.\u202F"],
-        [/\bLankwitz\.\s/g, "Lankwitz.\u202F"],
-        [/\bLichtenberg\.\s/g, "Lichtenberg.\u202F"],
-        [/\bLichtenrade\.\s/g, "Lichtenrade.\u202F"],
-        [/\bLichterfelde\.\s/g, "Lichterfelde.\u202F"],
-        [/\bLübars\.\s/g, "Lübars.\u202F"],
-        [/\bMahlsdorf\.\s/g, "Mahlsdorf.\u202F"],
-        [/\bMalchow\.\s/g, "Malchow.\u202F"],
-        [/\bMariendorf\.\s/g, "Mariendorf.\u202F"],
-        [/\bMarienfelde\.\s/g, "Marienfelde.\u202F"],
-        [/\bMärkisches Viertel\.\s/g, "Märkisches Viertel.\u202F"],
-        [/\bMarzahn\.\s/g, "Marzahn.\u202F"],
-        [/\bMarzahn-Hellersdorf\.\s/g, "Marzahn-Hellersdorf.\u202F"],
-        [/\bMitte\.\s/g, "Mitte.\u202F"],
-        [/\bMoabit\.\s/g, "Moabit.\u202F"],
-        [/\bMüggelheim\.\s/g, "Müggelheim.\u202F"],
-        [/\bNeu-Hohenschönhausen\.\s/g, "Neu-Hohenschönhausen.\u202F"],
-        [/\bNeukölln\.\s/g, "Neukölln.\u202F"],
-        [/\bNiederschöneweide\.\s/g, "Niederschöneweide.\u202F"],
-        [/\bNiederschönhausen\.\s/g, "Niederschönhausen.\u202F"],
-        [/\bNikolassee\.\s/g, "Nikolassee.\u202F"],
-        [/\bOberschöneweide\.\s/g, "Oberschöneweide.\u202F"],
-        [/\bPankow\.\s/g, "Pankow.\u202F"],
-        [/\bPlänterwald\.\s/g, "Plänterwald.\u202F"],
-        [/\bPrenzlauer Berg\.\s/g, "Prenzlauer Berg.\u202F"],
-        [/\bRahnsdorf\.\s/g, "Rahnsdorf.\u202F"],
-        [/\bReinickendorf\.\s/g, "Reinickendorf.\u202F"],
-        [/\bRosenthal\.\s/g, "Rosenthal.\u202F"],
-        [/\bRudow\.\s/g, "Rudow.\u202F"],
-        [/\bRummelsburg\.\s/g, "Rummelsburg.\u202F"],
-        [/\bSchlachtensee\.\s/g, "Schlachtensee.\u202F"],
-        [/\bSchmargendorf\.\s/g, "Schmargendorf.\u202F"],
-        [/\bSchmöckwitz\.\s/g, "Schmöckwitz.\u202F"],
-        [/\bSchöneberg\.\s/g, "Schöneberg.\u202F"],
-        [/\bSiemensstadt\.\s/g, "Siemensstadt.\u202F"],
-        [/\bSpandau\.\s/g, "Spandau.\u202F"],
-        [/\bStadtrandsiedlung Malchow\.\s/g, "Stadtrandsiedlung Malchow.\u202F"],
-        [/\bSteglitz\.\s/g, "Steglitz.\u202F"],
-        [/\bSteglitz-Zehlendorf\.\s/g, "Steglitz-Zehlendorf.\u202F"],
-        [/\bTegel\.\s/g, "Tegel.\u202F"],
-        [/\bTempelhof\.\s/g, "Tempelhof.\u202F"],
-        [/\bTempelhof-Schöneberg\.\s/g, "Tempelhof-Schöneberg.\u202F"],
-        [/\bTiergarten\.\s/g, "Tiergarten.\u202F"],
-        [/\bTreptow-Köpenick\.\s/g, "Treptow-Köpenick.\u202F"],
-        [/\bWaidmannslust\.\s/g, "Waidmannslust.\u202F"],
-        [/\bWartenberg\.\s/g, "Wartenberg.\u202F"],
-        [/\bWedding\.\s/g, "Wedding.\u202F"],
-        [/\bWeißensee\.\s/g, "Weißensee.\u202F"],
-        [/\bWestend\.\s/g, "Westend.\u202F"],
-        [/\bWilhelmsruh\.\s/g, "Wilhelmsruh.\u202F"],
-        [/\bWilhelmstadt\.\s/g, "Wilhelmstadt.\u202F"],
-        [/\bWilmersdorf\.\s/g, "Wilmersdorf.\u202F"],
-        [/\bWittenau\.\s/g, "Wittenau.\u202F"],
-        [/\bZehlendorf\.\s/g, "Zehlendorf.\u202F"],
+        [/(^|\s)Adlershof\.(?=\u0020|$)/g, "Adlershof.\u202F"],
+        [/(^|\s)Altglienicke\.(?=\u0020|$)/g, "Altglienicke.\u202F"],
+        [/(^|\s)Alt-Hohenschönhausen\.(?=\u0020|$)/g, "Alt-Hohenschönhausen.\u202F"],
+        [/(^|\s)Alt-Treptow\.(?=\u0020|$)/g, "Alt-Treptow.\u202F"],
+        [/(^|\s)Baumschulenweg\.(?=\u0020|$)/g, "Baumschulenweg.\u202F"],
+        [/(^|\s)Berlin\.(?=\u0020|$)/g, "Berlin.\u202F"],
+        [/(^|\s)Biesdorf\.(?=\u0020|$)/g, "Biesdorf.\u202F"],
+        [/(^|\s)Blankenburg\.(?=\u0020|$)/g, "Blankenburg.\u202F"],
+        [/(^|\s)Blankenfelde\.(?=\u0020|$)/g, "Blankenfelde.\u202F"],
+        [/(^|\s)Bohnsdorf\.(?=\u0020|$)/g, "Bohnsdorf.\u202F"],
+        [/(^|\s)Borsigwalde\.(?=\u0020|$)/g, "Borsigwalde.\u202F"],
+        [/(^|\s)Britz\.(?=\u0020|$)/g, "Britz.\u202F"],
+        [/(^|\s)Buch\.(?=\u0020|$)/g, "Buch.\u202F"],
+        [/(^|\s)Buckow\.(?=\u0020|$)/g, "Buckow.\u202F"],
+        [/(^|\s)Charlottenburg\.(?=\u0020|$)/g, "Charlottenburg.\u202F"],
+        [/(^|\s)Charlottenburg-Nord\.(?=\u0020|$)/g, "Charlottenburg-Nord.\u202F"],
+        [/(^|\s)Charlottenburg-Wilmersdorf\.(?=\u0020|$)/g, "Charlottenburg-Wilmersdorf.\u202F"],
+        [/(^|\s)Dahlem\.(?=\u0020|$)/g, "Dahlem.\u202F"],
+        [/(^|\s)Falkenberg\.(?=\u0020|$)/g, "Falkenberg.\u202F"],
+        [/(^|\s)Falkenhagener Feld\.(?=\u0020|$)/g, "Falkenhagener Feld.\u202F"],
+        [/(^|\s)Fennpfuhl\.(?=\u0020|$)/g, "Fennpfuhl.\u202F"],
+        [/(^|\s)Französisch Buchholz\.(?=\u0020|$)/g, "Französisch Buchholz.\u202F"],
+        [/(^|\s)Friedenau\.(?=\u0020|$)/g, "Friedenau.\u202F"],
+        [/(^|\s)Friedrichsfelde\.(?=\u0020|$)/g, "Friedrichsfelde.\u202F"],
+        [/(^|\s)Friedrichshagen\.(?=\u0020|$)/g, "Friedrichshagen.\u202F"],
+        [/(^|\s)Friedrichshain\.(?=\u0020|$)/g, "Friedrichshain.\u202F"],
+        [/(^|\s)Friedrichshain-Kreuzberg\.(?=\u0020|$)/g, "Friedrichshain-Kreuzberg.\u202F"],
+        [/(^|\s)Frohnau\.(?=\u0020|$)/g, "Frohnau.\u202F"],
+        [/(^|\s)Gatow\.(?=\u0020|$)/g, "Gatow.\u202F"],
+        [/(^|\s)Gesundbrunnen\.(?=\u0020|$)/g, "Gesundbrunnen.\u202F"],
+        [/(^|\s)Gropiusstadt\.(?=\u0020|$)/g, "Gropiusstadt.\u202F"],
+        [/(^|\s)Grünau\.(?=\u0020|$)/g, "Grünau.\u202F"],
+        [/(^|\s)Grunewald\.(?=\u0020|$)/g, "Grunewald.\u202F"],
+        [/(^|\s)Hakenfelde\.(?=\u0020|$)/g, "Hakenfelde.\u202F"],
+        [/(^|\s)Halensee\.(?=\u0020|$)/g, "Halensee.\u202F"],
+        [/(^|\s)Hansaviertel\.(?=\u0020|$)/g, "Hansaviertel.\u202F"],
+        [/(^|\s)Haselhorst\.(?=\u0020|$)/g, "Haselhorst.\u202F"],
+        [/(^|\s)Heiligensee\.(?=\u0020|$)/g, "Heiligensee.\u202F"],
+        [/(^|\s)Heinersdorf\.(?=\u0020|$)/g, "Heinersdorf.\u202F"],
+        [/(^|\s)Hellersdorf\.(?=\u0020|$)/g, "Hellersdorf.\u202F"],
+        [/(^|\s)Hermsdorf\.(?=\u0020|$)/g, "Hermsdorf.\u202F"],
+        [/(^|\s)Johannisthal\.(?=\u0020|$)/g, "Johannisthal.\u202F"],
+        [/(^|\s)Karlshorst\.(?=\u0020|$)/g, "Karlshorst.\u202F"],
+        [/(^|\s)Karow\.(?=\u0020|$)/g, "Karow.\u202F"],
+        [/(^|\s)Kaulsdorf\.(?=\u0020|$)/g, "Kaulsdorf.\u202F"],
+        [/(^|\s)Kladow\.(?=\u0020|$)/g, "Kladow.\u202F"],
+        [/(^|\s)Konradshöhe\.(?=\u0020|$)/g, "Konradshöhe.\u202F"],
+        [/(^|\s)Köpenick\.(?=\u0020|$)/g, "Köpenick.\u202F"],
+        [/(^|\s)Kreuzberg\.(?=\u0020|$)/g, "Kreuzberg.\u202F"],
+        [/(^|\s)Lankwitz\.(?=\u0020|$)/g, "Lankwitz.\u202F"],
+        [/(^|\s)Lichtenberg\.(?=\u0020|$)/g, "Lichtenberg.\u202F"],
+        [/(^|\s)Lichtenrade\.(?=\u0020|$)/g, "Lichtenrade.\u202F"],
+        [/(^|\s)Lichterfelde\.(?=\u0020|$)/g, "Lichterfelde.\u202F"],
+        [/(^|\s)Lübars\.(?=\u0020|$)/g, "Lübars.\u202F"],
+        [/(^|\s)Mahlsdorf\.(?=\u0020|$)/g, "Mahlsdorf.\u202F"],
+        [/(^|\s)Malchow\.(?=\u0020|$)/g, "Malchow.\u202F"],
+        [/(^|\s)Mariendorf\.(?=\u0020|$)/g, "Mariendorf.\u202F"],
+        [/(^|\s)Marienfelde\.(?=\u0020|$)/g, "Marienfelde.\u202F"],
+        [/(^|\s)Märkisches Viertel\.(?=\u0020|$)/g, "Märkisches Viertel.\u202F"],
+        [/(^|\s)Marzahn\.(?=\u0020|$)/g, "Marzahn.\u202F"],
+        [/(^|\s)Marzahn-Hellersdorf\.(?=\u0020|$)/g, "Marzahn-Hellersdorf.\u202F"],
+        [/(^|\s)Mitte\.(?=\u0020|$)/g, "Mitte.\u202F"],
+        [/(^|\s)Moabit\.(?=\u0020|$)/g, "Moabit.\u202F"],
+        [/(^|\s)Müggelheim\.(?=\u0020|$)/g, "Müggelheim.\u202F"],
+        [/(^|\s)Neu-Hohenschönhausen\.(?=\u0020|$)/g, "Neu-Hohenschönhausen.\u202F"],
+        [/(^|\s)Neukölln\.(?=\u0020|$)/g, "Neukölln.\u202F"],
+        [/(^|\s)Niederschöneweide\.(?=\u0020|$)/g, "Niederschöneweide.\u202F"],
+        [/(^|\s)Niederschönhausen\.(?=\u0020|$)/g, "Niederschönhausen.\u202F"],
+        [/(^|\s)Nikolassee\.(?=\u0020|$)/g, "Nikolassee.\u202F"],
+        [/(^|\s)Oberschöneweide\.(?=\u0020|$)/g, "Oberschöneweide.\u202F"],
+        [/(^|\s)Pankow\.(?=\u0020|$)/g, "Pankow.\u202F"],
+        [/(^|\s)Plänterwald\.(?=\u0020|$)/g, "Plänterwald.\u202F"],
+        [/(^|\s)Prenzlauer Berg\.(?=\u0020|$)/g, "Prenzlauer Berg.\u202F"],
+        [/(^|\s)Rahnsdorf\.(?=\u0020|$)/g, "Rahnsdorf.\u202F"],
+        [/(^|\s)Reinickendorf\.(?=\u0020|$)/g, "Reinickendorf.\u202F"],
+        [/(^|\s)Rosenthal\.(?=\u0020|$)/g, "Rosenthal.\u202F"],
+        [/(^|\s)Rudow\.(?=\u0020|$)/g, "Rudow.\u202F"],
+        [/(^|\s)Rummelsburg\.(?=\u0020|$)/g, "Rummelsburg.\u202F"],
+        [/(^|\s)Schlachtensee\.(?=\u0020|$)/g, "Schlachtensee.\u202F"],
+        [/(^|\s)Schmargendorf\.(?=\u0020|$)/g, "Schmargendorf.\u202F"],
+        [/(^|\s)Schmöckwitz\.(?=\u0020|$)/g, "Schmöckwitz.\u202F"],
+        [/(^|\s)Schöneberg\.(?=\u0020|$)/g, "Schöneberg.\u202F"],
+        [/(^|\s)Siemensstadt\.(?=\u0020|$)/g, "Siemensstadt.\u202F"],
+        [/(^|\s)Spandau\.(?=\u0020|$)/g, "Spandau.\u202F"],
+        [/(^|\s)Stadtrandsiedlung Malchow\.(?=\u0020|$)/g, "Stadtrandsiedlung Malchow.\u202F"],
+        [/(^|\s)Steglitz\.(?=\u0020|$)/g, "Steglitz.\u202F"],
+        [/(^|\s)Steglitz-Zehlendorf\.(?=\u0020|$)/g, "Steglitz-Zehlendorf.\u202F"],
+        [/(^|\s)Tegel\.(?=\u0020|$)/g, "Tegel.\u202F"],
+        [/(^|\s)Tempelhof\.(?=\u0020|$)/g, "Tempelhof.\u202F"],
+        [/(^|\s)Tempelhof-Schöneberg\.(?=\u0020|$)/g, "Tempelhof-Schöneberg.\u202F"],
+        [/(^|\s)Tiergarten\.(?=\u0020|$)/g, "Tiergarten.\u202F"],
+        [/(^|\s)Treptow-Köpenick\.(?=\u0020|$)/g, "Treptow-Köpenick.\u202F"],
+        [/(^|\s)Waidmannslust\.(?=\u0020|$)/g, "Waidmannslust.\u202F"],
+        [/(^|\s)Wartenberg\.(?=\u0020|$)/g, "Wartenberg.\u202F"],
+        [/(^|\s)Wedding\.(?=\u0020|$)/g, "Wedding.\u202F"],
+        [/(^|\s)Weißensee\.(?=\u0020|$)/g, "Weißensee.\u202F"],
+        [/(^|\s)Westend\.(?=\u0020|$)/g, "Westend.\u202F"],
+        [/(^|\s)Wilhelmsruh\.(?=\u0020|$)/g, "Wilhelmsruh.\u202F"],
+        [/(^|\s)Wilhelmstadt\.(?=\u0020|$)/g, "Wilhelmstadt.\u202F"],
+        [/(^|\s)Wilmersdorf\.(?=\u0020|$)/g, "Wilmersdorf.\u202F"],
+        [/(^|\s)Wittenau\.(?=\u0020|$)/g, "Wittenau.\u202F"],
+        [/(^|\s)Zehlendorf\.(?=\u0020|$)/g, "Zehlendorf.\u202F"],
 
     // Richtig Gendern (setzt automatisch weibliche Form voran)
         [/\bAnwohner und Anwohnerinnen/g, "Anwohnerinnen und Anwohner"],
@@ -506,6 +506,7 @@ console.log("SuperMAX läuft!");
         [/\bBVV-Vorsteh/g, "BV-Vorsteh"],
         [/(B|b?)üfett/g, "$1uffet"],
         [/\bCoffein/g, "Koffein"],
+        [/\bEintritt beträgt/g, "Eintritt kostet"],
         [/\bdie Tickethotline lautet/g, "Eintrittskarten gibt es unter"],
         [/\bDisko/g, "Disco"],
         [/ehemalige(n?) DDR/g, "DDR"],
@@ -562,14 +563,14 @@ console.log("SuperMAX läuft!");
         [/(\.)([a-zA-Z]{2,6})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, ".$2/$4"], // ein Slash nach Domainendung ohne Leerzeichen
         [/(\.com|\.de|\.info|\.berlin)(\/\s|\/\.)/g, "$1"],
 
-        // Finishing
+    // Finishing
         [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
         [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
         [/(\b[…]{1})\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "…\u202F$2"], // Auslassungszeichen mit geschütztem Leerzeichen zum Satzbeginn
-        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*…/g, "$1\u202F…"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende
-        [/\u202F…\s*\./g, "\u202F…"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende ohne Punkt
-        [/\u202F…\s*!/g, "\u202F…!"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende mit Ausrufezeichen
-        [/\u202F…\s*\?/g, "\u202F…?"], // Auslassungzeichen  mit geschütztem Leerzeichen zum Satzende mit Fragezeichen
+        [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*…/g, "$1\u202F…"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende
+        [/\u202F…\s*\./g, "\u202F…"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende ohne Punkt
+        [/\u202F…\s*!/g, "\u202F…!"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende mit Ausrufezeichen
+        [/\u202F…\s*\?/g, "\u202F…?"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende mit Fragezeichen
         [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
         [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
         [/(?<=\w|\d)\u0020+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
