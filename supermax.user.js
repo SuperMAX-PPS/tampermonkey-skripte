@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.13
+// @name         SuperMAX 3.1.15
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.13
+// @version      3.1.15
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
   'use strict';
-  console.log("SuperMAX v3.1.13 gestartet");
+  console.log("SuperMAX v3.1.15 gestartet");
 
   // === RegEx-Listen ===
   // === STRG+S: Grundregeln ===
@@ -1121,8 +1121,10 @@ console.log("SuperMAX läuft!");
 
 // SuperLINK für PPS in PEIQ (YOURLS-Tool-Integration für ShortLinks per STRG + L)
 document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
-        e.preventDefault();
+  if ((e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') ||
+      (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'l')) {
+    e.preventDefault();
+
 
         const active = document.activeElement;
         if (!active || !active.isContentEditable || !active.classList.contains('ProseMirror')) {
@@ -1192,12 +1194,12 @@ document.addEventListener('keydown', function(e) {
 GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     alert(
         "SuperMAX Tastaturkürzel:\n" +
-        "STRG + S → Grundregeln anwenden\n" +
-        "STRG + ALT + S → #-Textphrasen ersetzen\n\n" +
+        "STRG+S → Grundregeln anwenden\n" +
+        "STRG+ALT+S → #-Textphrasen ersetzen\n\n" +
         "SuperERASER Tastaturkürzel:\n" +
-        "STRG + E → Umbrüche, Makros und Links entfernen\n\n" +
+        "STRG+E → Umbrüche, Makros und Links entfernen\n\n" +
         "SuperLINK Tastaturkürzel:\n" +
-        "STRG + SHIFT + L → URL kürzen mit YOURLS\n" +
+        "STRG+ALT+L → URL kürzen mit YOURLS\n" +
         "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
         "Auch hilfreich im PPS Texteditor:\n" +
         "STRG+A > Alles markieren\n" +
