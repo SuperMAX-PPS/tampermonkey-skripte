@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.16
+// @name         SuperMAX 3.1.17
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.16
+// @version      3.1.17
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.1.16 gestartet");
+    console.log("SuperMAX v3.1.17 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -334,6 +334,13 @@ const baseReplacements = [
     [/Karsamstag,\s*de[nmr]/gi, "Karsamstag,"],
     [/Sonnabend,\s*de[nmr]/gi, "Sonnabend,"],
     [/Sonntag,\s*de[nmr]/gi, "Sonntag,"],
+    [/Montag(\(?\d+)/g, "Montag $1"], // Leerzeichen nach Wochentag
+    [/Dienstag(\(?\d+)/g, "Dienstag $1"], // Leerzeichen nach Wochentag
+    [/Mittwoch(\(?\d+)/g, "Mittwoch $1"], // Leerzeichen nach Wochentag
+    [/Donnerstag(\(?\d+)/g, "Donnerstag $1"], // Leerzeichen nach Wochentag
+    [/Freitag(\(?\d+)/g, "Freitag $1"], // Leerzeichen nach Wochentag
+    [/Sonnabend(\(?\d+)/g, "Sonnabend $1"], // Leerzeichen nach Wochentag
+    [/Sonntag(\(?\d+)/g, "Sonntag $1"], // Leerzeichen nach Wochentag
 
     // Uhrzeiten und Öffnungszeiten einheitlich formatieren
     [/(?<!Maßstab(?:\s+von)?\s+)(\d{1,2}):(\d{2})/g, "$1.$2"], // Funktioniert nur in PPS von PEIQ!
@@ -718,6 +725,12 @@ const hashtagReplacements = [
     [/#TIP/g, "Der Eintritt ist kostenfrei, Spenden werden erbeten."],
     [/#WIA/g, "Weitere Informationen und Anmeldung unter "],
     [/#WIU/g, "Weitere Informationen unter "],
+
+    // Spitzenkandidaten
+    [/##(?:Steffen Krach|Krach)\b/g, "Steffen Krach (SPD), im Gespräch als Spitzenkandidat für die Berliner Abgeordnetenhauswahl 2026#+"],
+    [/#(?:Steffen Krach|Krach)\b/g, "Steffen Krach (SPD)"],
+    [/##(?:Werner Graf|Graf)\b/g, "Werner Graf (Bündnis 90/Die Grüne), im Gespräch als Spitzenkandidat für die Berliner Abgeordnetenhauswahl 2026#+"],
+    [/#(?:Werner Graf|Graf)\b/g, "Werner Graf (Bündnis 90/Die Grüne)"],
 
     // Senatsmitglieder – www.berlin.de/rbmskzl/politik/senat/senatsmitglieder/
     [/##(?:Cansel Kiziltepe|Kiziltepe)\b/g, "Cansel Kiziltepe (SPD), Senatorin für Arbeit, Soziales, Gleichstellung, Integration, Vielfalt und Antidiskriminierung#+"],
