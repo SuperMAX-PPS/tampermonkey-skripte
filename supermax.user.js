@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.1.17
+// @name         SuperMAX 3.2.1
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.1.17
+// @version      3.2.1
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.1.17 gestartet");
+    console.log("SuperMAX v3.2.1 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -77,6 +77,7 @@ const baseReplacements = [
     [/(^|\s)akz(?=\s|$)/g, "\u202Fakz"], // Ratgeber-Redaktion
     [/(^|\s)BZfE(?=\s|$)/g, "\u202FBZfE"], // Ratgeber-Redaktion
     [/(^|\s)DEKRA info(?=\s|$)/g, "\u202FDEKRA info"], // Ratgeber-Redaktion
+    [/(^|\s)dgk(?=\s|$)/g, "\u202Fdgk"], // Ratgeber-Redaktion
     [/(^|\s)djd(?=\s|$)/g, "\u202Fdjd"], // Ratgeber-Redaktion
     [/(^|\s)PM(?=\s|$)/g, "\u202FPM"], // Ratgeber-Redaktion
     [/(^|\s)IVH(?=\s|$)/g, "\u202FIVH"], // Ratgeber-Redaktion
@@ -462,6 +463,7 @@ const baseReplacements = [
     [/\b(eigtl\.|eigentl\.)/g, "eigentlich"],
     [/\bEv\./g, "Evangelische"],
     [/\bevtl\./g, "eventuell"],
+    [/\bggf\./g, "gegebenenfalls"],
     [/\b(inkl\.|incl\.|inclusive)/g, "inklusive"],
     [/\bKath\./g, "Katholische"],
     [/\bLKW(s?)\b/g, "Lkw$1"],
@@ -584,18 +586,18 @@ const baseReplacements = [
     [/(\.com|\.de|\.info|\.berlin)(\/\s|\/\.)/g, "$1"],
 
     // Finishing
-    [/\s{2,}/g, " "], // Mehrere Leerzeichen reduzieren
+    [/\u0020{2,}/g, " "], // Mehrere Leerzeichen reduzieren
     [/\.{3}/g, "…"], // Drei Punkte durch Auslassungszeichen ersetzen
     [/(\b[…]{1})\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "…\u202F$2"], // Auslassungszeichen mit geschütztem Leerzeichen zum Satzbeginn
     [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*…/g, "$1\u202F…"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende
     [/\u202F…\s*\./g, "\u202F…"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende ohne Punkt
     [/\u202F…\s*!/g, "\u202F…!"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende mit Ausrufezeichen
     [/\u202F…\s*\?/g, "\u202F…?"], // Auslassungzeichen mit geschütztem Leerzeichen zum Satzende mit Fragezeichen
-    [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung
-    [/(\s*?)\u202F(\s*?)/g, "\u202F"], // Geschützte Leerzeichen filtern
+    [/\s*?xo\s*?/g, "#+\u2022\u202F"], // Listenformatierung (Übergangsweise > siehe Strukturierte Daten mit STRG+ALT+S)
+    [/(\u0020?)\u202F(\u0020?)/g, "\u202F"], // Geschützte Leerzeichen filtern
     [/(?<=\w|\d)\u0020+(?=[;,:.?!])/g, ""], // Leerzeichen vor Satzzeichen entfernen
     [/(?<=[.?!])\u0020+(?=(?![\p{L}\p{N}#„“"]).*$)/gu, ""], // Leerzeichen nach Satzzeichen entfernen
-    [/([…!?.,:;])\1+/g, "$1"],
+    [/([…!?.,:;])\1+/g, "$1"], // Doppelte Satzzeichen entfernen
     // [/(?<=\w)[\u0020\u00A0\u2005\u2009\u200B]+(?=[;,:.?!])/g, ""], //PRÜFEN
     [/DREI_FRAGE/g, "Die drei ???"], // Debugging
     [/DREI_AUSRUFE/g, "Die drei !!!"], // Debugging
@@ -612,6 +614,7 @@ const hashtagReplacements = [
     [/#AvD/g, "AvD (Automobilclub von Deutschland)"],
     [/#AVUS/g, "AVUS (Automobil-Verkehrs- und Übungsstraße)"],
     [/#BA/g, "Bundesagentur für Arbeit (BA)"],
+    [/#BAB/g, "Berliner Beauftragte zur Aufarbeitung der SED-Diktatur (BAB)"],
     [/#BBAW/g, "Berlin-Brandenburgische Akademie der Wissenschaften (BBAW)"],
     [/#BBB/g, "Berliner Bäder-Betriebe (BBB)"],
     [/#BDI/g, "Bundesverband der deutschen Industrie (BDI)"],
@@ -649,6 +652,7 @@ const hashtagReplacements = [
     [/#DOSB/g, "Deutscher Olympischer Sportbund (DOSB)"],
     [/#DRK/g, "Deutsches Rotes Kreuz (DRK)"],
     [/#DSB/g, "Deutscher Sportbund (DSB)"],
+    [/#DSD/g, "Deutsche Stiftung Denkmalschutz (DSD)"],
     [/#DVB/g, "Digital Video Broadcasting (DVB)"],
     [/#DWD/g, "Deutscher Wetterdienst (DWD)"],
     [/#EDEKA/g, "Edeka"],
@@ -690,6 +694,7 @@ const hashtagReplacements = [
     [/#MABB/g, "Medienanstalt Berlin-Brandenburg (MABB)"],
     [/#MDK/g, "Medizinischer Dienst der Krankenversicherung (MDK)"],
     [/#NABU/g, "NABU (Naturschutzbund Deutschland)"],
+    [/#NBB/g, "Netzgesellschaft Berlin-Brandenburg (NBB)"],
     [/#ÖPNV/g, "Öffentlicher Personennahverkehr (ÖPNV)"],
     [/#QM/g, "Quartiersmanagement (QM)"],
     [/#RAW/g, "RAW (Reichsbahnausbesserungswerk)"],
@@ -1004,9 +1009,9 @@ const hashtagReplacements = [
 
     // Genderfrei per Hashtag
     [/#Anwohner(?:innen und Anwohner|en und Anwohnerinnen| und Anwohnerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Anwohnende/gi, "Anwohner"],
-    [/#Arbeitnehmer(?:innen und Arbeitnehmer| und Arbeitnehmerinnen|[\\*\\:\\|]innen|Innen)/gi, "Arbeitnehmer"],
+    [/#Arbeitnehmer(?:innen und Arbeitnehmer| und Arbeitnehmerinnen|[\\*\\:\\|]innen|Innen)|#Arbeitnehmende/gi, "Arbeitnehmer"],
     [/#Ärzt(?:e und Ärztinnen|innen und Ärzte|[\\*\\:\\|]innen|Innen)/gi, "Ärzte"],
-    [/#Aussteller(?:innen und Aussteller|en und Ausstellerinnen| und Ausstellerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Aussteller"],
+    [/#Aussteller(?:innen und Aussteller|en und Ausstellerinnen| und Ausstellerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Ausstellende/gi, "Aussteller"],
     [/#Autofahrer(?:innen und Autofahrer| und Autofahrerinnen|[\\*\\:\\|]innen|Innen)|#Autofahrende/gi, "Autofahrer"],
     [/#Autor(?:innen und Autor|en und Autorinnen| und Autorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Autoren"],
     [/#Berliner(?:innen und Berliner|en und Berlinerinnen| und Berlinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Berliner"],
@@ -1040,6 +1045,14 @@ const hashtagReplacements = [
     [/#Verbraucher(?:innen und Verbraucher|en und Verbraucherinnen| und Verbraucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Verbraucher"],
     [/#Wähler(?:innen und Wähler|en und Wählerinnen| und Wählerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Wählende/gi, "Wähler"],
     [/#Zuhörer(?:innen und Zuhörer|en und Zuhörerinnen| und Zuhörerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Zuhörende/gi, "Zuhörer"],
+
+    // Strukturierte Daten formatieren
+    [/\s*?xo\s*?/g, "#+\u2022\u00A0"], // Listenformatierung mit Bullet
+    [/\s*?xz\s*?/g, "#+\u2002"], // Zeilenumbruch mit Einzug
+    [/\s*?xt0\s*?/g, "#+"], // Zeilenumbruch mit Tabulator 0
+    [/\s*?xt1\s*?/g, "\u0009"], // Tabulator 1
+    [/\s*?xt2\s*?/g, "\u0009\u0009"], // Tabulator 2
+    [/\s*?xt3\s*?/g, "\u0009\u0009\u0009"], // Tabulator 3
   ];
 
   // === Ersetzungsfunktionen ===
@@ -1228,7 +1241,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
         "SuperERASER Tastaturkürzel:\n" +
         "STRG+E → Umbrüche, Makros und Links entfernen\n\n" +
         "SuperLINK Tastaturkürzel:\n" +
-        "STRG+SHIFT+L → URL kürzen mit YOURLS\n" +
+        "STRG+ALT+L → URL kürzen mit YOURLS\n" +
         "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
         "Auch hilfreich im PPS Texteditor:\n" +
         "STRG+A > Alles markieren\n" +
