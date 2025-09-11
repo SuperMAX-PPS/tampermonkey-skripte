@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.2.2
+// @name         SuperMAX 3.3.1
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.2.2
+// @version      3.3.1
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -16,7 +16,7 @@
 
 // Menüeintrag zum Setzen des Tokens
 GM_registerMenuCommand("YOURLS-Token setzen", () => {
-    const token = prompt("Bitte gib deinen YOURLS-Token ein:");
+    const token = prompt("Bitte gib Deinen YOURLS-Token ein:");
     if (token) {
         GM_setValue("yourlsToken", token);
         alert("Token gespeichert!");
@@ -33,7 +33,7 @@ GM_registerMenuCommand("YOURLS-Token anzeigen", () => {
 
 // Menüeintrag zum Löschen des Tokens
 GM_registerMenuCommand("YOURLS-Token löschen", () => {
-    const confirmDelete = confirm("Möchtest du den gespeicherten Token wirklich löschen?");
+    const confirmDelete = confirm("Möchtest Du den gespeicherten Token wirklich löschen?");
     if (confirmDelete) {
         GM_setValue("yourlsToken", "");
         alert("Token wurde gelöscht.");
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.2.1 gestartet");
+    console.log("SuperMAX v3.3.1 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -197,6 +197,7 @@ const baseReplacements = [
     [/\bAutofahrer und Autofahrerinnen/g, "Autofahrerinnen und Autofahrer"],
     [/\bAutoren und Autorinnen/g, "Autorinnen und Autoren"],
     [/\bBesucher und Besucherinnen/g, "Besucherinnen und Besucher"],
+    [/\bBewerber und Bewerberinnen/g, "Bewerberinnen und Bewerber"],
     [/\bBürger und Bürgerinnen/g, "Bürgerinnen und Bürger"],
     [/\bErzieher und Erzieherinnen/g, "Erzieherinnen und Erzieher"],
     [/\bExperten und Expertinnen/g, "Expertinnen und Experten"],
@@ -978,6 +979,7 @@ const hashtagReplacements = [
     [/\bAutofahrer und Autofahrerinnen/g, "Autofahrerinnen und Autofahrer"],
     [/\bAutoren und Autorinnen/g, "Autorinnen und Autoren"],
     [/\bBesucher und Besucherinnen/g, "Besucherinnen und Besucher"],
+    [/\bBewerber und Bewerberinnen/g, "Bewerberinnen und Bewerber"],
     [/\bBürger und Bürgerinnen/g, "Bürgerinnen und Bürger"],
     [/\bErzieher und Erzieherinnen/g, "Erzieherinnen und Erzieher"],
     [/\bExperten und Expertinnen/g, "Expertinnen und Experten"],
@@ -1016,6 +1018,7 @@ const hashtagReplacements = [
     [/#Autor(?:innen und Autor|en und Autorinnen| und Autorinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Autoren"],
     [/#Berliner(?:innen und Berliner|en und Berlinerinnen| und Berlinerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Berliner"],
     [/#Besucher(?:innen und Besucher|en und Besucherinnen| und Besucherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Besuchende/gi, "Besucher"],
+    [/#Bewerber(?:innen und Bewerber|en und Bewerberinnen| und Bewerberinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Bewerbende/gi, "Bewerber"],
     [/#Bürger(?:innen und Bürger|en und Bürgerinnen| und Bürgerinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Bürger"],
     [/#Erzieher(?:innen und Erzieher|en und Erzieherinnen| und Erzieherinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)|#Erziehende/gi, "Erzieher"],
     [/#Expert(?:innen und Experten|en und Expertinnen| und Expertinnen|[\\*\\:\\|]innen|Innen|nde[nr]?)/gi, "Experten"],
@@ -1232,6 +1235,8 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+  // ---- Menü: Anzeigen / Zurücksetzen / Diagnose ----------------------------
+
 
 GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     alert(
@@ -1254,5 +1259,663 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     );
 });
 
+/* ------------ SuperRED v0.6.3
+   - Hotkey STRG+ALT+R befüllt (mit Sicherheitsabfrage/Overlay nur bei Bedarf)
+   - KW-Logik "Redaktionsschluss = Montag"
+   - Ausgabenkürzel (Mehrfach als #KT#MI, exklusives #DL bei Sonderfällen)
+   - Stichwort-Ermittlung aus Unterzeile (Fallback Body): Suffixe & Bindestrich-Komposita
+---------------------------------------------------------------------------- */
+(function () {
+  'use strict';
+  console.log('[SuperRED] v0.6.3 geladen @', location.href);
+
+  // ===== Konfiguration =====
+  const SUPERRED_CONFIG = {
+    // Primäre, eindeutige Selektoren aus Deinem Listenmenü
+    navSelectors: {
+      headline: '#jsFragments #texts li.jsModuleItem.moduleFormListItem.moduleFormItemSelect[data-label="headline"]',
+      subline:  '#jsFragments #texts li.jsModuleItem.moduleFormListItem.moduleFormItemSelect[data-label="subheadline"]',
+      body:     '#jsFragments #texts li.jsModuleItem.moduleFormListItem.moduleFormItemSelect[data-label="text"]'
+    },
+    // Fallback-Synonyme
+    labelFallbacks: {
+      headline: ['überschrift', 'headline', 'titel'],
+      subline:  ['unterzeile', 'subheadline', 'vorspann', 'teaser'],
+      body:     ['text', 'fließtext', 'body', 'artikeltext']
+    },
+    // Ziel-Feld (Artikelbeschreibung/Dateiname) – mit #moduleTitle als Priorität 1
+    articleDescriptionSelectors: [
+      '#moduleTitle',                    // <-- Priorität 1 (vom HTML-Snippet)
+      '#positionInfo',
+      'input[name="fileName"]',
+      'input[placeholder*="Dateiname" i]',
+      'input[aria-label*="Artikelbeschreibung" i]',
+      'input[aria-label*="Dateiname" i]'
+    ],
+    timeouts: { pmMount: 6000, between: 120 },
+
+    // ===== Dateiname/Format-Settings =====
+    filename: {
+      // --- KW-Steuerung ---
+      useKW: true,
+      kwMode: 'redaktionsschluss',       // 'redaktionsschluss' | 'iso'
+      redaktionsschlussWeekday: 1,       // 1 = Montag (0=So..6=Sa)
+
+      // --- Ausgabenkürzel ---
+      multiEditionJoiner: '#',           // mehrere Codes: "KT#MI"
+      maxEditionCodes: 3,
+      fallbackAusgabeKuerzel: 'DL',
+      prefixMaxWords: 3,                 // Ortsmarke am Anfang: bis zu N Wörter prüfen
+
+      // --- übrige Regeln ---
+      joiner: '_',                       // Trenner zwischen Nummer/Headline
+      requireEightDigitId: false,        // wenn true: ohne 8-stell. Nummer -> Platzhalter
+      missingIdPlaceholder: ''           // z.B. '00000000' oder '' (leer)
+    }
+  };
+
+  // ===== Utilities =====
+  const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const qs  = (sel, root = document) => root.querySelector(sel);
+  const normalizeSpace = (s) => (s ?? '')
+    .replace(/\u00A0|\u2005/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const isVisible = (el) => {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    const st = getComputedStyle(el);
+    return (r.width && r.height) && st.visibility !== 'hidden' && st.display !== 'none' && st.opacity !== '0';
+  };
+
+  // ProseMirror → Text
+  const textFromProseMirror = (el) => {
+    if (!el) return '';
+    const clone = el.cloneNode(true);
+    clone.querySelectorAll('a').forEach(a => a.replaceWith(document.createTextNode(a.textContent ?? '')));
+    return normalizeSpace(clone.innerText ?? clone.textContent ?? '');
+  };
+
+  // Deep query (offene ShadowRoots)
+  const deepQSA = (selector, root = document) => {
+    const out = new Set();
+    const walk = (node) => {
+      if (!node) return;
+      if (node.querySelectorAll) node.querySelectorAll(selector).forEach(el => out.add(el));
+      const all = node.querySelectorAll ? node.querySelectorAll('*') : [];
+      all.forEach(el => { if (el.shadowRoot) walk(el.shadowRoot); });
+    };
+    walk(root);
+    return Array.from(out);
+  };
+  const deepQS = (selector, root = document) => {
+    const list = deepQSA(selector, root);
+    return list.length ? list[0] : null;
+  };
+
+  // Wait / Click
+  function waitFor(checkFn, timeoutMs = 3000, intervalMs = 80) {
+    return new Promise((resolve, reject) => {
+      const start = performance.now();
+      (function loop() {
+        try { const val = checkFn(); if (val) return resolve(val); } catch {}
+        if (performance.now() - start >= timeoutMs) return reject(new Error('waitFor: timeout'));
+        setTimeout(loop, intervalMs);
+      }());
+    });
+  }
+  function clickChain(el) {
+    const fire = (type) => el.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
+    try { fire('pointerdown'); fire('mousedown'); fire('mouseup'); fire('click'); } catch { el.click?.(); }
+  }
+
+  // Buttons finden
+  function findNavButtonsSpecific() {
+    return {
+      headline: deepQS(SUPERRED_CONFIG.navSelectors.headline) ?? qs(SUPERRED_CONFIG.navSelectors.headline),
+      subline:  deepQS(SUPERRED_CONFIG.navSelectors.subline)  ?? qs(SUPERRED_CONFIG.navSelectors.subline),
+      body:     deepQS(SUPERRED_CONFIG.navSelectors.body)     ?? qs(SUPERRED_CONFIG.navSelectors.body)
+    };
+  }
+  function findNavButtonByText(options) {
+    const candidates = [
+      ...deepQSA('#jsFragments #texts li.jsModuleItem'),
+      ...deepQSA('button, [role="button"], a, .nav-item, .tab, .toggleBox, .toggleBoxIcon, [data-uid]')
+    ].filter(isVisible);
+    const norm = (t) => normalizeSpace(t).toLowerCase();
+    // exakt
+    for (const el of candidates) {
+      const txt  = norm(el.textContent ?? '');
+      const aria = norm(el.getAttribute?.('aria-label') ?? el.getAttribute?.('data-label') ?? '');
+      for (const label of options) {
+        const l = norm(label);
+        if (txt === l || aria === l) return el;
+      }
+    }
+    // enthält
+    for (const el of candidates) {
+      const txt  = norm(el.textContent ?? '');
+      const aria = norm(el.getAttribute?.('aria-label') ?? el.getAttribute?.('data-label') ?? '');
+      for (const label of options) {
+        const l = norm(label);
+        if ((txt && txt.includes(l)) || (aria && aria.includes(l))) return el;
+      }
+    }
+    return null;
+  }
+  function findAllNavButtons() {
+    const specific = findNavButtonsSpecific();
+    const haveAll = specific.headline && specific.subline && specific.body;
+    if (haveAll) return specific;
+    const fb = SUPERRED_CONFIG.labelFallbacks;
+    return {
+      headline: specific.headline ?? findNavButtonByText(fb.headline),
+      subline:  specific.subline  ?? findNavButtonByText(fb.subline),
+      body:     specific.body     ?? findNavButtonByText(fb.body)
+    };
+  }
+
+  // Aktiver ProseMirror
+  function getActivePM() {
+    const pms = deepQSA('.ProseMirror[contenteditable="true"]').filter(isVisible);
+    return pms[0] ?? null;
+  }
+  async function waitForActivePM(afterLabel) {
+    await new Promise(r => setTimeout(r, SUPERRED_CONFIG.timeouts.between));
+    const pm = await waitFor(() => {
+      const el = getActivePM();
+      return el && isVisible(el) ? el : null;
+    }, SUPERRED_CONFIG.timeouts.pmMount, 100);
+    await new Promise(r => setTimeout(r, 50));
+    console.log('[SuperRED] PM aktiv nach Klick auf', afterLabel, pm);
+    return pm;
+  }
+
+  // Sequenzielles Auslesen
+  async function captureAllThree() {
+    const btns = findAllNavButtons();
+    console.log('[SuperRED] Buttons gefunden:', btns);
+    const result = { headline: '', subline: '', body: '' };
+    const steps = [
+      { key: 'headline', label: 'Überschrift', btn: btns.headline },
+      { key: 'subline',  label: 'Unterzeile',  btn: btns.subline  },
+      { key: 'body',     label: 'Text',        btn: btns.body     }
+    ];
+    for (const step of steps) {
+      if (!step.btn) {
+        console.warn('[SuperRED] Kein Button für', step.label, 'gefunden – überspringe.');
+        continue;
+      }
+      try {
+        clickChain(step.btn);
+        const pm  = await waitForActivePM(step.label);
+        const txt = textFromProseMirror(pm);
+        result[step.key] = txt;
+      } catch (err) {
+        console.warn('[SuperRED] Schritt fehlgeschlagen:', step.label, err);
+      }
+    }
+    return result;
+  }
+
+  // ===== Artikelbeschreibung (Dateiname) – zielgenau auf #moduleTitle =====
+
+  // React-sicherer Setter für <input>
+  function setInputValueReactSafe(input, value) {
+    const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    const setter = desc && desc.set;
+    if (setter) setter.call(input, String(value));
+    else input.value = String(value);
+    input.dispatchEvent(new Event('input',  { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    input.dispatchEvent(new Event('blur',   { bubbles: true }));
+  }
+
+  function findArticleDescriptionInput() {
+    // Priorisierte Suche (zuerst #moduleTitle)
+    for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) {
+      const el = qs(s);
+      if (el) return el;
+    }
+    for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) {
+      const el = deepQS(s);
+      if (el) return el;
+    }
+    return null;
+  }
+
+  // ---------- KW-Helfer ----------
+  function isoWeekString(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    return String(weekNo).padStart(2, '0');
+  }
+  function nextWeekday(date, weekday /* 0=So..6=Sa */) {
+    const d = new Date(date);
+    const day = d.getDay();
+    let delta = (weekday - day + 7) % 7;
+    if (delta === 0) delta = 7; // "nächster" Wochentag, nicht derselbe
+    d.setDate(d.getDate() + delta);
+    return d;
+  }
+  function redaktionsKWString(date, weekday /* default 1 = Mo */) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const rsDay = (typeof weekday === 'number') ? weekday : 1;
+    if (day === rsDay) {
+      return isoWeekString(d);
+    } else {
+      const nm = nextWeekday(d, rsDay);
+      return isoWeekString(nm);
+    }
+  }
+
+  // ---------- Einfache Headline-/Nummern-Helfer ----------
+  function safeHeadline(h) {
+    const s = normalizeSpace(h ?? '');
+    return s.replace(/\s+/g, ' ').trim();
+  }
+  function guessEightDigitNumber(list) {
+    for (const s of list) {
+      const m = (s ?? '').match(/\b\d{8}\b/);
+      if (m) return m[0];
+    }
+    return '';
+  }
+  function getExistingNumberFromField(inputEl) {
+    const v = (inputEl?.value ?? '').toString().trim();
+    const m = v.match(/^\d{8}$/); // exakt 8-stellig?
+    return m ? m[0] : '';
+  }
+
+  // ---------- Dateiname bauen ----------
+  function buildFileName({ kw, kuerzel, nummer, headline, stichwort }) {
+    // Beispiel: "36#KT#MI_12345678_Überschrift (Stichwort)"
+    const parts = [];
+    if (kw) parts.push(kw);
+    parts.push(`#${kuerzel}`); // kuerzel kann "KT" ODER "KT#MI" sein -> ergibt "#KT" bzw. "#KT#MI"
+    if (nummer) parts.push(SUPERRED_CONFIG.filename.joiner + nummer);
+    parts.push(SUPERRED_CONFIG.filename.joiner + headline);
+    const base = parts.join('');
+    return stichwort ? `${base} (${stichwort})` : base;
+  }
+
+  // ---------- AUSGABE-MAPPING (Ortsmarken → Codes) ----------
+  const AUSGABE_MAP = {
+    CH: ['Charlottenburg-Nord', 'Charlottenburg-Wilmersdorf', 'Charlottenburg', 'Westend'],
+    HL: ['Alt-Hohenschönhausen', 'Falkenberg', 'Fennpfuhl', 'Friedrichsfelde', 'Karlshorst', 'Lichtenberg', 'Malchow', 'Neu-Hohenschönhausen', 'Rummelsburg', 'Wartenberg'],
+    HM: ['Biesdorf', 'Hellersdorf', 'Kaulsdorf', 'Mahlsdorf', 'Marzahn-Hellersdorf', 'Marzahn'],
+    KT: ['Adlershof', 'Altglienicke', 'Alt-Treptow', 'Baumschulenweg', 'Bohnsdorf', 'Friedrichshagen', 'Grünau', 'Johannisthal', 'Köpenick', 'Müggelheim', 'Niederschöneweide', 'Oberschöneweide', 'Plänterwald', 'Rahnsdorf', 'Schmöckwitz', 'Treptow-Köpenick'],
+    MI: ['Friedrichshain-Kreuzberg', 'Friedrichshain', 'Gesundbrunnen', 'Hansaviertel', 'Kreuzberg', 'Mitte', 'Moabit', 'Tiergarten', 'Wedding'],
+    NK: ['Britz', 'Buckow', 'Gropiusstadt', 'Neukölln', 'Rudow'],
+    PW: ['Blankenburg', 'Blankenfelde', 'Buch', 'Französisch Buchholz', 'Heinersdorf', 'Karow', 'Niederschönhausen', 'Pankow', 'Prenzlauer Berg', 'Rosenthal', 'Stadtrandsiedlung Malchow', 'Weißensee', 'Wilhelmsruh'],
+    RE: ['Borsigwalde', 'Frohnau', 'Heiligensee', 'Hermsdorf', 'Konradshöhe', 'Lübars', 'Märkisches Viertel', 'Reinickendorf', 'Tegel', 'Waidmannslust', 'Wittenau'],
+    ST: ['Lankwitz', 'Lichterfelde', 'Steglitz-Zehlendorf', 'Steglitz'],
+    SV: ['Falkenhagener Feld', 'Gatow', 'Hakenfelde', 'Haselhorst', 'Kladow', 'Siemensstadt', 'Spandau', 'Wilhelmstadt'],
+    TH: ['Friedenau', 'Lichtenrade', 'Mariendorf', 'Marienfelde', 'Schöneberg', 'Tempelhof-Schöneberg', 'Tempelhof'],
+    WI: ['Charlottenburg-Wilmersdorf', 'Grunewald', 'Halensee', 'Schmargendorf', 'Wilmersdorf'],
+    ZD: ['Dahlem', 'Nikolassee', 'Schlachtensee', 'Steglitz-Zehlendorf', 'Zehlendorf'],
+    DL: ['Berlin', 'Chance der Woche', 'Stadtspaziergang']
+  };
+
+  // Reverse-Index: Ortsname (kanonisch) -> Codes
+  const CANONICAL_LOCALITY_TO_CODES = new Map();
+  const LOCALITY_NAMES_CANONICAL = [];
+
+  (function buildLocalityIndex() {
+    const canon = (s) => s.toLowerCase()
+      .normalize('NFC')
+      .replace(/[.,:;!?)+\]]+$/g, '')
+      .replace(/[\s\-]+/g, ' ')
+      .trim();
+
+    for (const [code, list] of Object.entries(AUSGABE_MAP)) {
+      for (const raw of list) {
+        const key = canon(raw);
+        if (!CANONICAL_LOCALITY_TO_CODES.has(key)) CANONICAL_LOCALITY_TO_CODES.set(key, new Set());
+        CANONICAL_LOCALITY_TO_CODES.get(key).add(code);
+      }
+    }
+
+    LOCALITY_NAMES_CANONICAL.push(...CANONICAL_LOCALITY_TO_CODES.keys());
+    LOCALITY_NAMES_CANONICAL.sort((a, b) => b.length - a.length); // längere Phrasen zuerst
+  })();
+
+  // Locality-Helper
+  function canonLoc(s) {
+    return (s ?? '').toLowerCase()
+      .normalize('NFC')
+      .replace(/[.,:;!?)+\]]+$/g, '')
+      .replace(/[\s\-]+/g, ' ')
+      .trim();
+  }
+
+  // Anfangsphrase am Zeilenbeginn (3/2/1 Token) als Ortsmarke
+  function matchLocalityAtStart(text, maxWords = SUPERRED_CONFIG.filename.prefixMaxWords || 3) {
+    if (!text) return null;
+    const cleaned = text.trim().replace(/^[\s"'„‚‘’"»«]+/, '');
+    const tokens = cleaned.split(/\s+/).map(t => t.replace(/^["'„‚‘’"»«(]+|[)"'“”‚‘’»«:.;,!?]+$/g, ''));
+    const n = Math.min(tokens.length, Math.max(1, maxWords));
+
+    for (let take = n; take >= 1; take--) {
+      const phrase = tokens.slice(0, take).join(' ');
+      const key = canonLoc(phrase);
+      const codesSet = CANONICAL_LOCALITY_TO_CODES.get(key);
+      if (codesSet && codesSet.size) {
+        return { phrase, codes: Array.from(codesSet) };
+      }
+    }
+    return null;
+  }
+
+  // Ortsmarken irgendwo im Text finden (erste Position hat Priorität)
+  function findLocalitiesInText(text) {
+    const res = [];
+    if (!text) return res;
+
+    const norm = (text ?? '')
+      .normalize('NFC')
+      .toLowerCase()
+      .replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ')
+      .replace(/[–—]/g, '-');
+
+    for (const nameKey of LOCALITY_NAMES_CANONICAL) {
+      const pattern = nameKey.replace(/ /g, '[\\s\\-]+'); // "Prenzlauer Berg" -> Prenzlauer[\s\-]+Berg
+      const re = new RegExp(`(^|\\b)${pattern}(?=\\b|[.:,;!?\\)])`, 'i');
+      const m = re.exec(norm);
+      if (m) {
+        res.push({
+          nameCanonical: nameKey,
+          index: m.index,
+          codes: Array.from(CANONICAL_LOCALITY_TO_CODES.get(nameKey) || [])
+        });
+      }
+    }
+
+    res.sort((a, b) => a.index - b.index);
+    return res;
+  }
+
+  // Exklusiv-Regel für DL-Sonderfälle
+  function containsExclusiveDL(values) {
+    const needles = ['chance der woche', 'stadtspaziergang'];
+    const canon = (s) => (s ?? '').toLowerCase().normalize('NFC');
+    const hay = canon(values.subline) + '\n' + canon(values.body);
+    return needles.some(n => hay.includes(n));
+  }
+
+  // Kernlogik: Ausgabenkürzel (Mehrfach als "KT#MI" – ohne führendes '#')
+  function computeAusgabeKuerzel(values) {
+    const cfg = SUPERRED_CONFIG.filename;
+    const maxCodes = Math.max(1, cfg.maxEditionCodes || 3);
+    const joiner = cfg.multiEditionJoiner || '#';
+    const FALLBACK = cfg.fallbackAusgabeKuerzel || 'DL';
+
+    // Exklusiv-Regel
+    if (containsExclusiveDL(values)) {
+      return 'DL'; // ausschließlich DL
+    }
+
+    const codesOrdered = [];
+    const addCodes = (codes) => {
+      for (const c of codes) {
+        if (!codesOrdered.includes(c)) codesOrdered.push(c);
+        if (codesOrdered.length >= maxCodes) return;
+      }
+    };
+
+    // 1) Unterzeile – Anfangsphrase (3/2/1 Wörter)
+    let primary = null;
+    if (values.subline?.trim()) {
+      const m = matchLocalityAtStart(values.subline);
+      if (m) primary = m;
+    }
+
+    // 2) Falls nichts: Fließtext – Anfangsphrase
+    if (!primary && values.body?.trim()) {
+      const m = matchLocalityAtStart(values.body);
+      if (m) primary = m;
+    }
+
+    // 3) Falls immer noch nichts: Volltext-Scan
+    let firstTextHit = null;
+    const fullHits = findLocalitiesInText(values.body ?? '');
+    if (!primary && fullHits.length) {
+      firstTextHit = fullHits[0];
+      addCodes(firstTextHit.codes);
+    }
+
+    // Primär-Codes bevorzugt (Unterzeile > Body-Start)
+    if (primary) addCodes(primary.codes);
+
+    // 4) Zusätzliche Codes aus dem Fließtext
+    //    WICHTIG: 'DL' nicht als Zusatz, wenn bereits andere Codes existieren.
+    if (fullHits.length) {
+      for (const hit of fullHits) {
+        const codes = hit.codes.filter(c => c !== 'DL' || codesOrdered.length === 0);
+        addCodes(codes);
+        if (codesOrdered.length >= maxCodes) break;
+      }
+    }
+
+    // 5) Fallback, wenn gar nichts gefunden
+    if (codesOrdered.length === 0) codesOrdered.push(FALLBACK);
+
+    return codesOrdered.join(joiner);
+  }
+
+  // ---------- STICHWORT: Suffixe & Bindestrich-Komposita ----------
+  // Suffixe: -straße/-strasse, -platz, -park, -bahnhof, -kreuz, -felde, -brücke/-bruecke
+  const STICHWORT_SUFFIXES = ['straße', 'strasse', 'platz', 'park', 'bahnhof', 'kreuz', 'felde', 'brücke', 'bruecke', 'baustelle', 'club', 'heim'];
+
+  function extractStichwortFrom(text) {
+    if (!text) return '';
+
+    const cleaned = (text ?? '')
+      .replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ')
+      .replace(/[“”„‟"«»]/g, '"')
+      .replace(/[‚‘’‛']/g, "'")
+      .trim();
+
+    // 1) Suffix-Matches (inkl. Mehrwort- und Bindestrichvarianten), z. B. "Julius-Leber-Brücke", "Karl-Sass-Straße", "Hauptbahnhof", "Mauerpark"
+    //   - Erlaubt: Groß-/Kleinschreibung, Umlaute, mehrere Teile per Bindestrich
+    const suffixPattern =
+      new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)*-(?:${STICHWORT_SUFFIXES.join('|')}))\\b`, 'gi');
+
+    const singleWordSuffixPattern =
+      new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]*(?:${STICHWORT_SUFFIXES.map(s=>s.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&')).join('|')})\\b)`, 'gi');
+
+    // 2) Allgemeine Bindestrich-Komposita (fallback), z. B. "Freizeit-Zentrum"
+    const hyphenCompositePattern =
+      /\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)+)\b/g;
+
+    // Versuch 1: Mehrteil mit Suffix (…-brücke/-straße/…)
+    let m;
+    let candidates = [];
+    while ((m = suffixPattern.exec(cleaned)) !== null) {
+      candidates.push({ idx: m.index, text: m[1] });
+    }
+    // Versuch 1b: Single-Word mit Suffix (Hauptbahnhof, Mauerpark)
+    while ((m = singleWordSuffixPattern.exec(cleaned)) !== null) {
+      candidates.push({ idx: m.index, text: m[1] });
+    }
+    // Falls gefunden: nimm den frühesten Treffer
+    if (candidates.length) {
+      candidates.sort((a,b)=>a.idx-b.idx);
+      return tidyStichwort(candidates[0].text);
+    }
+
+    // Versuch 2: allgemeine Bindestrich-Komposita (Freizeit-Zentrum)
+    const hyphens = [];
+    while ((m = hyphenCompositePattern.exec(cleaned)) !== null) {
+      hyphens.push({ idx: m.index, text: m[1] });
+    }
+    if (hyphens.length) {
+      hyphens.sort((a,b)=>a.idx-b.idx);
+      return tidyStichwort(hyphens[0].text);
+    }
+
+    return '';
+  }
+
+  function tidyStichwort(s) {
+    // Schlusszeichen ab, Mehrfach-Leerzeichen reduzieren
+    return s.replace(/[)\].,:;!?]+$/,'').replace(/\s+/g,' ').trim();
+  }
+
+  function extractStichwort(values) {
+    // Exklusive DL-Fälle -> kein Stichwort
+    if (containsExclusiveDL(values)) return '';
+    // 1) Unterzeile priorisiert
+    let sw = extractStichwortFrom(values.subline);
+    if (sw) return sw;
+    // 2) Fallback: Body (nur den Beginn durchsuchen, um Ausreißer zu vermeiden)
+    const bodyStart = (values.body ?? '').slice(0, 280);
+    sw = extractStichwortFrom(bodyStart);
+    return sw || '';
+  }
+
+  // ====== KONDITIONS-OVERLAY (nur bei Überschreib-Warnung) ======
+  let overlayEl = null;
+
+  function showConfirmOverlay({ currentValue, proposedValue, kwPreview, kuerzelPreview, onConfirm }) {
+    try {
+      if (overlayEl) overlayEl.remove();
+      overlayEl = document.createElement('div');
+      overlayEl.style.cssText = `
+        position: fixed; top: 12px; right: 12px; z-index: 2147483647;
+        background: #0b1e2d; color: #fff; font: 13px/1.35 system-ui,Segoe UI,Arial,sans-serif;
+        border: 1px solid #0d3a5c; border-radius: 8px; padding: 12px 14px; max-width: 620px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      `;
+      const btn = (bg) => `
+        display:inline-block;margin:6px 6px 0 0;padding:6px 10px;border-radius:6px;
+        background:${bg};color:#fff;border:0;cursor:pointer
+      `;
+      overlayEl.innerHTML = `
+        <div style="font-weight:600;margin-bottom:6px;">SuperRED – Überschreiben bestätigen</div>
+        <div style="opacity:.8;margin-bottom:8px">${new Date().toLocaleTimeString()}</div>
+        <div style="margin-bottom:8px"><b>Aktueller Wert</b>:<br>
+          <code style="display:inline-block;background:#07233a;padding:4px 6px;border-radius:4px;max-width:100%;word-break:break-all">${escapeHTML(currentValue || '(leer)')}</code>
+        </div>
+        <div style="margin-bottom:8px"><b>Neuer Wert</b>:<br>
+          <code style="display:inline-block;background:#07233a;padding:4px 6px;border-radius:4px;max-width:100%;word-break:break-all">${escapeHTML(proposedValue)}</code>
+        </div>
+        <div style="opacity:.8;margin:8px 0 4px 0">
+          <span><b>Kürzel</b>: <code style="background:#07233a;padding:2px 4px;border-radius:4px">#${escapeHTML(kuerzelPreview)}</code></span>
+          <span style="margin-left:10px"><b>KW</b>: ${escapeHTML(kwPreview || '(inaktiv)')}</span>
+        </div>
+        <div style="margin-top:10px">
+          <button id="sr_ok"   style="${btn('#1b8d3d')}">Überschreiben</button>
+          <button id="sr_cancel" style="${btn('#3a3a3a')}">Abbrechen</button>
+        </div>
+      `;
+      document.body.appendChild(overlayEl);
+      overlayEl.querySelector('#sr_ok')?.addEventListener('click', () => { try { overlayEl.remove(); } catch {} onConfirm?.(); });
+      overlayEl.querySelector('#sr_cancel')?.addEventListener('click', () => { try { overlayEl.remove(); } catch {} });
+    } catch (err) {
+      console.error('[SuperRED] Overlay-Fehler:', err);
+      alert('SuperRED: Overlay-Fehler (siehe Konsole).');
+    }
+  }
+
+  function escapeHTML(s) {
+    return (s ?? '').replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  // ===== Hauptbefüllung (mit Stichwort-Regel und bedingter Overlay-Abfrage) =====
+  function computeFinalFileName(values, targetInputEl) {
+    const cfg = SUPERRED_CONFIG.filename;
+
+    // Nummer bestimmen
+    const nummerExistingExact = getExistingNumberFromField(targetInputEl); // nur wenn exakt 8-stellig allein
+    const nummer =
+      nummerExistingExact ||
+      guessEightDigitNumber([values.headline, values.subline, values.body]) ||
+      (cfg.requireEightDigitId ? (cfg.missingIdPlaceholder || '') : '');
+
+    // Headline-Fallback-Kette
+    let baseHeadline = values.headline?.trim() || values.subline?.trim() || '';
+    if (!baseHeadline) {
+      const body = (values.body ?? '').replace(/\s+/g,' ').trim();
+      baseHeadline = body.split(' ').slice(0, 10).join(' ') || 'ohne Titel';
+    }
+    const headline = safeHeadline(baseHeadline);
+
+    // Stichwort gemäß Regelwerk
+    const stichwort = extractStichwort(values);
+
+    // KW gemäß Modus
+    const kw = (cfg.useKW)
+      ? (cfg.kwMode === 'redaktionsschluss'
+          ? redaktionsKWString(new Date(), cfg.redaktionsschlussWeekday)
+          : isoWeekString(new Date()))
+      : '';
+
+    // Ausgabenkürzel dynamisch
+    const ausgabeKuerzelDyn = computeAusgabeKuerzel(values);
+
+    return {
+      text: buildFileName({ kw, kuerzel: ausgabeKuerzelDyn, nummer, headline, stichwort }),
+      kw,
+      kuerzel: ausgabeKuerzelDyn
+    };
+  }
+
+  function writeFinalToTarget(target, text) {
+    const old = typeof target.value === 'string' ? target.value : '';
+    setInputValueReactSafe(target, text);
+    try { target.selectionStart = target.selectionEnd = target.value.length; } catch {}
+    console.log('[SuperRED] Artikelbeschreibung (final) geschrieben. Alt:', old, 'Neu:', target.value);
+    flash(target, true);
+    return true;
+  }
+
+  // ===== Aktion: STRG+ALT+R =====
+  async function actionFillWithConditionalOverlay() {
+    const target = findArticleDescriptionInput();
+    if (!target) {
+      alert('SuperRED: Konnte das Feld „Artikelbeschreibung (Dateiname)“ nicht finden.');
+      return;
+    }
+    const current = (target.value ?? '').toString().trim();
+    const onlyEightDigits = /^\d{8}$/.test(current) || current === '';
+
+    // Werte erfassen (wir brauchen sie in jedem Fall für den neuen Titel)
+    const values = await captureAllThree();
+    const { text: proposed, kw, kuerzel } = computeFinalFileName(values, target);
+
+    if (onlyEightDigits) {
+      // Leeres Feld oder exakt 8-stellige Nummer -> direkt schreiben
+      writeFinalToTarget(target, proposed);
+      return;
+    }
+
+    // Sonst: Bestätigungs-Overlay zeigen
+    showConfirmOverlay({
+      currentValue: current,
+      proposedValue: proposed,
+      kwPreview: kw,
+      kuerzelPreview: kuerzel,
+      onConfirm: () => writeFinalToTarget(target, proposed)
+    });
+  }
+
+  // ===== Hotkeys =====
+  // STRG+ALT+R befüllt (Overlay nur wenn nötig). Keine D-/R-Doppelbelegung mehr.
+  window.addEventListener('keydown', (e) => {
+    const k = e.key?.toLowerCase?.() ?? '';
+    const fill = (e.ctrlKey && e.altKey && k === 'r');
+    if (fill) { e.preventDefault(); actionFillWithConditionalOverlay(); }
+  }, true);
+
+  // ===== (Optional) Tampermonkey-Menü =====
+  if (typeof GM_registerMenuCommand === 'function') {
+    GM_registerMenuCommand('SuperRED: Artikelbeschreibung befüllen (STRG+ALT+R)', actionFillWithConditionalOverlay);
+  }
+})();
 
 })();
