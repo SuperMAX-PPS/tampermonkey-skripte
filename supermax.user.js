@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.3.1
+// @name         SuperMAX 3.3.2
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.3.1
+// @version      3.3.2
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.3.1 gestartet");
+    console.log("SuperMAX v3.3.2 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -1248,6 +1248,8 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
         "SuperLINK Tastaturkürzel:\n" +
         "STRG+ALT+L → URL kürzen mit YOURLS\n" +
         "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
+        "SuperRED Tastaturkürzel:\n" +
+        "STRG+ALT+R → Artikelbeschreibung erzeugen\n\n" +
         "Auch hilfreich im PPS Texteditor:\n" +
         "STRG+A > Alles markieren\n" +
         "STRG+C > Auswahl kopieren\n" +
@@ -1302,14 +1304,14 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
       redaktionsschlussWeekday: 1,       // 1 = Montag (0=So..6=Sa)
 
       // --- Ausgabenkürzel ---
-      multiEditionJoiner: '#',           // mehrere Codes: "KT#MI"
+      multiEditionJoiner: '#',           // mehrere Codes: "#KT#MI"
       maxEditionCodes: 3,
       fallbackAusgabeKuerzel: 'DL',
       prefixMaxWords: 3,                 // Ortsmarke am Anfang: bis zu N Wörter prüfen
 
       // --- übrige Regeln ---
       joiner: '_',                       // Trenner zwischen Nummer/Headline
-      requireEightDigitId: false,        // wenn true: ohne 8-stell. Nummer -> Platzhalter
+      requireEightDigitId: false,        // wenn true: ohne 8-stellige Nummer -> Platzhalter
       missingIdPlaceholder: ''           // z.B. '00000000' oder '' (leer)
     }
   };
@@ -1708,8 +1710,8 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   }
 
   // ---------- STICHWORT: Suffixe & Bindestrich-Komposita ----------
-  // Suffixe: -straße/-strasse, -platz, -park, -bahnhof, -kreuz, -felde, -brücke/-bruecke
-  const STICHWORT_SUFFIXES = ['straße', 'strasse', 'platz', 'park', 'bahnhof', 'kreuz', 'felde', 'brücke', 'bruecke', 'baustelle', 'club', 'heim'];
+  // Suffixe: -straße, -platz, -park, -bahnhof, -kreuz, -felde, -brücke
+  const STICHWORT_SUFFIXES = ['straße', 'platz', 'park', 'bahnhof', 'kreuz', 'feld', 'brücke', 'tunnel', 'schule', 'kirche', 'turm', 'bad', 'bibliothek', 'messe', 'baustelle', 'club', 'heim', 'stadion', 'garten'];
 
   function extractStichwortFrom(text) {
     if (!text) return '';
