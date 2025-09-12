@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.3.2
+// @name         SuperMAX 3.3.3
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.3.2
+// @version      3.3.3
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.3.2 gestartet");
+    console.log("SuperMAX v3.3.3 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -1711,7 +1711,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
 
   // ---------- STICHWORT: Suffixe & Bindestrich-Komposita ----------
   // Suffixe: -straße, -platz, -park, -bahnhof, -kreuz, -felde, -brücke
-  const STICHWORT_SUFFIXES = ['straße', 'platz', 'park', 'bahnhof', 'kreuz', 'feld', 'brücke', 'tunnel', 'schule', 'kirche', 'turm', 'bad', 'bibliothek', 'messe', 'baustelle', 'club', 'heim', 'stadion', 'garten'];
+  const STICHWORT_SUFFIXES = ['stift', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden', 'wahl', 'schul', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan'];
 
   function extractStichwortFrom(text) {
     if (!text) return '';
@@ -1907,7 +1907,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   }
 
   // ===== Hotkeys =====
-  // STRG+ALT+R befüllt (Overlay nur wenn nötig). Keine D-/R-Doppelbelegung mehr.
+  // STRG+ALT+R befüllt (Overlay nur wenn nötig)
   window.addEventListener('keydown', (e) => {
     const k = e.key?.toLowerCase?.() ?? '';
     const fill = (e.ctrlKey && e.altKey && k === 'r');
@@ -1915,9 +1915,9 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   }, true);
 
   // ===== (Optional) Tampermonkey-Menü =====
-  if (typeof GM_registerMenuCommand === 'function') {
-    GM_registerMenuCommand('SuperRED: Artikelbeschreibung befüllen (STRG+ALT+R)', actionFillWithConditionalOverlay);
-  }
+  // if (typeof GM_registerMenuCommand === 'function') {
+  //  GM_registerMenuCommand('SuperRED: Artikelbeschreibung befüllen (STRG+ALT+R)', actionFillWithConditionalOverlay);
+  // }
 })();
 
 })();
