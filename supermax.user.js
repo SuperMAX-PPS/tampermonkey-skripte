@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.3.5
+// @name         SuperMAX 3.3.6
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.3.5
+// @version      3.3.6
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. SuperRED erzeugt Artikelbeschreibung per STRG+R. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.3.5 gestartet");
+    console.log("SuperMAX v3.3.6 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -1302,11 +1302,41 @@ document.addEventListener('keydown', function(e) {
       enableContainsStems: true,
       // Basis-Stems (werden intern in robuste Regex-Varianten überführt):
       containsStems: [
-        { label: 'bau',     pattern: 'bau' },
-        { label: 'straße',  pattern: 'stra(?:ß|ss)e(?:n)?' } // deckt 'Straße', 'Strasse', 'Straßen', 'Strassen'
+        { label: 'bad', pattern: 'b(?:a|ä)d(?:er)?' },
+        { label: 'bahnhof', pattern: 'bahnhof' },
+        { label: 'bau', pattern: 'bau' },
+        { label: 'brücke', pattern: 'brücke' },
+        { label: 'bühne', pattern: 'bühne' },
+        { label: 'club', pattern: 'club' },
+        { label: 'denkmal', pattern: 'denkmal' },
+        { label: 'fest', pattern: 'fest' },
+        { label: 'garten', pattern: 'garten' },
+        { label: 'heim', pattern: 'heim' },
+        { label: 'hof', pattern: 'hof' },
+        { label: 'kinder', pattern: 'kinder' },
+        { label: 'kirch', pattern: 'kirch' },
+        { label: 'könig', pattern: 'könig' },
+        { label: 'kreuz', pattern: 'kreuz' },
+        { label: 'lauf', pattern: 'lauf' },
+        { label: 'markt', pattern: 'markt' },
+        { label: 'messe', pattern: 'messe' },
+        { label: 'park', pattern: 'park' },
+        { label: 'plan', pattern: 'plan' },
+        { label: 'platz', pattern: 'platz' },
+        { label: 'schaden', pattern: 'schaden' },
+        { label: 'schul', pattern: 'schul' },
+        { label: 'schloss', pattern: 'schlo(?:ß|ss)?' },
+        { label: 'stadion', pattern: 'stadion' },
+        { label: 'straße', pattern: 'stra(?:ß|ss)e(?:n)?' }, // deckt 'Straße', 'Strasse', 'Straßen', 'Strassen'
+        { label: 'treff', pattern: 'treff' },
+        { label: 'turm', pattern: 'turm' },
+        { label: 'wahl', pattern: 'wahl' },
+        { label: 'weg', pattern: 'weg' },
+        { label: 'wettbewerb', pattern: 'wettbewerb' },
+        { label: 'zentrum', pattern: 'zentrum' },
       ],
       // Unerwünschte Volltreffer exakt ausschließen (lowercase; nach NFC-Norm):
-      ignoreExact: ['baum']
+      ignoreExact: ['bauer', 'gogol-grützner']
     }
   };
 
@@ -1692,9 +1722,11 @@ document.addEventListener('keydown', function(e) {
   // ----- STICHWORT: Suffixe, Contains-Stems & Bindestrich-Komposita -----
   // Auswahl erfolgt nach frühestem Auftreten im Text, nicht nach Reihenfolge der Muster.
   const STICHWORT_SUFFIXES = [
-    'zentrum', 'stift', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden',
-    'wahl', 'schul', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'filiale',
-    'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan', 'wache', 'schaden', 'wettbewerb', 'lauf'
+    'zentrum', 'markt', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden',
+    'wahl', 'schule', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'filiale',
+    'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan', 'wache', 'feuer', 'wettbewerb', 'lauf', 'denkmal',
+    'stadtspaziergang', 'chance', 'krankheit', 'schloss', 'führung', 'biotop', 'brand', 'treff', 'streik', 'betreuung',
+    'bühne', 'tag', 'woche', 'monat', 'jahr', 'festival', 'burg', 'berg', 'stiftung', 'ehrung', 'ausschreibung', 'weg'
   ];
 
   // Helper: Kandidaten per Contains-Stems (inkl. Bindestrich-Komposita) einsammeln
@@ -1717,7 +1749,7 @@ document.addEventListener('keydown', function(e) {
     while ((m = tokenRe.exec(cleaned)) !== null) {
       const token = m[1];
       const norm = token.toLowerCase().normalize('NFC');
-      if (ignoreSet.has(norm)) continue; // Schutz z. B. gegen 'baum'
+      if (ignoreSet.has(norm)) continue; // Schutz z. B. gegen 'bauer'
       for (const s of stemRegexes) {
         if (s.re.test(norm)) { out.push({ idx: m.index, text: token }); break; }
       }
