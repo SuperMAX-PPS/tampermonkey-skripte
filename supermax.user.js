@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         SuperMAX 3.3.3
+// @name         SuperMAX 3.3.5
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.3.3
-// @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. Token-Verwaltung. Updates via GitHub.
+// @version      3.3.5
+// @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. SuperRED erzeugt Artikelbeschreibung per STRG+R. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @match        https://pps.berliner-woche.de/*
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.3.3 gestartet");
+    console.log("SuperMAX v3.3.5 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -676,10 +676,12 @@ const hashtagReplacements = [
     [/#HWR/g, "Hochschule für Wirtschaft und Recht Berlin (HWR)"],
     [/#HZB/g, "Helmholtz-Zentrum Berlin (HZB)"],
     [/#IBAN/g, "IBAN (International Bank Account Number)"],
-    [/#IFAF/g, "IFAF Berlin – Institut für angewandte Forschung Berlin "],
+    [/#IFAF/g, "IFAF Berlin – Institut für angewandte Forschung Berlin"],
+    [/#IGeL/g, "Individuelle Gesundheitsleistungen (IGeL)"],
     [/#IHK/g, "Industrie- und Handelskammer zu Berlin (IHK Berlin)"],
     [/#IKEA/g, "Ikea"],
     [/#ILA/g, "Internationale Luft- und Raumfahrtausstellung Berlin (ILA)"],
+    [/#IPF/g, "Infozentrum für Prävention und Früherkennung (IPF)"],
     [/#IRT/g, "Institut für Rundfunktechnik (IRT)"],
     [/#ISTAF/g, "ISTAF (Internationales Stadionfest Berlin)"],
     [/#ITB/g, "ITB (Internationale Tourismus-Börse)"],
@@ -694,6 +696,7 @@ const hashtagReplacements = [
     [/#LEA/g, "Landesamt für Einwanderung (LEA)"],
     [/#MABB/g, "Medienanstalt Berlin-Brandenburg (MABB)"],
     [/#MDK/g, "Medizinischer Dienst der Krankenversicherung (MDK)"],
+    [/#MRT/g, "Magnetresonanztomografie (MRT)"],
     [/#NABU/g, "NABU (Naturschutzbund Deutschland)"],
     [/#NBB/g, "Netzgesellschaft Berlin-Brandenburg (NBB)"],
     [/#ÖPNV/g, "Öffentlicher Personennahverkehr (ÖPNV)"],
@@ -1235,41 +1238,13 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-  // ---- Menü: Anzeigen / Zurücksetzen / Diagnose ----------------------------
+// ---------------------------------------------------------------------
+// SuperRED v0.6.6 (2025-09-16)
+// ---------------------------------------------------------------------
 
-
-GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
-    alert(
-        "SuperMAX Tastaturkürzel:\n" +
-        "STRG+S → Grundregeln anwenden\n" +
-        "STRG+ALT+S → #-Textphrasen ersetzen\n\n" +
-        "SuperERASER Tastaturkürzel:\n" +
-        "STRG+E → Umbrüche, Makros und Links entfernen\n\n" +
-        "SuperLINK Tastaturkürzel:\n" +
-        "STRG+ALT+L → URL kürzen mit YOURLS\n" +
-        "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
-        "SuperRED Tastaturkürzel:\n" +
-        "STRG+ALT+R → Artikelbeschreibung erzeugen\n\n" +
-        "Auch hilfreich im PPS Texteditor:\n" +
-        "STRG+A > Alles markieren\n" +
-        "STRG+C > Auswahl kopieren\n" +
-        "STRG+X > Auswahl ausschneiden\n" +
-        "STRG+V > Auswahl einfügen\n" +
-        "STRG+Z > Aktion rückgängig machen\n" +
-        "STRG+Y > Aktion wieder herstellen\n" +
-        "STRG+SHIFT+S > Speichern und schließen\n"
-    );
-});
-
-/* ------------ SuperRED v0.6.3
-   - Hotkey STRG+ALT+R befüllt (mit Sicherheitsabfrage/Overlay nur bei Bedarf)
-   - KW-Logik "Redaktionsschluss = Montag"
-   - Ausgabenkürzel (Mehrfach als #KT#MI, exklusives #DL bei Sonderfällen)
-   - Stichwort-Ermittlung aus Unterzeile (Fallback Body): Suffixe & Bindestrich-Komposita
----------------------------------------------------------------------------- */
 (function () {
   'use strict';
-  console.log('[SuperRED] v0.6.3 geladen @', location.href);
+  console.log('[SuperRED] v0.6.6 geladen @', location.href);
 
   // ===== Konfiguration =====
   const SUPERRED_CONFIG = {
@@ -1287,7 +1262,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     },
     // Ziel-Feld (Artikelbeschreibung/Dateiname) – mit #moduleTitle als Priorität 1
     articleDescriptionSelectors: [
-      '#moduleTitle',                    // <-- Priorität 1 (vom HTML-Snippet)
+      '#moduleTitle', // <-- Priorität 1
       '#positionInfo',
       'input[name="fileName"]',
       'input[placeholder*="Dateiname" i]',
@@ -1300,19 +1275,38 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     filename: {
       // --- KW-Steuerung ---
       useKW: true,
-      kwMode: 'redaktionsschluss',       // 'redaktionsschluss' | 'iso'
-      redaktionsschlussWeekday: 1,       // 1 = Montag (0=So..6=Sa)
+      kwMode: 'redaktionsschluss', // 'redaktionsschluss' | 'iso'
+      redaktionsschlussWeekday: 1, // 1 = Montag (0=So..6=Sa)
 
       // --- Ausgabenkürzel ---
-      multiEditionJoiner: '#',           // mehrere Codes: "#KT#MI"
+      multiEditionJoiner: '#', // mehrere Codes: "#KT#MI"
       maxEditionCodes: 3,
       fallbackAusgabeKuerzel: 'DL',
-      prefixMaxWords: 3,                 // Ortsmarke am Anfang: bis zu N Wörter prüfen
+      prefixMaxWords: 3, // Ortsmarke am Anfang: bis zu N Wörter prüfen
 
       // --- übrige Regeln ---
-      joiner: '_',                       // Trenner zwischen Nummer/Headline
-      requireEightDigitId: false,        // wenn true: ohne 8-stellige Nummer -> Platzhalter
-      missingIdPlaceholder: ''           // z.B. '00000000' oder '' (leer)
+      joiner: '_', // Trenner zwischen Nummer/Headline
+      requireEightDigitId: false,
+      missingIdPlaceholder: ''
+    },
+
+    // Steuerung für Blacklist im Volltext-Scan von Ortsmarken
+    locality: {
+      textScanBlacklist: ['mitte']
+    },
+
+    // NEW: Stichwort-Logik
+    stichwort: {
+      // Falls true, wird zusätzlich zur Suffix-Logik nach "Stems" gesucht, die
+      // irgendwo im Wort vorkommen (präfix/suffix/infix), inkl. Bindestrich-Komposita.
+      enableContainsStems: true,
+      // Basis-Stems (werden intern in robuste Regex-Varianten überführt):
+      containsStems: [
+        { label: 'bau',     pattern: 'bau' },
+        { label: 'straße',  pattern: 'stra(?:ß|ss)e(?:n)?' } // deckt 'Straße', 'Strasse', 'Straßen', 'Strassen'
+      ],
+      // Unerwünschte Volltreffer exakt ausschließen (lowercase; nach NFC-Norm):
+      ignoreExact: ['baum']
     }
   };
 
@@ -1320,7 +1314,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const qs  = (sel, root = document) => root.querySelector(sel);
   const normalizeSpace = (s) => (s ?? '')
-    .replace(/\u00A0|\u2005/g, ' ')
+    .replace(/[\u00A0\u2005]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
   const isVisible = (el) => {
@@ -1329,15 +1323,13 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     const st = getComputedStyle(el);
     return (r.width && r.height) && st.visibility !== 'hidden' && st.display !== 'none' && st.opacity !== '0';
   };
-
-  // ProseMirror → Text
+  // ProseMirror → Text (Links zu reinem Text)
   const textFromProseMirror = (el) => {
     if (!el) return '';
     const clone = el.cloneNode(true);
     clone.querySelectorAll('a').forEach(a => a.replaceWith(document.createTextNode(a.textContent ?? '')));
     return normalizeSpace(clone.innerText ?? clone.textContent ?? '');
   };
-
   // Deep query (offene ShadowRoots)
   const deepQSA = (selector, root = document) => {
     const out = new Set();
@@ -1354,7 +1346,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     const list = deepQSA(selector, root);
     return list.length ? list[0] : null;
   };
-
   // Wait / Click
   function waitFor(checkFn, timeoutMs = 3000, intervalMs = 80) {
     return new Promise((resolve, reject) => {
@@ -1363,7 +1354,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
         try { const val = checkFn(); if (val) return resolve(val); } catch {}
         if (performance.now() - start >= timeoutMs) return reject(new Error('waitFor: timeout'));
         setTimeout(loop, intervalMs);
-      }());
+      })();
     });
   }
   function clickChain(el) {
@@ -1391,7 +1382,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
       const aria = norm(el.getAttribute?.('aria-label') ?? el.getAttribute?.('data-label') ?? '');
       for (const label of options) {
         const l = norm(label);
-        if (txt === l || aria === l) return el;
+        if ((txt && txt === l) || (aria && aria === l)) return el;
       }
     }
     // enthält
@@ -1461,7 +1452,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   }
 
   // ===== Artikelbeschreibung (Dateiname) – zielgenau auf #moduleTitle =====
-
   // React-sicherer Setter für <input>
   function setInputValueReactSafe(input, value) {
     const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
@@ -1472,7 +1462,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     input.dispatchEvent(new Event('change', { bubbles: true }));
     input.dispatchEvent(new Event('blur',   { bubbles: true }));
   }
-
   function findArticleDescriptionInput() {
     // Priorisierte Suche (zuerst #moduleTitle)
     for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) {
@@ -1486,10 +1475,10 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     return null;
   }
 
-  // ---------- KW-Helfer ----------
+  // ----- KW-Helfer -----
   function isoWeekString(d) {
-    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    const dayNum = date.getUTCDay() || 7;
+    const date  = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = (date.getUTCDay() || 7);
     date.setUTCDate(date.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
     const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
@@ -1515,37 +1504,36 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     }
   }
 
-  // ---------- Einfache Headline-/Nummern-Helfer ----------
+  // ----- Einfache Headline-/Nummern-Helfer -----
   function safeHeadline(h) {
     const s = normalizeSpace(h ?? '');
     return s.replace(/\s+/g, ' ').trim();
   }
   function guessEightDigitNumber(list) {
     for (const s of list) {
-      const m = (s ?? '').match(/\b\d{8}\b/);
-      if (m) return m[0];
+      const m = (s ?? '').match(/(^|[^0-9])(\d{8})(?!\d)/);
+      if (m) return m[2];
     }
     return '';
   }
   function getExistingNumberFromField(inputEl) {
-    const v = (inputEl?.value ?? '').toString().trim();
-    const m = v.match(/^\d{8}$/); // exakt 8-stellig?
-    return m ? m[0] : '';
+    const v = (inputEl?.value ?? '').toString();
+    const m = v.match(/(^|[^0-9])(\d{8})(?!\d)/);
+    return m ? m[2] : '';
   }
 
-  // ---------- Dateiname bauen ----------
+  // ----- Dateiname bauen -----
   function buildFileName({ kw, kuerzel, nummer, headline, stichwort }) {
-    // Beispiel: "36#KT#MI_12345678_Überschrift (Stichwort)"
     const parts = [];
     if (kw) parts.push(kw);
-    parts.push(`#${kuerzel}`); // kuerzel kann "KT" ODER "KT#MI" sein -> ergibt "#KT" bzw. "#KT#MI"
-    if (nummer) parts.push(SUPERRED_CONFIG.filename.joiner + nummer);
+    parts.push(`#${kuerzel}`);
+    if (nummer)   parts.push(SUPERRED_CONFIG.filename.joiner + nummer);
     parts.push(SUPERRED_CONFIG.filename.joiner + headline);
     const base = parts.join('');
     return stichwort ? `${base} (${stichwort})` : base;
   }
 
-  // ---------- AUSGABE-MAPPING (Ortsmarken → Codes) ----------
+  // ----- AUSGABE-MAPPING (Ortsmarken → Codes) -----
   const AUSGABE_MAP = {
     CH: ['Charlottenburg-Nord', 'Charlottenburg-Wilmersdorf', 'Charlottenburg', 'Westend'],
     HL: ['Alt-Hohenschönhausen', 'Falkenberg', 'Fennpfuhl', 'Friedrichsfelde', 'Karlshorst', 'Lichtenberg', 'Malchow', 'Neu-Hohenschönhausen', 'Rummelsburg', 'Wartenberg'],
@@ -1566,14 +1554,12 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   // Reverse-Index: Ortsname (kanonisch) -> Codes
   const CANONICAL_LOCALITY_TO_CODES = new Map();
   const LOCALITY_NAMES_CANONICAL = [];
-
   (function buildLocalityIndex() {
     const canon = (s) => s.toLowerCase()
       .normalize('NFC')
       .replace(/[.,:;!?)+\]]+$/g, '')
       .replace(/[\s\-]+/g, ' ')
       .trim();
-
     for (const [code, list] of Object.entries(AUSGABE_MAP)) {
       for (const raw of list) {
         const key = canon(raw);
@@ -1581,10 +1567,10 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
         CANONICAL_LOCALITY_TO_CODES.get(key).add(code);
       }
     }
-
     LOCALITY_NAMES_CANONICAL.push(...CANONICAL_LOCALITY_TO_CODES.keys());
-    LOCALITY_NAMES_CANONICAL.sort((a, b) => b.length - a.length); // längere Phrasen zuerst
+    LOCALITY_NAMES_CANONICAL.sort((a, b) => b.length - a.length);
   })();
+  const LOCALITY_KEYS_SET = new Set(LOCALITY_NAMES_CANONICAL);
 
   // Locality-Helper
   function canonLoc(s) {
@@ -1594,6 +1580,9 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
       .replace(/[\s\-]+/g, ' ')
       .trim();
   }
+  function isLocalityPhrase(s) {
+    return LOCALITY_KEYS_SET.has(canonLoc(s));
+  }
 
   // Anfangsphrase am Zeilenbeginn (3/2/1 Token) als Ortsmarke
   function matchLocalityAtStart(text, maxWords = SUPERRED_CONFIG.filename.prefixMaxWords || 3) {
@@ -1601,7 +1590,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     const cleaned = text.trim().replace(/^[\s"'„‚‘’"»«]+/, '');
     const tokens = cleaned.split(/\s+/).map(t => t.replace(/^["'„‚‘’"»«(]+|[)"'“”‚‘’»«:.;,!?]+$/g, ''));
     const n = Math.min(tokens.length, Math.max(1, maxWords));
-
     for (let take = n; take >= 1; take--) {
       const phrase = tokens.slice(0, take).join(' ');
       const key = canonLoc(phrase);
@@ -1612,21 +1600,19 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     }
     return null;
   }
-
   // Ortsmarken irgendwo im Text finden (erste Position hat Priorität)
   function findLocalitiesInText(text) {
     const res = [];
     if (!text) return res;
-
     const norm = (text ?? '')
       .normalize('NFC')
       .toLowerCase()
       .replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ')
-      .replace(/[–—]/g, '-');
-
+      .replace(/[–—]/g, '-')
+      .replace(/\s+/g, ' ');
     for (const nameKey of LOCALITY_NAMES_CANONICAL) {
-      const pattern = nameKey.replace(/ /g, '[\\s\\-]+'); // "Prenzlauer Berg" -> Prenzlauer[\s\-]+Berg
-      const re = new RegExp(`(^|\\b)${pattern}(?=\\b|[.:,;!?\\)])`, 'i');
+      const pattern = nameKey.replace(/ /g, '[\\s\\-]+');
+      const re = new RegExp(`(^|\\b)${pattern}(?=\\b|[.:,;!?\\)\]])`, 'i');
       const m = re.exec(norm);
       if (m) {
         res.push({
@@ -1636,7 +1622,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
         });
       }
     }
-
     res.sort((a, b) => a.index - b.index);
     return res;
   }
@@ -1656,11 +1641,11 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     const joiner = cfg.multiEditionJoiner || '#';
     const FALLBACK = cfg.fallbackAusgabeKuerzel || 'DL';
 
-    // Exklusiv-Regel
-    if (containsExclusiveDL(values)) {
-      return 'DL'; // ausschließlich DL
-    }
+    const blacklist = (SUPERRED_CONFIG.locality?.textScanBlacklist ?? []).map(s => canonLoc(s));
 
+    if (containsExclusiveDL(values)) {
+      return 'DL';
+    }
     const codesOrdered = [];
     const addCodes = (codes) => {
       for (const c of codes) {
@@ -1675,26 +1660,23 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
       const m = matchLocalityAtStart(values.subline);
       if (m) primary = m;
     }
-
     // 2) Falls nichts: Fließtext – Anfangsphrase
     if (!primary && values.body?.trim()) {
       const m = matchLocalityAtStart(values.body);
       if (m) primary = m;
     }
 
-    // 3) Falls immer noch nichts: Volltext-Scan
-    let firstTextHit = null;
-    const fullHits = findLocalitiesInText(values.body ?? '');
+    // 3) Volltext-Scan (mit Blacklist)
+    const fullHitsAll = findLocalitiesInText(values.body ?? '');
+    const fullHits = fullHitsAll.filter(h => !blacklist.includes(h.nameCanonical));
+
     if (!primary && fullHits.length) {
-      firstTextHit = fullHits[0];
-      addCodes(firstTextHit.codes);
+      addCodes(fullHits[0].codes);
     }
 
-    // Primär-Codes bevorzugt (Unterzeile > Body-Start)
     if (primary) addCodes(primary.codes);
 
-    // 4) Zusätzliche Codes aus dem Fließtext
-    //    WICHTIG: 'DL' nicht als Zusatz, wenn bereits andere Codes existieren.
+    // 4) Zusätzliche Codes aus dem Fließtext; 'DL' nicht als Zusatz, wenn andere vorhanden
     if (fullHits.length) {
       for (const hit of fullHits) {
         const codes = hit.codes.filter(c => c !== 'DL' || codesOrdered.length === 0);
@@ -1703,78 +1685,97 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
       }
     }
 
-    // 5) Fallback, wenn gar nichts gefunden
     if (codesOrdered.length === 0) codesOrdered.push(FALLBACK);
-
     return codesOrdered.join(joiner);
   }
 
-  // ---------- STICHWORT: Suffixe & Bindestrich-Komposita ----------
-  // Suffixe: -straße, -platz, -park, -bahnhof, -kreuz, -felde, -brücke
-  const STICHWORT_SUFFIXES = ['stift', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden', 'wahl', 'schul', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan'];
+  // ----- STICHWORT: Suffixe, Contains-Stems & Bindestrich-Komposita -----
+  // Auswahl erfolgt nach frühestem Auftreten im Text, nicht nach Reihenfolge der Muster.
+  const STICHWORT_SUFFIXES = [
+    'zentrum', 'stift', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden',
+    'wahl', 'schul', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'filiale',
+    'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan', 'wache', 'schaden', 'wettbewerb', 'lauf'
+  ];
+
+  // Helper: Kandidaten per Contains-Stems (inkl. Bindestrich-Komposita) einsammeln
+  function findContainsStemCandidates(cleaned) {
+    const cfg = SUPERRED_CONFIG.stichwort;
+    if (!cfg?.enableContainsStems) return [];
+
+    // Tokenizer: Wörter inkl. Bindestrichteile
+    const tokenRe = /\b([A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*)\b/g;
+    const ignoreSet = new Set((cfg.ignoreExact || []).map(s => s.toLowerCase().normalize('NFC')));
+
+    // Vorbereitete Regexe
+    const stemRegexes = (cfg.containsStems || []).map(x => ({
+      label: x.label,
+      re: new RegExp(x.pattern, 'i')
+    }));
+
+    const out = [];
+    let m;
+    while ((m = tokenRe.exec(cleaned)) !== null) {
+      const token = m[1];
+      const norm = token.toLowerCase().normalize('NFC');
+      if (ignoreSet.has(norm)) continue; // Schutz z. B. gegen 'baum'
+      for (const s of stemRegexes) {
+        if (s.re.test(norm)) { out.push({ idx: m.index, text: token }); break; }
+      }
+    }
+    return out;
+  }
 
   function extractStichwortFrom(text) {
     if (!text) return '';
-
     const cleaned = (text ?? '')
       .replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ')
       .replace(/[“”„‟"«»]/g, '"')
       .replace(/[‚‘’‛']/g, "'")
       .trim();
 
-    // 1) Suffix-Matches (inkl. Mehrwort- und Bindestrichvarianten), z. B. "Julius-Leber-Brücke", "Karl-Sass-Straße", "Hauptbahnhof", "Mauerpark"
-    //   - Erlaubt: Groß-/Kleinschreibung, Umlaute, mehrere Teile per Bindestrich
-    const suffixPattern =
-      new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)*-(?:${STICHWORT_SUFFIXES.join('|')}))\\b`, 'gi');
+    const escapedSuffixes = STICHWORT_SUFFIXES.map(s => s.replace(/[\-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+    const suffixPattern = new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)*-(?:${escapedSuffixes.join('|')}))\\b`, 'gi');
+    const singleWordSuffixPattern = new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]*(?:${escapedSuffixes.join('|')}))\\b`, 'gi');
 
-    const singleWordSuffixPattern =
-      new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]*(?:${STICHWORT_SUFFIXES.map(s=>s.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&')).join('|')})\\b)`, 'gi');
+    const hyphenCompositePattern = /\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)+)\b/g;
 
-    // 2) Allgemeine Bindestrich-Komposita (fallback), z. B. "Freizeit-Zentrum"
-    const hyphenCompositePattern =
-      /\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)+)\b/g;
-
-    // Versuch 1: Mehrteil mit Suffix (…-brücke/-straße/…)
     let m;
-    let candidates = [];
+    const candidates = [];
     while ((m = suffixPattern.exec(cleaned)) !== null) {
       candidates.push({ idx: m.index, text: m[1] });
     }
-    // Versuch 1b: Single-Word mit Suffix (Hauptbahnhof, Mauerpark)
     while ((m = singleWordSuffixPattern.exec(cleaned)) !== null) {
       candidates.push({ idx: m.index, text: m[1] });
     }
-    // Falls gefunden: nimm den frühesten Treffer
+
+    // NEW: Contains-Stems (Präfix/Suffix/Infix) – nach Suffixen einsortieren
+    const containsCands = findContainsStemCandidates(cleaned);
+    if (containsCands.length) candidates.push(...containsCands);
+
     if (candidates.length) {
-      candidates.sort((a,b)=>a.idx-b.idx);
-      return tidyStichwort(candidates[0].text);
+      candidates.sort((a, b) => a.idx - b.idx);
+      const firstNonLocality = candidates.find(c => !isLocalityPhrase(c.text));
+      if (firstNonLocality) return tidyStichwort(firstNonLocality.text);
     }
 
-    // Versuch 2: allgemeine Bindestrich-Komposita (Freizeit-Zentrum)
     const hyphens = [];
     while ((m = hyphenCompositePattern.exec(cleaned)) !== null) {
       hyphens.push({ idx: m.index, text: m[1] });
     }
     if (hyphens.length) {
-      hyphens.sort((a,b)=>a.idx-b.idx);
-      return tidyStichwort(hyphens[0].text);
+      hyphens.sort((a, b) => a.idx - b.idx);
+      const firstNonLocality = hyphens.find(h => !isLocalityPhrase(h.text));
+      if (firstNonLocality) return tidyStichwort(firstNonLocality.text);
     }
-
     return '';
   }
-
   function tidyStichwort(s) {
-    // Schlusszeichen ab, Mehrfach-Leerzeichen reduzieren
-    return s.replace(/[)\].,:;!?]+$/,'').replace(/\s+/g,' ').trim();
+    return s.replace(/[)\].,:;!?]+$/, '').replace(/\s+/g, ' ').trim();
   }
-
   function extractStichwort(values) {
-    // Exklusive DL-Fälle -> kein Stichwort
     if (containsExclusiveDL(values)) return '';
-    // 1) Unterzeile priorisiert
     let sw = extractStichwortFrom(values.subline);
     if (sw) return sw;
-    // 2) Fallback: Body (nur den Beginn durchsuchen, um Ausreißer zu vermeiden)
     const bodyStart = (values.body ?? '').slice(0, 280);
     sw = extractStichwortFrom(bodyStart);
     return sw || '';
@@ -1782,7 +1783,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
 
   // ====== KONDITIONS-OVERLAY (nur bei Überschreib-Warnung) ======
   let overlayEl = null;
-
   function showConfirmOverlay({ currentValue, proposedValue, kwPreview, kuerzelPreview, onConfirm }) {
     try {
       if (overlayEl) overlayEl.remove();
@@ -1811,7 +1811,7 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
           <span style="margin-left:10px"><b>KW</b>: ${escapeHTML(kwPreview || '(inaktiv)')}</span>
         </div>
         <div style="margin-top:10px">
-          <button id="sr_ok"   style="${btn('#1b8d3d')}">Überschreiben</button>
+          <button id="sr_ok" style="${btn('#1b8d3d')}">Überschreiben</button>
           <button id="sr_cancel" style="${btn('#3a3a3a')}">Abbrechen</button>
         </div>
       `;
@@ -1823,23 +1823,18 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
       alert('SuperRED: Overlay-Fehler (siehe Konsole).');
     }
   }
-
   function escapeHTML(s) {
-    return (s ?? '').replace(/[<>&'"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&#39;','"':'&quot;'}[c]));
+    return (s ?? '').replace(/[<>&'\"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp','\'':'&#39;','\"':'&quot;'}[c]));
   }
 
-  // ===== Hauptbefüllung (mit Stichwort-Regel und bedingter Overlay-Abfrage) =====
+  // ===== Hauptbefüllung =====
   function computeFinalFileName(values, targetInputEl) {
     const cfg = SUPERRED_CONFIG.filename;
 
-    // Nummer bestimmen
-    const nummerExistingExact = getExistingNumberFromField(targetInputEl); // nur wenn exakt 8-stellig allein
-    const nummer =
-      nummerExistingExact ||
-      guessEightDigitNumber([values.headline, values.subline, values.body]) ||
-      (cfg.requireEightDigitId ? (cfg.missingIdPlaceholder || '') : '');
+    const nummerExisting = getExistingNumberFromField(targetInputEl);
+    const nummerGuessed  = guessEightDigitNumber([values.headline, values.subline, values.body]);
+    const nummer = nummerExisting || nummerGuessed || (cfg.requireEightDigitId ? (cfg.missingIdPlaceholder || '') : '');
 
-    // Headline-Fallback-Kette
     let baseHeadline = values.headline?.trim() || values.subline?.trim() || '';
     if (!baseHeadline) {
       const body = (values.body ?? '').replace(/\s+/g,' ').trim();
@@ -1847,17 +1842,14 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     }
     const headline = safeHeadline(baseHeadline);
 
-    // Stichwort gemäß Regelwerk
     const stichwort = extractStichwort(values);
 
-    // KW gemäß Modus
     const kw = (cfg.useKW)
       ? (cfg.kwMode === 'redaktionsschluss'
-          ? redaktionsKWString(new Date(), cfg.redaktionsschlussWeekday)
-          : isoWeekString(new Date()))
+        ? redaktionsKWString(new Date(), cfg.redaktionsschlussWeekday)
+        : isoWeekString(new Date()))
       : '';
 
-    // Ausgabenkürzel dynamisch
     const ausgabeKuerzelDyn = computeAusgabeKuerzel(values);
 
     return {
@@ -1872,7 +1864,6 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     setInputValueReactSafe(target, text);
     try { target.selectionStart = target.selectionEnd = target.value.length; } catch {}
     console.log('[SuperRED] Artikelbeschreibung (final) geschrieben. Alt:', old, 'Neu:', target.value);
-    flash(target, true);
     return true;
   }
 
@@ -1886,17 +1877,14 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     const current = (target.value ?? '').toString().trim();
     const onlyEightDigits = /^\d{8}$/.test(current) || current === '';
 
-    // Werte erfassen (wir brauchen sie in jedem Fall für den neuen Titel)
     const values = await captureAllThree();
     const { text: proposed, kw, kuerzel } = computeFinalFileName(values, target);
 
     if (onlyEightDigits) {
-      // Leeres Feld oder exakt 8-stellige Nummer -> direkt schreiben
       writeFinalToTarget(target, proposed);
       return;
     }
 
-    // Sonst: Bestätigungs-Overlay zeigen
     showConfirmOverlay({
       currentValue: current,
       proposedValue: proposed,
@@ -1907,17 +1895,38 @@ GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
   }
 
   // ===== Hotkeys =====
-  // STRG+ALT+R befüllt (Overlay nur wenn nötig)
   window.addEventListener('keydown', (e) => {
     const k = e.key?.toLowerCase?.() ?? '';
     const fill = (e.ctrlKey && e.altKey && k === 'r');
     if (fill) { e.preventDefault(); actionFillWithConditionalOverlay(); }
   }, true);
 
-  // ===== (Optional) Tampermonkey-Menü =====
-  // if (typeof GM_registerMenuCommand === 'function') {
-  //  GM_registerMenuCommand('SuperRED: Artikelbeschreibung befüllen (STRG+ALT+R)', actionFillWithConditionalOverlay);
-  // }
 })();
+
+    // ---- Menü: Anzeigen / Zurücksetzen / Diagnose ----------------------------
+
+
+    GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
+    alert(
+        "SuperMAX Tastaturkürzel:\n" +
+        "STRG+S → Grundregeln anwenden\n" +
+        "STRG+ALT+S → #-Textphrasen ersetzen\n\n" +
+        "SuperERASER Tastaturkürzel:\n" +
+        "STRG+E → Umbrüche, Makros und Links entfernen\n\n" +
+        "SuperLINK Tastaturkürzel:\n" +
+        "STRG+ALT+L → URL kürzen mit YOURLS\n" +
+        "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
+        "SuperRED Tastaturkürzel:\n" +
+        "STRG+ALT+R → Artikelbeschreibung erzeugen\n\n" +
+        "Auch hilfreich im PPS Texteditor:\n" +
+        "STRG+A > Alles markieren\n" +
+        "STRG+C > Auswahl kopieren\n" +
+        "STRG+X > Auswahl ausschneiden\n" +
+        "STRG+V > Auswahl einfügen\n" +
+        "STRG+Z > Aktion rückgängig machen\n" +
+        "STRG+Y > Aktion wieder herstellen\n" +
+        "STRG+SHIFT+S > Speichern und schließen\n"
+    );
+});
 
 })();
