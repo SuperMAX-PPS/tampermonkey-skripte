@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.3.6
+// @name         SuperMAX 3.3.7
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.3.6
+// @version      3.3.7
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. SuperRED erzeugt Artikelbeschreibung per STRG+R. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.3.6 gestartet");
+    console.log("SuperMAX v3.3.7 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -56,7 +56,7 @@ const baseReplacements = [
     [/\b(\d{1,4})\s*[–-]\s*(\d{1,4})\b/g, "$1-$2"], // Gedankenstrich zwischen zwei Zahlen wird Bindestrich
     [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s*–\s*([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Gedankenstrich mit optionalen Leerzeichen wird Gedankenstrich mit geschütztem Leerzeichen
     [/(\b[a-zA-ZäöüÄÖÜß]{2,})\s-\s([a-zA-ZäöüÄÖÜß]{2,}\b)/g, "$1\u202F–\u202F$2"], // Bindestrich mit Leerzeichen wird Gedankenstrich mit geschütztem Leerzeichen
-    [/(?<=\b[A-Za-zÄÖÜäöüß]{3,})\s*\/\s*(?=[A-Za-zÄÖÜäöüß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern mit geschützten Leerzeichen
+    [/(?<=\b[a-zA-ZäöüÄÖÜß]{3,})\s*\/\s*(?=[a-zA-ZäöüÄÖÜß]{3,}\b)/g, "\u202F/\u202F"], // Slash zwischen zwei Wörtern mit geschützten Leerzeichen
     [/(\(?\d+)(\s*)(\/)(\s*)(\(?\d+)/g, "$1$3$5"], // Slash zwischen zwei Zahlen ohne Leerzeichen
 
     // Autorenkürzel Debugging
@@ -404,13 +404,13 @@ const baseReplacements = [
     [/\((\d+(?:,\d+)?)\s*Milliliter\)/g, "($1 ml)"],
 
     // Längenmaße (mit Lookaheads zur Absicherung)
-    [/\b(\d+(?:,\d+)?)\s*(km)(?![\/²³a-zA-Z])\b/g, "$1 Kilometer"],
+    [/\b(\d+(?:,\d+)?)\s*(km)(?![\/²³a-zA-ZäöüÄÖÜß])\b/g, "$1 Kilometer"],
     [/\((\d+(?:,\d+)?)\s*Kilometer\)/g, "($1 km)"],
-    [/\b(\d+(?:,\d+)?)\s*(m)(?![²³\/a-zA-Z])\b/g, "$1 Meter"],
+    [/\b(\d+(?:,\d+)?)\s*(m)(?![²³\/a-zA-ZäöüÄÖÜß])\b/g, "$1 Meter"],
     [/\((\d+(?:,\d+)?)\s*Meter\)/g, "($1 m)"],
-    [/\b(\d+(?:,\d+)?)\s*(cm)(?![²³a-zA-Z])\b/g, "$1 Zentimeter"],
+    [/\b(\d+(?:,\d+)?)\s*(cm)(?![²³a-zA-ZäöüÄÖÜß])\b/g, "$1 Zentimeter"],
     [/\((\d+(?:,\d+)?)\s*Zentimeter\)/g, "($1 cm)"],
-    [/\b(\d+(?:,\d+)?)\s*(mm)(?![²³a-zA-Z])\b/g, "$1 Millimeter"],
+    [/\b(\d+(?:,\d+)?)\s*(mm)(?![²³a-zA-ZäöüÄÖÜß])\b/g, "$1 Millimeter"],
     [/\((\d+(?:,\d+)?)\s*Millimeter\)/g, "($1 mm)"],
     [/\b(\d+(?:,\d+)?)\s*(µm)\b/g, "$1 Mikrometer"],
     [/\((\d+(?:,\d+)?)\s*Mikrometer\)/g, "($1 µm)"],
@@ -418,17 +418,17 @@ const baseReplacements = [
     [/\((\d+(?:,\d+)?)\s*Nanometer\)/g, "($1 nm)"],
 
     // Gewichte
-    [/\b(\d+(?:,\d+)?)\s*(t|To\.)(?![a-zA-Z])\b/g, "$1 Tonnen"],
+    [/\b(\d+(?:,\d+)?)\s*(t|To\.)(?![a-zA-ZäöüÄÖÜß])\b/g, "$1 Tonnen"],
     [/\((\d+(?:,\d+)?)\s*Tonn(e|en?)\)/g, "($1 t)"],
-    [/\b(\d+(?:,\d+)?)\s*(kg)(?![a-zA-Z])\b/g, "$1 Kilogramm"],
+    [/\b(\d+(?:,\d+)?)\s*(kg)(?![a-zA-ZäöüÄÖÜß])\b/g, "$1 Kilogramm"],
     [/\((\d+(?:,\d+)?)\s*Kilogramm\)/g, "($1 kg)"],
-    [/\b(\d+(?:,\d+)?)\s*(g)(?![a-zA-Z])\b/g, "$1 Gramm"],
+    [/\b(\d+(?:,\d+)?)\s*(g)(?![a-zA-ZäöüÄÖÜß])\b/g, "$1 Gramm"],
     [/\((\d+(?:,\d+)?)\s*Gramm\)/g, "($1 g)"],
-    [/\b(\d+(?:,\d+)?)\s*(mg)(?![a-zA-Z])\b/g, "$1 Milligramm"],
+    [/\b(\d+(?:,\d+)?)\s*(mg)(?![a-zA-ZäöüÄÖÜß])\b/g, "$1 Milligramm"],
     [/\((\d+(?:,\d+)?)\s*Milligramm\)/g, "($1 mg)"],
-    [/\b(\d+(?:,\d+)?)\s*(µg)(?![a-zA-Z])\b/g, "$1 Mikrogramm"],
+    [/\b(\d+(?:,\d+)?)\s*(µg)(?![a-zA-ZäöüÄÖÜß])\b/g, "$1 Mikrogramm"],
     [/\((\d+(?:,\d+)?)\s*Mikrogramm\)/g, "($1 µg)"],
-    [/\b(\d+(?:,\d+)?)\s*(ng)(?![a-zA-Z])\b/g, "$1 Nanogramm"],
+    [/\b(\d+(?:,\d+)?)\s*(ng)(?![a-zA-ZäöüÄÖÜß])\b/g, "$1 Nanogramm"],
     [/\((\d+(?:,\d+)?)\s*Nanogramm\)/g, "($1 ng)"],
 
     // Speicherkapazitäten
@@ -452,10 +452,10 @@ const baseReplacements = [
     [/(\d+)\s*(ct|Ct)/g, "$1 Cent"],
 
     // Abkürzungen
-    [/\bu\.\s*a\.(?![a-zA-Z])/g, "unter anderem"],
-    [/\bu\.\s*ä\.(?![a-zA-Z])/g, "und ähnliche"],
+    [/\bu\.\s*a\.(?![a-zA-ZäöüÄÖÜß])/g, "unter anderem"],
+    [/\bu\.\s*ä\.(?![a-zA-ZäöüÄÖÜß])/g, "und ähnliche"],
     [/\bu\.(?!\s*(a\.|ä\.|s\.|k\.|v\.|w\.|z\.|n\.|m\.|l\.|r\.|t\.|d\.|b\.|c\.|x\.|y\.|j\.|h\.|g\.|f\.|e\.|q\.|p\.))\b/g, "und"],
-    [/\bo\.(?![a-zA-Z])\b/g, "oder"],
+    [/\bo\.(?![a-zA-ZäöüÄÖÜß])\b/g, "oder"],
     [/\b(abzgl\.|abzügl\.)/g, "abzüglich"],
     [/\b[Bb][Aa][Ff][Öö][Gg]\b/g, "BAföG"],
     [/\bbzw\./g, "beziehungsweise"],
@@ -552,6 +552,7 @@ const baseReplacements = [
     [/\b(Long Drink|Long-Drink)/g, "Longdrink"],
     [/\bLoveparade/g, "Love-Parade"],
     [/\bmacht keinen Sinn\b/g, "ergibt keinen Sinn"],
+    [/\bmacht Sinn\b/g, "ergibt Sinn"],
     [/\bMund-zu-Mund-Propaganda\b/g, "Mundpropaganda"],
     [/\bOstersonnabend/g, "Karsamstag"],
     [/\bParagraph/g, "Paragraf"],
@@ -559,7 +560,7 @@ const baseReplacements = [
     [/\bPoetryslam/g, "Poetry-Slam"],
     [/\b(Prime-Time|Prime Time)/g, "Primetime"],
     [/\bRiesterrente/g, "Riester-Rente"],
-    [/\bRock'n'Roll/g, "Rock 'n' Roll"],
+    [/\bRock'n'Roll/g, "Rock\u202F'n'\u202FRoll"],
     [/\bRock-and-Roll/g, "Rock and Roll"],
     [/\b(Rukola|Rukolla|Rukkolla|Rukkola)/g, "Rucola"],
     [/\bscheinbar/g, "anscheinend"],
@@ -583,8 +584,8 @@ const baseReplacements = [
     [/\b(https:\s*\/\/\s*|http:\s*\/\/\s*)/g, ""],
     [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, "/$2/$4"], // zwei Slashs in URL ohne Leerzeichen
     [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)/g, "/$2/"], // zwei Slashs in URL ohne Leerzeichen
-    [/(\.)([a-zA-Z]{2,6})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, ".$2/$4"], // ein Slash nach Domainendung ohne Leerzeichen
-    [/(\.com|\.de|\.info|\.berlin)(\/\s|\/\.)/g, "$1"],
+    [/(\.)([a-zA-ZäöüÄÖÜß]{2,6})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, ".$2/$4"], // ein Slash nach Domainendung ohne Leerzeichen
+    [/(\.com|\.de|\.info|\.berlin)(\/\s|\/\.)/g, "$1."],
 
     // Finishing
     [/\u0020{2,}/g, " "], // Mehrere Leerzeichen reduzieren
@@ -1313,6 +1314,7 @@ document.addEventListener('keydown', function(e) {
         { label: 'garten', pattern: 'garten' },
         { label: 'heim', pattern: 'heim' },
         { label: 'hof', pattern: 'hof' },
+        { label: 'kiez', pattern: 'kiez' },
         { label: 'kinder', pattern: 'kinder' },
         { label: 'kirch', pattern: 'kirch' },
         { label: 'könig', pattern: 'könig' },
@@ -1725,7 +1727,7 @@ document.addEventListener('keydown', function(e) {
     'zentrum', 'markt', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden',
     'wahl', 'schule', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'filiale',
     'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan', 'wache', 'feuer', 'wettbewerb', 'lauf', 'denkmal',
-    'stadtspaziergang', 'chance', 'krankheit', 'schloss', 'führung', 'biotop', 'brand', 'treff', 'streik', 'betreuung',
+    'stadtspaziergang', 'könig', 'krankheit', 'schloss', 'führung', 'biotop', 'kiez', 'treff', 'streik', 'betreuung',
     'bühne', 'tag', 'woche', 'monat', 'jahr', 'festival', 'burg', 'berg', 'stiftung', 'ehrung', 'ausschreibung', 'weg'
   ];
 
