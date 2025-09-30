@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.3.7
+// @name         SuperMAX 3.4.1
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.3.7
+// @version      3.4.1
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. SuperRED erzeugt Artikelbeschreibung per STRG+R. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.3.7 gestartet");
+    console.log("SuperMAX v3.4.1 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -307,7 +307,6 @@ const baseReplacements = [
     [/\.\s*10\.(\d{2,4})\b/g, ". Oktober"],
     [/\.\s*11\.(\d{2,4})\b/g, ". November"],
     [/\.\s*12\.(\d{2,4})\b/g, ". Dezember"],
-    [/\.\s*0?1\.(\d{2,4})\b/g, ". Januar"],
     [/\b0([1-9])\. (?=Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)/g, "$1. "],
     [/\b(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*[-–]\s*(\d{1,2})/g, "$1 bis $2"],
 
@@ -697,6 +696,7 @@ const hashtagReplacements = [
     [/#LEA/g, "Landesamt für Einwanderung (LEA)"],
     [/#MABB/g, "Medienanstalt Berlin-Brandenburg (MABB)"],
     [/#MDK/g, "Medizinischer Dienst der Krankenversicherung (MDK)"],
+    [/#MEK/g, "Museum Europäischer Kulturen (MEK)"],
     [/#MRT/g, "Magnetresonanztomografie (MRT)"],
     [/#NABU/g, "NABU (Naturschutzbund Deutschland)"],
     [/#NBB/g, "Netzgesellschaft Berlin-Brandenburg (NBB)"],
@@ -1136,7 +1136,7 @@ const hashtagReplacements = [
     }
   });
 
-    // SuperERASER für PPS in PEIQ (Unerwünschte Absätze und Makros entfernen mit STRG + E)
+// SuperERASER für PPS in PEIQ (Unerwünschte Absätze und Makros entfernen mit STRG + E)
 
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.key === 'e') {
@@ -1168,7 +1168,8 @@ const hashtagReplacements = [
         }
     });
 
-// SuperLINK für PPS in PEIQ (YOURLS-Tool-Integration für ShortLinks per STRG + L)
+// SuperLINK für PPS in PEIQ (YOURLS-Tool-Integration für ShortLinks per STRG+ALT+L)
+
 document.addEventListener('keydown', function(e) {
   if ((e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') ||
       (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'l')) {
@@ -1239,31 +1240,28 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// ---------------------------------------------------------------------
-// SuperRED v0.6.6 (2025-09-16)
-// ---------------------------------------------------------------------
+// SuperRED für PPS in PEIQ per Shortcut STRG+ALT+R
+// Befüllt Feld "Artikelbeschreibung (Dateiname)" mit KW, Ausgabenkürzel, Überschrift (Stichwort)
+// Befüllt Feld "Notizen" mit Termin-Check, Phrasen-Check und TAGs aus Textanalyse
 
 (function () {
   'use strict';
-  console.log('[SuperRED] v0.6.6 geladen @', location.href);
+  console.log('[SuperRED] v1.6.5 geladen @', location.href);
 
   // ===== Konfiguration =====
   const SUPERRED_CONFIG = {
-    // Primäre, eindeutige Selektoren aus Deinem Listenmenü
     navSelectors: {
       headline: '#jsFragments #texts li.jsModuleItem.moduleFormListItem.moduleFormItemSelect[data-label="headline"]',
       subline:  '#jsFragments #texts li.jsModuleItem.moduleFormListItem.moduleFormItemSelect[data-label="subheadline"]',
       body:     '#jsFragments #texts li.jsModuleItem.moduleFormListItem.moduleFormItemSelect[data-label="text"]'
     },
-    // Fallback-Synonyme
     labelFallbacks: {
       headline: ['überschrift', 'headline', 'titel'],
       subline:  ['unterzeile', 'subheadline', 'vorspann', 'teaser'],
       body:     ['text', 'fließtext', 'body', 'artikeltext']
     },
-    // Ziel-Feld (Artikelbeschreibung/Dateiname) – mit #moduleTitle als Priorität 1
     articleDescriptionSelectors: [
-      '#moduleTitle', // <-- Priorität 1
+      '#moduleTitle',
       '#positionInfo',
       'input[name="fileName"]',
       'input[placeholder*="Dateiname" i]',
@@ -1271,73 +1269,57 @@ document.addEventListener('keydown', function(e) {
       'input[aria-label*="Dateiname" i]'
     ],
     timeouts: { pmMount: 6000, between: 120 },
-
-    // ===== Dateiname/Format-Settings =====
     filename: {
-      // --- KW-Steuerung ---
       useKW: true,
       kwMode: 'redaktionsschluss', // 'redaktionsschluss' | 'iso'
-      redaktionsschlussWeekday: 1, // 1 = Montag (0=So..6=Sa)
-
-      // --- Ausgabenkürzel ---
-      multiEditionJoiner: '#', // mehrere Codes: "#KT#MI"
+      redaktionsschlussWeekday: 1,
+      multiEditionJoiner: '#',
       maxEditionCodes: 3,
       fallbackAusgabeKuerzel: 'DL',
-      prefixMaxWords: 3, // Ortsmarke am Anfang: bis zu N Wörter prüfen
-
-      // --- übrige Regeln ---
-      joiner: '_', // Trenner zwischen Nummer/Headline
+      prefixMaxWords: 3,
+      joiner: '_',
       requireEightDigitId: false,
       missingIdPlaceholder: ''
     },
-
-    // Steuerung für Blacklist im Volltext-Scan von Ortsmarken
-    locality: {
-      textScanBlacklist: ['mitte']
-    },
-
-    // NEW: Stichwort-Logik
+    locality: { textScanBlacklist: ['mitte'] },
     stichwort: {
-      // Falls true, wird zusätzlich zur Suffix-Logik nach "Stems" gesucht, die
-      // irgendwo im Wort vorkommen (präfix/suffix/infix), inkl. Bindestrich-Komposita.
       enableContainsStems: true,
-      // Basis-Stems (werden intern in robuste Regex-Varianten überführt):
       containsStems: [
-        { label: 'bad', pattern: 'b(?:a|ä)d(?:er)?' },
-        { label: 'bahnhof', pattern: 'bahnhof' },
-        { label: 'bau', pattern: 'bau' },
-        { label: 'brücke', pattern: 'brücke' },
-        { label: 'bühne', pattern: 'bühne' },
-        { label: 'club', pattern: 'club' },
-        { label: 'denkmal', pattern: 'denkmal' },
-        { label: 'fest', pattern: 'fest' },
-        { label: 'garten', pattern: 'garten' },
-        { label: 'heim', pattern: 'heim' },
-        { label: 'hof', pattern: 'hof' },
-        { label: 'kiez', pattern: 'kiez' },
-        { label: 'kinder', pattern: 'kinder' },
-        { label: 'kirch', pattern: 'kirch' },
-        { label: 'könig', pattern: 'könig' },
-        { label: 'kreuz', pattern: 'kreuz' },
-        { label: 'lauf', pattern: 'lauf' },
-        { label: 'markt', pattern: 'markt' },
-        { label: 'messe', pattern: 'messe' },
-        { label: 'park', pattern: 'park' },
-        { label: 'plan', pattern: 'plan' },
-        { label: 'platz', pattern: 'platz' },
-        { label: 'schaden', pattern: 'schaden' },
-        { label: 'schul', pattern: 'schul' },
-        { label: 'schloss', pattern: 'schlo(?:ß|ss)?' },
-        { label: 'stadion', pattern: 'stadion' },
-        { label: 'straße', pattern: 'stra(?:ß|ss)e(?:n)?' }, // deckt 'Straße', 'Strasse', 'Straßen', 'Strassen'
-        { label: 'treff', pattern: 'treff' },
-        { label: 'turm', pattern: 'turm' },
-        { label: 'wahl', pattern: 'wahl' },
-        { label: 'weg', pattern: 'weg' },
+        { label: 'bad',        pattern: 'b(?:a|ä)d(?:er)?' },
+        { label: 'bahnhof',    pattern: 'bahnhof' },
+        { label: 'bau',        pattern: 'bau' },
+        { label: 'brücke',     pattern: 'brücke' },
+        { label: 'bühne',      pattern: 'bühne' },
+        { label: 'club',       pattern: 'club' },
+        { label: 'denkmal',    pattern: 'denkmal' },
+        { label: 'fest',       pattern: 'fest' },
+        { label: 'garten',     pattern: 'garten' },
+        { label: 'heim',       pattern: 'heim' },
+        { label: 'hof',        pattern: 'hof' },
+        { label: 'kiez',       pattern: 'kiez' },
+        { label: 'kinder',     pattern: 'kinder' },
+        { label: 'kirch',      pattern: 'kirch' },
+        { label: 'könig',      pattern: 'könig' },
+        { label: 'kreuz',      pattern: 'kreuz' },
+        { label: 'lange\u0020nacht',       pattern: 'lange\u0020nacht' },
+        { label: 'lauf',       pattern: 'lauf' },
+        { label: 'markt',      pattern: 'markt' },
+        { label: 'messe',      pattern: 'messe' },
+        { label: 'park',       pattern: 'park' },
+        { label: 'plan',       pattern: 'plan' },
+        { label: 'platz',      pattern: 'platz' },
+        { label: 'schaden',    pattern: 'schaden' },
+        { label: 'schul',      pattern: 'schul' },
+        { label: 'schloss',    pattern: 'schlo(?:ß|ss)' },
+        { label: 'stadion',    pattern: 'stadion' },
+        { label: 'straße',     pattern: 'stra(?:ß|ss)e(?:n)?' },
+        { label: 'treff',      pattern: 'treff' },
+        { label: 'turm',       pattern: 'turm' },
+        { label: 'wahl',       pattern: 'wahl' },
+        { label: 'weg',        pattern: 'weg' },
         { label: 'wettbewerb', pattern: 'wettbewerb' },
-        { label: 'zentrum', pattern: 'zentrum' },
+        { label: 'zentrum',    pattern: 'zentrum' }
       ],
-      // Unerwünschte Volltreffer exakt ausschließen (lowercase; nach NFC-Norm):
       ignoreExact: ['bauer', 'gogol-grützner']
     }
   };
@@ -1345,24 +1327,22 @@ document.addEventListener('keydown', function(e) {
   // ===== Utilities =====
   const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const qs  = (sel, root = document) => root.querySelector(sel);
-  const normalizeSpace = (s) => (s ?? '')
-    .replace(/[\u00A0\u2005]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  const normalizeSpace = (s) => (s ?? '').replace(/[\u00A0\u2005]/g, ' ').replace(/\s+/g, ' ').trim();
+
   const isVisible = (el) => {
     if (!el) return false;
     const r = el.getBoundingClientRect();
     const st = getComputedStyle(el);
     return (r.width && r.height) && st.visibility !== 'hidden' && st.display !== 'none' && st.opacity !== '0';
   };
-  // ProseMirror → Text (Links zu reinem Text)
+
   const textFromProseMirror = (el) => {
     if (!el) return '';
     const clone = el.cloneNode(true);
     clone.querySelectorAll('a').forEach(a => a.replaceWith(document.createTextNode(a.textContent ?? '')));
     return normalizeSpace(clone.innerText ?? clone.textContent ?? '');
   };
-  // Deep query (offene ShadowRoots)
+
   const deepQSA = (selector, root = document) => {
     const out = new Set();
     const walk = (node) => {
@@ -1378,7 +1358,7 @@ document.addEventListener('keydown', function(e) {
     const list = deepQSA(selector, root);
     return list.length ? list[0] : null;
   };
-  // Wait / Click
+
   function waitFor(checkFn, timeoutMs = 3000, intervalMs = 80) {
     return new Promise((resolve, reject) => {
       const start = performance.now();
@@ -1394,7 +1374,6 @@ document.addEventListener('keydown', function(e) {
     try { fire('pointerdown'); fire('mousedown'); fire('mouseup'); fire('click'); } catch { el.click?.(); }
   }
 
-  // Buttons finden
   function findNavButtonsSpecific() {
     return {
       headline: deepQS(SUPERRED_CONFIG.navSelectors.headline) ?? qs(SUPERRED_CONFIG.navSelectors.headline),
@@ -1408,18 +1387,16 @@ document.addEventListener('keydown', function(e) {
       ...deepQSA('button, [role="button"], a, .nav-item, .tab, .toggleBox, .toggleBoxIcon, [data-uid]')
     ].filter(isVisible);
     const norm = (t) => normalizeSpace(t).toLowerCase();
-    // exakt
     for (const el of candidates) {
-      const txt  = norm(el.textContent ?? '');
+      const txt = norm(el.textContent ?? '');
       const aria = norm(el.getAttribute?.('aria-label') ?? el.getAttribute?.('data-label') ?? '');
       for (const label of options) {
         const l = norm(label);
         if ((txt && txt === l) || (aria && aria === l)) return el;
       }
     }
-    // enthält
     for (const el of candidates) {
-      const txt  = norm(el.textContent ?? '');
+      const txt = norm(el.textContent ?? '');
       const aria = norm(el.getAttribute?.('aria-label') ?? el.getAttribute?.('data-label') ?? '');
       for (const label of options) {
         const l = norm(label);
@@ -1440,7 +1417,6 @@ document.addEventListener('keydown', function(e) {
     };
   }
 
-  // Aktiver ProseMirror
   function getActivePM() {
     const pms = deepQSA('.ProseMirror[contenteditable="true"]').filter(isVisible);
     return pms[0] ?? null;
@@ -1456,7 +1432,6 @@ document.addEventListener('keydown', function(e) {
     return pm;
   }
 
-  // Sequenzielles Auslesen
   async function captureAllThree() {
     const btns = findAllNavButtons();
     console.log('[SuperRED] Buttons gefunden:', btns);
@@ -1467,13 +1442,10 @@ document.addEventListener('keydown', function(e) {
       { key: 'body',     label: 'Text',        btn: btns.body     }
     ];
     for (const step of steps) {
-      if (!step.btn) {
-        console.warn('[SuperRED] Kein Button für', step.label, 'gefunden – überspringe.');
-        continue;
-      }
+      if (!step.btn) { console.warn('[SuperRED] Kein Button für', step.label, 'gefunden – überspringe.'); continue; }
       try {
         clickChain(step.btn);
-        const pm  = await waitForActivePM(step.label);
+        const pm = await waitForActivePM(step.label);
         const txt = textFromProseMirror(pm);
         result[step.key] = txt;
       } catch (err) {
@@ -1483,8 +1455,7 @@ document.addEventListener('keydown', function(e) {
     return result;
   }
 
-  // ===== Artikelbeschreibung (Dateiname) – zielgenau auf #moduleTitle =====
-  // React-sicherer Setter für <input>
+  // ===== Artikelbeschreibung (Dateiname) =====
   function setInputValueReactSafe(input, value) {
     const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
     const setter = desc && desc.set;
@@ -1495,57 +1466,39 @@ document.addEventListener('keydown', function(e) {
     input.dispatchEvent(new Event('blur',   { bubbles: true }));
   }
   function findArticleDescriptionInput() {
-    // Priorisierte Suche (zuerst #moduleTitle)
-    for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) {
-      const el = qs(s);
-      if (el) return el;
-    }
-    for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) {
-      const el = deepQS(s);
-      if (el) return el;
-    }
+    for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) { const el = qs(s); if (el) return el; }
+    for (const s of SUPERRED_CONFIG.articleDescriptionSelectors) { const el = deepQS(s); if (el) return el; }
     return null;
   }
 
-  // ----- KW-Helfer -----
   function isoWeekString(d) {
-    const date  = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    const dayNum = (date.getUTCDay() || 7);
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dow = date.getUTCDay();
+    const dayNum = (dow === 0 ? 7 : dow);
     date.setUTCDate(date.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
     const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
     return String(weekNo).padStart(2, '0');
   }
-  function nextWeekday(date, weekday /* 0=So..6=Sa */) {
+  function nextWeekday(date, weekday) {
     const d = new Date(date);
     const day = d.getDay();
     let delta = (weekday - day + 7) % 7;
-    if (delta === 0) delta = 7; // "nächster" Wochentag, nicht derselbe
+    if (delta === 0) delta = 7;
     d.setDate(d.getDate() + delta);
     return d;
   }
-  function redaktionsKWString(date, weekday /* default 1 = Mo */) {
+  function redaktionsKWString(date, weekday) {
     const d = new Date(date);
     const day = d.getDay();
     const rsDay = (typeof weekday === 'number') ? weekday : 1;
-    if (day === rsDay) {
-      return isoWeekString(d);
-    } else {
-      const nm = nextWeekday(d, rsDay);
-      return isoWeekString(nm);
-    }
+    if (day === rsDay) return isoWeekString(d);
+    const nm = nextWeekday(d, rsDay);
+    return isoWeekString(nm);
   }
-
-  // ----- Einfache Headline-/Nummern-Helfer -----
-  function safeHeadline(h) {
-    const s = normalizeSpace(h ?? '');
-    return s.replace(/\s+/g, ' ').trim();
-  }
+  function safeHeadline(h) { return normalizeSpace(h ?? '').replace(/\s+/g, ' ').trim(); }
   function guessEightDigitNumber(list) {
-    for (const s of list) {
-      const m = (s ?? '').match(/(^|[^0-9])(\d{8})(?!\d)/);
-      if (m) return m[2];
-    }
+    for (const s of list) { const m = (s ?? '').match(/(^|[^0-9])(\d{8})(?!\d)/); if (m) return m[2]; }
     return '';
   }
   function getExistingNumberFromField(inputEl) {
@@ -1553,19 +1506,16 @@ document.addEventListener('keydown', function(e) {
     const m = v.match(/(^|[^0-9])(\d{8})(?!\d)/);
     return m ? m[2] : '';
   }
-
-  // ----- Dateiname bauen -----
   function buildFileName({ kw, kuerzel, nummer, headline, stichwort }) {
     const parts = [];
     if (kw) parts.push(kw);
     parts.push(`#${kuerzel}`);
-    if (nummer)   parts.push(SUPERRED_CONFIG.filename.joiner + nummer);
+    if (nummer) parts.push(SUPERRED_CONFIG.filename.joiner + nummer);
     parts.push(SUPERRED_CONFIG.filename.joiner + headline);
     const base = parts.join('');
     return stichwort ? `${base} (${stichwort})` : base;
   }
 
-  // ----- AUSGABE-MAPPING (Ortsmarken → Codes) -----
   const AUSGABE_MAP = {
     CH: ['Charlottenburg-Nord', 'Charlottenburg-Wilmersdorf', 'Charlottenburg', 'Westend'],
     HL: ['Alt-Hohenschönhausen', 'Falkenberg', 'Fennpfuhl', 'Friedrichsfelde', 'Karlshorst', 'Lichtenberg', 'Malchow', 'Neu-Hohenschönhausen', 'Rummelsburg', 'Wartenberg'],
@@ -1573,7 +1523,7 @@ document.addEventListener('keydown', function(e) {
     KT: ['Adlershof', 'Altglienicke', 'Alt-Treptow', 'Baumschulenweg', 'Bohnsdorf', 'Friedrichshagen', 'Grünau', 'Johannisthal', 'Köpenick', 'Müggelheim', 'Niederschöneweide', 'Oberschöneweide', 'Plänterwald', 'Rahnsdorf', 'Schmöckwitz', 'Treptow-Köpenick'],
     MI: ['Friedrichshain-Kreuzberg', 'Friedrichshain', 'Gesundbrunnen', 'Hansaviertel', 'Kreuzberg', 'Mitte', 'Moabit', 'Tiergarten', 'Wedding'],
     NK: ['Britz', 'Buckow', 'Gropiusstadt', 'Neukölln', 'Rudow'],
-    PW: ['Blankenburg', 'Blankenfelde', 'Buch', 'Französisch Buchholz', 'Heinersdorf', 'Karow', 'Niederschönhausen', 'Pankow', 'Prenzlauer Berg', 'Rosenthal', 'Stadtrandsiedlung Malchow', 'Weißensee', 'Wilhelmsruh'],
+    PW: ['Blankenburg', 'Blankenfelde', 'Buch', 'Französisch Buchholz', 'Heinersdorf', 'Karow', 'Niederschönehausen', 'Pankow', 'Prenzlauer Berg', 'Rosenthal', 'Stadtrandsiedlung Malchow', 'Weißensee', 'Wilhelmsruh'],
     RE: ['Borsigwalde', 'Frohnau', 'Heiligensee', 'Hermsdorf', 'Konradshöhe', 'Lübars', 'Märkisches Viertel', 'Reinickendorf', 'Tegel', 'Waidmannslust', 'Wittenau'],
     ST: ['Lankwitz', 'Lichterfelde', 'Steglitz-Zehlendorf', 'Steglitz'],
     SV: ['Falkenhagener Feld', 'Gatow', 'Hakenfelde', 'Haselhorst', 'Kladow', 'Siemensstadt', 'Spandau', 'Wilhelmstadt'],
@@ -1583,15 +1533,10 @@ document.addEventListener('keydown', function(e) {
     DL: ['Berlin', 'Chance der Woche', 'Stadtspaziergang']
   };
 
-  // Reverse-Index: Ortsname (kanonisch) -> Codes
   const CANONICAL_LOCALITY_TO_CODES = new Map();
   const LOCALITY_NAMES_CANONICAL = [];
   (function buildLocalityIndex() {
-    const canon = (s) => s.toLowerCase()
-      .normalize('NFC')
-      .replace(/[.,:;!?)+\]]+$/g, '')
-      .replace(/[\s\-]+/g, ' ')
-      .trim();
+    const canon = (s) => s.toLowerCase().normalize('NFC').replace(/[.,:;!?\)\]]+$/g, '').replace(/[\s\-]+/g, ' ').trim();
     for (const [code, list] of Object.entries(AUSGABE_MAP)) {
       for (const raw of list) {
         const key = canon(raw);
@@ -1604,20 +1549,10 @@ document.addEventListener('keydown', function(e) {
   })();
   const LOCALITY_KEYS_SET = new Set(LOCALITY_NAMES_CANONICAL);
 
-  // Locality-Helper
-  function canonLoc(s) {
-    return (s ?? '').toLowerCase()
-      .normalize('NFC')
-      .replace(/[.,:;!?)+\]]+$/g, '')
-      .replace(/[\s\-]+/g, ' ')
-      .trim();
-  }
-  function isLocalityPhrase(s) {
-    return LOCALITY_KEYS_SET.has(canonLoc(s));
-  }
+  function canonLoc(s) { return (s ?? '').toLowerCase().normalize('NFC').replace(/[.,:;!?\)\]]+$/g, '').replace(/[\s\-]+/g, ' ').trim(); }
+  function isLocalityPhrase(s) { return LOCALITY_KEYS_SET.has(canonLoc(s)); }
 
-  // Anfangsphrase am Zeilenbeginn (3/2/1 Token) als Ortsmarke
-  function matchLocalityAtStart(text, maxWords = SUPERRED_CONFIG.filename.prefixMaxWords || 3) {
+  function matchLocalityAtStart(text, maxWords = (SUPERRED_CONFIG.filename.prefixMaxWords ?? 3)) {
     if (!text) return null;
     const cleaned = text.trim().replace(/^[\s"'„‚‘’"»«]+/, '');
     const tokens = cleaned.split(/\s+/).map(t => t.replace(/^["'„‚‘’"»«(]+|[)"'“”‚‘’»«:.;,!?]+$/g, ''));
@@ -1626,39 +1561,25 @@ document.addEventListener('keydown', function(e) {
       const phrase = tokens.slice(0, take).join(' ');
       const key = canonLoc(phrase);
       const codesSet = CANONICAL_LOCALITY_TO_CODES.get(key);
-      if (codesSet && codesSet.size) {
-        return { phrase, codes: Array.from(codesSet) };
-      }
+      if (codesSet && codesSet.size) return { phrase, codes: Array.from(codesSet) };
     }
     return null;
   }
-  // Ortsmarken irgendwo im Text finden (erste Position hat Priorität)
+
   function findLocalitiesInText(text) {
     const res = [];
     if (!text) return res;
-    const norm = (text ?? '')
-      .normalize('NFC')
-      .toLowerCase()
-      .replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ')
-      .replace(/[–—]/g, '-')
-      .replace(/\s+/g, ' ');
+    const norm = (text ?? '').normalize('NFC').toLowerCase().replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ').replace(/[–—]/g, '-').replace(/\s+/g, ' ');
     for (const nameKey of LOCALITY_NAMES_CANONICAL) {
       const pattern = nameKey.replace(/ /g, '[\\s\\-]+');
-      const re = new RegExp(`(^|\\b)${pattern}(?=\\b|[.:,;!?\\)\]])`, 'i');
+      const re = new RegExp(`(?:^|\\b)${pattern}(?=\\b(?:[.:,;!?\\)\\]]|$))`, 'i');
       const m = re.exec(norm);
-      if (m) {
-        res.push({
-          nameCanonical: nameKey,
-          index: m.index,
-          codes: Array.from(CANONICAL_LOCALITY_TO_CODES.get(nameKey) || [])
-        });
-      }
+      if (m) res.push({ nameCanonical: nameKey, index: m.index, codes: Array.from(CANONICAL_LOCALITY_TO_CODES.get(nameKey) ?? []) });
     }
     res.sort((a, b) => a.index - b.index);
     return res;
   }
 
-  // Exklusiv-Regel für DL-Sonderfälle
   function containsExclusiveDL(values) {
     const needles = ['chance der woche', 'stadtspaziergang'];
     const canon = (s) => (s ?? '').toLowerCase().normalize('NFC');
@@ -1666,49 +1587,25 @@ document.addEventListener('keydown', function(e) {
     return needles.some(n => hay.includes(n));
   }
 
-  // Kernlogik: Ausgabenkürzel (Mehrfach als "KT#MI" – ohne führendes '#')
   function computeAusgabeKuerzel(values) {
     const cfg = SUPERRED_CONFIG.filename;
-    const maxCodes = Math.max(1, cfg.maxEditionCodes || 3);
-    const joiner = cfg.multiEditionJoiner || '#';
-    const FALLBACK = cfg.fallbackAusgabeKuerzel || 'DL';
-
+    const maxCodes = Math.max(1, (cfg.maxEditionCodes ?? 3));
+    const joiner   = (cfg.multiEditionJoiner ?? '#');
+    const FALLBACK = (cfg.fallbackAusgabeKuerzel ?? 'DL');
     const blacklist = (SUPERRED_CONFIG.locality?.textScanBlacklist ?? []).map(s => canonLoc(s));
+    if (containsExclusiveDL(values)) return 'DL';
 
-    if (containsExclusiveDL(values)) {
-      return 'DL';
-    }
     const codesOrdered = [];
     const addCodes = (codes) => {
-      for (const c of codes) {
-        if (!codesOrdered.includes(c)) codesOrdered.push(c);
-        if (codesOrdered.length >= maxCodes) return;
-      }
+      for (const c of codes) { if (!codesOrdered.includes(c)) codesOrdered.push(c); if (codesOrdered.length >= maxCodes) return; }
     };
-
-    // 1) Unterzeile – Anfangsphrase (3/2/1 Wörter)
     let primary = null;
-    if (values.subline?.trim()) {
-      const m = matchLocalityAtStart(values.subline);
-      if (m) primary = m;
-    }
-    // 2) Falls nichts: Fließtext – Anfangsphrase
-    if (!primary && values.body?.trim()) {
-      const m = matchLocalityAtStart(values.body);
-      if (m) primary = m;
-    }
-
-    // 3) Volltext-Scan (mit Blacklist)
+    if (values.subline?.trim()) { const m = matchLocalityAtStart(values.subline); if (m) primary = m; }
+    if (!primary && values.body?.trim()) { const m = matchLocalityAtStart(values.body); if (m) primary = m; }
     const fullHitsAll = findLocalitiesInText(values.body ?? '');
     const fullHits = fullHitsAll.filter(h => !blacklist.includes(h.nameCanonical));
-
-    if (!primary && fullHits.length) {
-      addCodes(fullHits[0].codes);
-    }
-
+    if (!primary && fullHits.length) { addCodes(fullHits[0].codes); }
     if (primary) addCodes(primary.codes);
-
-    // 4) Zusätzliche Codes aus dem Fließtext; 'DL' nicht als Zusatz, wenn andere vorhanden
     if (fullHits.length) {
       for (const hit of fullHits) {
         const codes = hit.codes.filter(c => c !== 'DL' || codesOrdered.length === 0);
@@ -1716,86 +1613,48 @@ document.addEventListener('keydown', function(e) {
         if (codesOrdered.length >= maxCodes) break;
       }
     }
-
     if (codesOrdered.length === 0) codesOrdered.push(FALLBACK);
     return codesOrdered.join(joiner);
   }
 
-  // ----- STICHWORT: Suffixe, Contains-Stems & Bindestrich-Komposita -----
-  // Auswahl erfolgt nach frühestem Auftreten im Text, nicht nach Reihenfolge der Muster.
   const STICHWORT_SUFFIXES = [
-    'zentrum', 'markt', 'straße', 'platz', 'park', 'bahnhof', 'feld', 'brücke', 'tunnel', 'gasse', 'schaden', 'schäden',
-    'wahl', 'schule', 'ferien', 'fest', 'kirch', 'kreuz', 'turm', 'bad', 'bibliothek', 'messe', 'bau', 'club', 'filiale',
-    'heim', 'stadion', 'halle', 'garten', 'hof', 'kinder', 'plan', 'wache', 'feuer', 'wettbewerb', 'lauf', 'denkmal',
-    'stadtspaziergang', 'könig', 'krankheit', 'schloss', 'führung', 'biotop', 'kiez', 'treff', 'streik', 'betreuung',
-    'bühne', 'tag', 'woche', 'monat', 'jahr', 'festival', 'burg', 'berg', 'stiftung', 'ehrung', 'ausschreibung', 'weg'
+    'zentrum','markt','straße','platz','park','bahnhof','feld','brücke','tunnel','gasse','schaden','schäden',
+    'wahl','schule','ferien','fest','kirch','kreuz','turm','bad','bibliothek','messe','bau','club','filiale',
+    'heim','stadion','halle','garten','hof','kinder','plan','wache','feuer','wettbewerb','lauf','denkmal',
+    'stadtspaziergang','könig','krankheit','schloss','führung','biotop','kiez','treff','streik','betreuung',
+    'bühne','szene','woche','monat','jahr','festival','burg','berg','stiftung','ehrung','ausschreibung','weg'
   ];
-
-  // Helper: Kandidaten per Contains-Stems (inkl. Bindestrich-Komposita) einsammeln
   function findContainsStemCandidates(cleaned) {
-    const cfg = SUPERRED_CONFIG.stichwort;
-    if (!cfg?.enableContainsStems) return [];
-
-    // Tokenizer: Wörter inkl. Bindestrichteile
-    const tokenRe = /\b([A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*)\b/g;
-    const ignoreSet = new Set((cfg.ignoreExact || []).map(s => s.toLowerCase().normalize('NFC')));
-
-    // Vorbereitete Regexe
-    const stemRegexes = (cfg.containsStems || []).map(x => ({
-      label: x.label,
-      re: new RegExp(x.pattern, 'i')
-    }));
-
-    const out = [];
-    let m;
+    const cfg = SUPERRED_CONFIG.stichwort; if (!cfg?.enableContainsStems) return [];
+    const tokenRe = /\b([A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß]+)*)\b/gu;
+    const ignoreSet = new Set((cfg.ignoreExact ?? []).map(s => s.toLowerCase().normalize('NFC')));
+    const stemRegexes = (cfg.containsStems ?? []).map(x => ({ label: x.label, re: new RegExp(x.pattern, 'iu') }));
+    const out = []; let m;
     while ((m = tokenRe.exec(cleaned)) !== null) {
-      const token = m[1];
-      const norm = token.toLowerCase().normalize('NFC');
-      if (ignoreSet.has(norm)) continue; // Schutz z. B. gegen 'bauer'
-      for (const s of stemRegexes) {
-        if (s.re.test(norm)) { out.push({ idx: m.index, text: token }); break; }
-      }
+      const token = m[1]; const norm = token.toLowerCase().normalize('NFC');
+      if (ignoreSet.has(norm)) continue;
+      for (const s of stemRegexes) { if (s.re.test(norm)) { out.push({ idx: m.index, text: token }); break; } }
     }
     return out;
   }
-
+  function tidyStichwort(s) { return (s ?? '').replace(/[)\].,:;!?]+$/, '').replace(/\s+/g, ' ').trim(); }
   function extractStichwortFrom(text) {
     if (!text) return '';
-    const cleaned = (text ?? '')
-      .replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ')
-      .replace(/[“”„‟"«»]/g, '"')
-      .replace(/[‚‘’‛']/g, "'")
-      .trim();
-
-    const escapedSuffixes = STICHWORT_SUFFIXES.map(s => s.replace(/[\-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
-    const suffixPattern = new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)*-(?:${escapedSuffixes.join('|')}))\\b`, 'gi');
-    const singleWordSuffixPattern = new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]*(?:${escapedSuffixes.join('|')}))\\b`, 'gi');
-
-    const hyphenCompositePattern = /\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)+)\b/g;
-
-    let m;
-    const candidates = [];
-    while ((m = suffixPattern.exec(cleaned)) !== null) {
-      candidates.push({ idx: m.index, text: m[1] });
-    }
-    while ((m = singleWordSuffixPattern.exec(cleaned)) !== null) {
-      candidates.push({ idx: m.index, text: m[1] });
-    }
-
-    // NEW: Contains-Stems (Präfix/Suffix/Infix) – nach Suffixen einsortieren
-    const containsCands = findContainsStemCandidates(cleaned);
-    if (containsCands.length) candidates.push(...containsCands);
-
+    const cleaned = (text ?? '').replace(/[\u00A0\u2000-\u200A\u202F\u205F]/g, ' ').replace(/[“”„‟"«»]/g, '"').replace(/[‚‘’‛']/g, "'").trim();
+    const esc = STICHWORT_SUFFIXES.map(s => s.replace(/[\\\-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+    const suffixPattern = new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)*-(?:${esc.join('|')}))\\b`, 'giu');
+    const singleWordSuffixPattern = new RegExp(`\\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]*(?:${esc.join('|')}))\\b`, 'giu');
+    const hyphenCompositePattern = /\b([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+(?:-[A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß]+)+)\b/gu;
+    let m; const candidates = [];
+    while ((m = suffixPattern.exec(cleaned)) !== null) candidates.push({ idx: m.index, text: m[1] });
+    while ((m = singleWordSuffixPattern.exec(cleaned)) !== null) candidates.push({ idx: m.index, text: m[1] });
+    const containsCands = findContainsStemCandidates(cleaned); if (containsCands.length) candidates.push(...containsCands);
     if (candidates.length) {
       candidates.sort((a, b) => a.idx - b.idx);
       const firstNonLocality = candidates.find(c => !isLocalityPhrase(c.text));
       if (firstNonLocality) return tidyStichwort(firstNonLocality.text);
     }
-
-    const hyphens = [];
-    while ((m = hyphenCompositePattern.exec(cleaned)) !== null) {
-      hyphens.push({ idx: m.index, text: m[1] });
-    }
+    const hyphens = []; while ((m = hyphenCompositePattern.exec(cleaned)) !== null) hyphens.push({ idx: m.index, text: m[1] });
     if (hyphens.length) {
       hyphens.sort((a, b) => a.idx - b.idx);
       const firstNonLocality = hyphens.find(h => !isLocalityPhrase(h.text));
@@ -1803,142 +1662,389 @@ document.addEventListener('keydown', function(e) {
     }
     return '';
   }
-  function tidyStichwort(s) {
-    return s.replace(/[)\].,:;!?]+$/, '').replace(/\s+/g, ' ').trim();
-  }
   function extractStichwort(values) {
     if (containsExclusiveDL(values)) return '';
-    let sw = extractStichwortFrom(values.subline);
-    if (sw) return sw;
+    let sw = extractStichwortFrom(values.subline); if (sw) return sw;
     const bodyStart = (values.body ?? '').slice(0, 280);
     sw = extractStichwortFrom(bodyStart);
-    return sw || '';
+    return sw ?? '';
   }
 
-  // ====== KONDITIONS-OVERLAY (nur bei Überschreib-Warnung) ======
-  let overlayEl = null;
-  function showConfirmOverlay({ currentValue, proposedValue, kwPreview, kuerzelPreview, onConfirm }) {
+  // ===== NOTES (integriert) =====
+  const NOTES_CFG = {
+    selectors: [ '#notes', 'textarea[name="notes"]', 'input[name="notes"]', '[aria-label*="Notiz" i]', '[placeholder*="Notiz" i]' ],
+    labelRegex: /notiz|notizen|notes?/i,
+    warnIfNonTrivialExisting: true,
+    SKEY_PHRASES: 'sn_phrases_v16',
+    PHRASES_DEFAULT: 'alles für deutschland, durch den rost, eskimo, getürkt, hitler, gestern, heute, morgen, letzte, mohrenstraße, nächste, neger, selbstmord, suizid, unserer redaktion, vergasung, zigeuner',
+    SKEY_TAG_TABLE: 'sn_tag_table_v16',
+    TAG_TABLE_DEFAULT: [
+        'BAUEN: abriss, archiologe, architekt, ausgrabung, bagger, bauabnahme, bauantrag, bauarbeit, baubeginn, bauen, baufällig, baugenehmigung, baugrube, bauherr, bauleitung, baumaßnahme, baupläne, baustelle, baustopp, bauverzögerung, bebauung, brückenbau, dachausbau, denkmalschutz, ersatzverkehr, fertigstellung, glasfassade, gleisbau, grundstück, hochbau, immobilie, innenausbau, lückenbau, mietwohnung, modularbau, planfeststellung, randbebauung, restaurierung, richtfest, rückbau, signalbau, spatenstich, sperrung, stahlbeton, straßenbau, streckenausbau, streckenbau, tiefbau, wohnungsbau, wolkenkratzer',
+        'BERLIN: airport, arena, bellevue, berlin, botschaft, brandenburger tor, charité, eats music hall, fanmeile, fernsehturm, flughafen, forst, friedrichstadtpalast, funkturm, hauptbahnhof, hauptstadt, helios, humboldtforum, kanzleramt, karneval, lange nacht, leuchtturm, marathon, mauerfall, mauerweg, museumsinsel, olympia, philarmonie, regierender, reichstag, ringbahn, rotes rathaus, schirmherr, senat, siegessäule, silvester, stadtautobahn, stadtring, tempelhofer feld, tempodrom, tiergarten, tierheim, tierpark, tourismus, touristen, vivantes, vöbb, waldbühne, wiedervereinigung, zoo',
+        'BILDUNG: abitur, abschluss, absolvent, akadem, ausbilder, azubi, bachelor, bildung, deutschkurs, diplom, elternabend, exmatrikulation, expolingua, fakultät, forscher, forscher, forschung, gymnasium, hochschule, hörsaal, jobmedi, jobwunder, klausur, lehramt, lehrstelle, lernen, master, numerus, oberstufe, praktika, praktikum, quereinsteiger, quereinstieg, rechenschwäche, schüler, semester, seminar, sprachkurs, studenten, studium, stuzubi, symposium, universität, unterricht, vhs, volontär, volontariat, wissenschaft, workshop, zeugniss',
+        'BLAULICHT: autorennen, bestechung, blitzer, bombe, brand, dealer, delikt, dieb, drogen, entschärf, erfroren, ertrunken, evakuier, explo, festgenommen, feuerwehreinsatz, freispruch, gestoßen, gestürzt, gewalt, hausbesetzer, illegal, justiz, messer, mord, opfer, polizei, raser, räuber, razzia, reanimation, schmuggel, schüsse, schwerverletzt, sondereinsatz, straftat, täter, tatort, todesfolge, töte, überfall, übergriff, unerlaubt, unfall, unglück, verdächt, vergift, verurteilt, waffe, zoll',
+        'KINDER: arche, baby, basteln, boys, einschulung, ferien, fez, freizeittreff, girls, grundschule, hausaufgaben, hüpfburg, jugend, jungen, karussell, kinder, klassenfahrt, leiheltern, lesepaten, mädchen, mitmach, musikschule, nachhilfe, nachwuchs, pfadfinder, plansche, plüschtier, ponyreiten, puppentheater, rummel, schulanfang, schulbeginn, schülerhilfe, schülerlotse, schulgarten, schwimmkurs, seepferd, seifenkisten, spaßbad, spielen, spielplatz, spielstraße, spielzeug, streichelzoo, taschengeld, teenager, ufafabrik, verkehrslotse, verkehrsschule, zuckerwatte',
+        'KULTUR: aufführung, ausstellung, ballett, bibliothek, buch, bühne, chor, eintritt, event, feiern, festival, feuerwerk, film, freizeit, galerie, kabarett, karten, kino, komödie, konzert, kreative, kultur, kunst, lesung, markt, museen, museum, musical, musik, nacht, opern, orgel, party, planetarium, premiere, programm, rennbahn, revue, show, spaziergang, sternwarte, tänze, theater, ticket, trödel, veranstalt, verlag, vernisage, vortrag, weihnacht',
+        'LEUTE: artist, ausgezeichnet, autor, benannt, beobachtet, biografie, deportiert, eltern, erfinder, erinnerung, erlebt, erzählt, geboren, geburt, gedenken, gegründet, gelebt, gelehrter, gesammelt, geschwister, gestorben, heimat, heirat, hinterblieben, histori, hochzeit, jährig, jubilar, maler, memoiren, migriert, musiker, mutter, persönliche, produzent, regisseur, rückkehr, ruhestätte, schriftsteller, stolperstein, tausendsasser, überleb, vater, verdienste, vergangenheit, verlassen, verlobt, versteckt, weltenbummler, zeitzeuge',
+        'LOKALES: anbindung, anlieger, anwohner, behörde, bezirk, bolzpl, brache, brennpunkt, bürger, dorfanger, dorfkern, einwohner, fahrradstraße, freibad, haltestelle, heimatmuseum, höfe, hotspot, hundeauslauf, kathedrale, kiez, kirche, kita, kleingärten, krankenhaus, kriminalität, lokal, marktplatz, moschee, nachbar, nähe, nahversorg, ordnungs, parkranger, problem, promenade, quartier, rathaus, rohrbruch, schule, schwimmbad, siedlung, stätte, stromausfall, umbenennung, versammlung, viertel, volkspark, wache, wochenmarkt',
+        'POLITIK: abgeordnete, afd, anfrage, ausschuss, beschluss, bündnis, bürgermeister, bürgersprechstunde, bürokrat, bvv, cdu, christdemo, debatte, demokrat, demonstr, diplomat, extrem, fdp, feindlich, gesetze, gesetzlich, haushaltsplan, haushaltssperre, kandid, kanzler, koalition, kommission, kundge, kürzung, liberale, minister, nominier, opposition, panther, partei, politi, präsident, proteste, provokation, radikal, regier, rüstung, sozialdemo, spd, stadtrat, stellvertret, vorsitz, wahlen, wähler, wehrpflicht',
+        'SERVICE: anmeld, aufruf, auktion, befragung, beteiligung, broschüre, bürgeramt, bürgerbüro, bürgertelefon, bwurl, download, flyer, fördergeld, fundbüro, gewinnspiel, gratis, hotline, informationen, infos, internet, jobcenter, kontakt, kostenfrei, kostenlos, kummer, mail, nummer, öffnungszeit, ombudsstelle, pdf, pflegehilfe, portal, ratgeber, schiedss, schlichter, schlichtung, selbsthilfe, service, silbernetz, sozialladen, sprechstunde, sprechzeit, teilnahme, teilnehm, tourist, verbraucher, verlosung, versteigerung, webseite, website',
+        'SOZIALES: ambulant, armut, barrierearm, barrierefrei, bedürftig, bürgergeld, caritas, diakonie, dlrg, drk, drogenberatung, ehrenamt, engagiert, feuerwehr, freiwillig, gemeinwohl, gesundheitsamt, grundsicherung, handicap, heime, helfe, hitzeplan, hospiz, inklusion, integration, kältehilfe, klinik, kranker, lageso, migra, obdach, opferhilfe, paliativ, patientenberatung, samariter, schuldnerberatung, seelsorge, seniorenhilfe, silbernet, solidarität, sozial, spende, stationär, stiftung, stützpunkt, suchthilfe, tafel, unterstütz, versicher, wohngeld',
+        'SPORT: alba, athlet, bäder, becken, billard, boxen, bundesliga, eisbären, eiskunstlauf, finale, fitness, füchse, fußball, handball, hertha, hockey, istaf, judo, karate, landesliga, läufer, leistungsschau, mannschaft, medaille, meisterschaft, parcour, pferde, rekord, ruder, schach, schwimm, segel, sommerspiele, sport, sporthalle, stadion, tennis, titelkampf, titelvertei, trainer, training, triat, turnhalle, turnier, volley, wasserball, wettrennen, winterspiele, workout, zehnkampf',
+        'UMWELT: abfall, abgase, abwasser, artenschutz, aufforst, bäume, begrünung, bienen, biotop, brunnen, dünger, düngung, energie, erneuerbare, fällarbeiten, fällungen, flora, gewässer, grünanlage, hitze, kläranlage, klärwerk, klima, lärmschutz, müll, nachhaltig, natur, ökolog, pestizid, pflanz, pfuhl, photovoltaik, regenwasser, repair, reservat, rieselfeld, schadstoff, schreberg, schwamm, solar, starkregen, strom, stürme, treibhaus, umwelt, vogelschutz, wasser, wetter, windkraft, windräder',
+        'VERKEHR: abschlepp, abzweig, ampel, autobahn, avus, bahn, bike, brücke, busse, bvg, dreieck, eisenbahn, elterntaxi, fähre, fahrrad, fahrzeug, flieg, flug, fuhrpark, garage, geschwindigkeit, jelbi, knöllchen, kontrolle, kreuzung, linie, lkw, öpnv, padelec, pkw, poller, roller, s-bahn, schiene, schulweg, scooter, shuttle, spurig, stellpl, stvo, tram, transport, tunnel, u-bahn, überweg, umleitung, verbindung, verkehr, zebrastreifen, züge',
+        'WIRTSCHAFT: angestellte, arbeit, autovermiet, bankrott, baumarkt, baumärkte, business, center, dienstleist, discounter, erfolgsgeschichte, fachkräfte, firma, frainchise, funding, gastro, geschäft, gewerb, gewerkschaft, händler, handwerk, hotel, imbiss, industrie, insolvenz, investi, käufer, konkurs, kunde, kundschaft, lieferdienst, marken, markthalle, neueröffn, passage, produkte, räumungsverkauf, schließung, schwarzarbeit, sortiment, späti, start-up, steuer, streik, umsatz, unternehme, verkaufsfläche, warenh, wiedereröffn, wirtschaft'
+    ].join('\n'),
+      sep: '\n',
+    showPhraseHits: true,
+    tagMaxCount: 6,
+    inlineSep: ' || ',
+    SKEY_PHRASES_EXCLUDE: 'sn_phrases_exclude_v1',
+    PHRASES_EXCLUDE_DEFAULT: 'guten morgen, morgenpost, morgens',
+    phraseWholeWord: true
+  };
+  const SN_STORE = { get(k, d='') { try { return GM_getValue(k, d); } catch { return d; } }, set(k, v) { try { GM_setValue(k, v); } catch {} } };
+  function _qs(s, r=document){ return r.querySelector(s); }
+  function _qsa(s, r=document){ return Array.from(r.querySelectorAll(s)); }
+  function normalizeSpaces(s){ return (s ?? '').replace(/[\u00A0\u202F\u2009]/g,' ').replace(/[–—]/g,'-').replace(/\s{2,}/g,' ').trim(); }
+  function findNotesField(root=document){
+    for (const s of NOTES_CFG.selectors){ const el=_qs(s, root); if (el) return el; }
+    const labels = _qsa('label', root).filter(l => NOTES_CFG.labelRegex.test(l.textContent || ''));
+    for (const lab of labels){
+      const forId = lab.getAttribute('for'); if (forId){ const el = root.getElementById(forId); if (el) return el; }
+      const el = lab.closest('section,div,li,form,fieldset')?.querySelector('textarea, input, [contenteditable="true"]'); if (el) return el;
+    }
     try {
-      if (overlayEl) overlayEl.remove();
-      overlayEl = document.createElement('div');
-      overlayEl.style.cssText = `
-        position: fixed; top: 12px; right: 12px; z-index: 2147483647;
-        background: #0b1e2d; color: #fff; font: 13px/1.35 system-ui,Segoe UI,Arial,sans-serif;
-        border: 1px solid #0d3a5c; border-radius: 8px; padding: 12px 14px; max-width: 620px;
-        box-shadow: 0 8px 24px rgba(0,0,0,.25);
-      `;
-      const btn = (bg) => `
-        display:inline-block;margin:6px 6px 0 0;padding:6px 10px;border-radius:6px;
-        background:${bg};color:#fff;border:0;cursor:pointer
-      `;
-      overlayEl.innerHTML = `
-        <div style="font-weight:600;margin-bottom:6px;">SuperRED – Überschreiben bestätigen</div>
-        <div style="opacity:.8;margin-bottom:8px">${new Date().toLocaleTimeString()}</div>
-        <div style="margin-bottom:8px"><b>Aktueller Wert</b>:<br>
-          <code style="display:inline-block;background:#07233a;padding:4px 6px;border-radius:4px;max-width:100%;word-break:break-all">${escapeHTML(currentValue || '(leer)')}</code>
-        </div>
-        <div style="margin-bottom:8px"><b>Neuer Wert</b>:<br>
-          <code style="display:inline-block;background:#07233a;padding:4px 6px;border-radius:4px;max-width:100%;word-break:break-all">${escapeHTML(proposedValue)}</code>
-        </div>
-        <div style="opacity:.8;margin:8px 0 4px 0">
-          <span><b>Kürzel</b>: <code style="background:#07233a;padding:2px 4px;border-radius:4px">#${escapeHTML(kuerzelPreview)}</code></span>
-          <span style="margin-left:10px"><b>KW</b>: ${escapeHTML(kwPreview || '(inaktiv)')}</span>
-        </div>
-        <div style="margin-top:10px">
-          <button id="sr_ok" style="${btn('#1b8d3d')}">Überschreiben</button>
-          <button id="sr_cancel" style="${btn('#3a3a3a')}">Abbrechen</button>
-        </div>
-      `;
-      document.body.appendChild(overlayEl);
-      overlayEl.querySelector('#sr_ok')?.addEventListener('click', () => { try { overlayEl.remove(); } catch {} onConfirm?.(); });
-      overlayEl.querySelector('#sr_cancel')?.addEventListener('click', () => { try { overlayEl.remove(); } catch {} });
-    } catch (err) {
-      console.error('[SuperRED] Overlay-Fehler:', err);
-      alert('SuperRED: Overlay-Fehler (siehe Konsole).');
+      const xp = document.evaluate("//label[contains(translate(., 'NOTIZEN', 'notizen'),'notiz')]/following::*[self::textarea or self::input or @contenteditable='true'][1]", root, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      if (xp) return xp;
+    } catch {}
+    return null;
+  }
+  function setNotesReactSafe(el, value){
+    if (!el) return false;
+    if (el.isContentEditable || el.getAttribute('contenteditable') === 'true'){
+      el.focus(); document.execCommand('selectAll', false, null); document.execCommand('insertText', false, String(value));
+      el.dispatchEvent(new InputEvent('input', {bubbles:true})); el.dispatchEvent(new Event('change', {bubbles:true})); el.dispatchEvent(new Event('blur', {bubbles:true}));
+      return true;
     }
-  }
-  function escapeHTML(s) {
-    return (s ?? '').replace(/[<>&'\"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp','\'':'&#39;','\"':'&quot;'}[c]));
-  }
-
-  // ===== Hauptbefüllung =====
-  function computeFinalFileName(values, targetInputEl) {
-    const cfg = SUPERRED_CONFIG.filename;
-
-    const nummerExisting = getExistingNumberFromField(targetInputEl);
-    const nummerGuessed  = guessEightDigitNumber([values.headline, values.subline, values.body]);
-    const nummer = nummerExisting || nummerGuessed || (cfg.requireEightDigitId ? (cfg.missingIdPlaceholder || '') : '');
-
-    let baseHeadline = values.headline?.trim() || values.subline?.trim() || '';
-    if (!baseHeadline) {
-      const body = (values.body ?? '').replace(/\s+/g,' ').trim();
-      baseHeadline = body.split(' ').slice(0, 10).join(' ') || 'ohne Titel';
-    }
-    const headline = safeHeadline(baseHeadline);
-
-    const stichwort = extractStichwort(values);
-
-    const kw = (cfg.useKW)
-      ? (cfg.kwMode === 'redaktionsschluss'
-        ? redaktionsKWString(new Date(), cfg.redaktionsschlussWeekday)
-        : isoWeekString(new Date()))
-      : '';
-
-    const ausgabeKuerzelDyn = computeAusgabeKuerzel(values);
-
-    return {
-      text: buildFileName({ kw, kuerzel: ausgabeKuerzelDyn, nummer, headline, stichwort }),
-      kw,
-      kuerzel: ausgabeKuerzelDyn
-    };
-  }
-
-  function writeFinalToTarget(target, text) {
-    const old = typeof target.value === 'string' ? target.value : '';
-    setInputValueReactSafe(target, text);
-    try { target.selectionStart = target.selectionEnd = target.value.length; } catch {}
-    console.log('[SuperRED] Artikelbeschreibung (final) geschrieben. Alt:', old, 'Neu:', target.value);
+    const proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+    const setter = Object.getOwnPropertyDescriptor(proto ?? {}, 'value')?.set; if (setter) setter.call(el, String(value)); else el.value = String(value);
+    el.dispatchEvent(new Event('input', {bubbles:true})); el.dispatchEvent(new Event('change', {bubbles:true})); el.dispatchEvent(new Event('blur', {bubbles:true}));
     return true;
   }
+  function flashNotes(el, ok=true){ if(!el) return; const o=el.style.outline; el.style.outline=`2px solid ${ok?'#8bc34a':'#ff5252'}`; setTimeout(()=>el.style.outline=o,900); }
 
-  // ===== Aktion: STRG+ALT+R =====
-  async function actionFillWithConditionalOverlay() {
-    const target = findArticleDescriptionInput();
-    if (!target) {
-      alert('SuperRED: Konnte das Feld „Artikelbeschreibung (Dateiname)“ nicht finden.');
-      return;
+  // ---- Termin / Phrasen / Tags ----
+  const MONTHS_ALT = ['Januar','Jan\\.?','Februar','Feb\\.?','März','Mrz\\.?','Maerz','April','Apr\\.?','Mai','Juni','Jun\\.?','Juli','Jul\\.?','August','Aug\\.?','September','Sept\\.?','Sep\\.?','Oktober','Okt\\.?','November','Nov\\.?','Dezember','Dez\\.?'].join('|');
+  const WEEKDAYS_OPT = '(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonnabend|Sonntag,?\\s*)?';
+  const DE_MONTHS = { januar:0, jan:0, februar:1, feb:1, märz:2, mrz:2, maerz:2, april:3, apr:3, mai:4, juni:5, jun:5, juli:6, jul:6, august:7, aug:7, september:8, sept:8, sep:8, oktober:9, okt:9, november:10, nov:10, dezember:11, dez:11 };
+  const pad2 = (n) => String(n).padStart(2,'0');
+  const fmtDateDE = (d) => `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()}`;
+  const sod = (d) => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+  const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+  const parseIntSafe = (s) => { const n=parseInt(s,10); return Number.isFinite(n)?n:null; };
+  function buildDate(dayStr, monStr, yearStr, now){
+  const dd = parseIntSafe(dayStr);
+  let mm = parseIntSafe(monStr);
+  let yyyy = yearStr ? parseIntSafe(yearStr) : null;
+
+  if (!dd) return null;
+  if (yyyy != null && yyyy < 100) yyyy = 2000 + yyyy;
+  if (!mm || mm < 1 || mm > 12) mm = parseIntSafe(monStr);
+  if (!mm) return null;
+
+  // NEU: Ohne Jahr => IMMER aktuelles Jahr, KEIN Auto-Rollover mehr
+  if (yyyy == null) yyyy = now.getFullYear();
+
+  const d = new Date(yyyy, mm - 1, dd);
+  d.setHours(0,0,0,0);
+
+  // Validierung (31.02. etc. aussortieren)
+  if (d.getDate() !== dd || d.getMonth() !== mm - 1) return null;
+
+  return d;
+}
+
+  function normalizeSpacesFull(s){ return (s ?? '').replace(/[\u00A0\u202F\u2009]/g,' ').replace(/[–—]/g,'-').replace(/\s{2,}/g,' ').trim(); }
+  function extractAbsoluteDates(rawText, now){
+    const text = normalizeSpacesFull(rawText); const out = []; const t0=sod(now);
+    const listMonPat = new RegExp(String.raw`(\d{1,2}\.)\s*(?:,\s*\d{1,2}\.)*(?:\s*und\s*\d{1,2}\.)\s*(${MONTHS_ALT})\s*(\d{4})?`, 'gi');
+      const vonBisMonPat = new RegExp(
+          String.raw`(?:\bvon\s*)?(\d{1,2})\.\s*(?:bis|[–-])\s*(\d{1,2})\.\s*(${MONTHS_ALT})\s*(\d{4})?`,
+          'gi'
+      );
+
+      let vb;
+      while ((vb = vonBisMonPat.exec(text)) !== null) {
+          const startDay = vb[1];
+          const monKey = vb[3].toLowerCase().replace(/\.$/, '');
+          const year    = vb[4] ? parseIntSafe(vb[4]) : null;
+
+          if (Object.prototype.hasOwnProperty.call(DE_MONTHS, monKey)) {
+              const monIdx  = DE_MONTHS[monKey];
+              const dStart  = buildDate(startDay, monIdx + 1, year, now);
+              if (dStart) out.push(dStart);
+          }
+      }
+    let lm; while ((lm=listMonPat.exec(text))!==null){ const firstDay=lm[1].replace('.',''); const monKey=lm[2].toLowerCase().replace(/\.$/,''); const year=lm[3]?parseIntSafe(lm[3]):null; const monIdx=DE_MONTHS[monKey]; if(monIdx!=null){ const d=buildDate(firstDay, monIdx+1, year, now); if(d) out.push(d);} }
+    const wsp='[\\s\\u00A0\\u202F\\u2009]*'; const rangeRe=new RegExp(String.raw`(?:^|[^0-9])(\d{1,2})\.${wsp}[–-]${wsp}(\d{1,2})\.(\d{1,2})\.?(?:\s*(\d{2,4}))?`,'gi'); let rr; while((rr=rangeRe.exec(text))) { const d=buildDate(rr[1], rr[3], rr[4] ?? null, now); if(d) out.push(d); }
+    const fullRe=/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/gi; let fr; while((fr=fullRe.exec(text))) { const d=buildDate(fr[1], fr[2], fr[3], now); if(d) out.push(d); }
+    const noYearRe=/(\d{1,2})\.(\d{1,2})\.(?!\d)/gi; let ny; while((ny=noYearRe.exec(text))) { const d=buildDate(ny[1], ny[2], null, now); if(d) out.push(d); }
+    const monRe=new RegExp(`${WEEKDAYS_OPT}(\\d{1,2})\\.?\\s*(${MONTHS_ALT})(?:\\s*(\\d{4}))?`,'gi'); let mm; while((mm=monRe.exec(text))){ const day=mm[1]; const monKey=mm[2].toLowerCase().replace(/\.$/,''); const year=mm[3]?parseIntSafe(mm[3]):null; if(Object.prototype.hasOwnProperty.call(DE_MONTHS, monKey)){ const d=buildDate(day, DE_MONTHS[monKey]+1, year, now); if(d) out.push(d);} }
+    const min = addDays(t0, -30);   // PAST_WINDOW_DAYS: -30
+    const max = addDays(t0, 365);   // großzügig; computeTerminLine begrenzt später auf +120
+    const win = out.map(sod).filter(d => d >= min && d <= max);
+    return [...new Map(win.map(d => [d.getTime(), d])).values()].sort((a, b) => a - b);
+  }
+  function computeTerminLine(text) {
+  // Lokale Schwellwerte (keine globalen consts -> keine Kollisionen)
+  const FUTURE_WINDOW_DAYS = 120; // nur Termine bis +120 Tage berücksichtigen
+  const PAST_WINDOW_DAYS   = 30;  // vergangene Termine bis -30 Tage berücksichtigen
+  const SOON_DAYS          = 6;   // 0..6 Tage in der Zukunft => "ACHTUNG-TERMIN"
+
+  const dates = extractAbsoluteDates(text, new Date());
+  if (!dates.length) return null;
+
+  const today = sod(new Date());
+  const toDeltaDays = (d) => Math.round((sod(d) - today) / (24 * 3600 * 1000));
+
+  // Annotieren mit Delta-Tagen
+  const list = dates.map(d => ({ d, delta: toDeltaDays(d) }));
+
+  // Zukunft im Fenster
+  const future = list
+    .filter(x => x.delta >= 0 && x.delta <= FUTURE_WINDOW_DAYS)
+    .sort((a, b) => a.delta - b.delta); // frühester Termin zuerst
+
+  // Jüngste Vergangenheit im Fenster
+  const pastRecent = list
+    .filter(x => x.delta < 0 && x.delta >= -PAST_WINDOW_DAYS)
+    .sort((a, b) => b.delta - a.delta); // -1 vor -5
+
+  // Auswahl: bevorzugt nächster Zukunftstermin, sonst jüngster vergangener
+  let pick = null;
+  if (future.length)         pick = future[0];
+  else if (pastRecent.length) pick = pastRecent[0];
+  else return null; // nichts relevantes -> keine TERMIN-Zeile
+
+  const isPast = pick.delta < 0;
+  const isSoon = pick.delta >= 0 && pick.delta <= SOON_DAYS;
+
+  // Labeling: Vergangenheit (bis -30) oder sehr bald (0..6) => ACHTUNG-TERMIN
+  const prefix = (isPast || isSoon) ? 'ACHTUNG-TERMIN: ' : 'TERMIN: ';
+  return `${prefix}${fmtDateDE(pick.d)}`;
+}
+
+  function getPhraseList(){ const raw=SN_STORE.get(NOTES_CFG.SKEY_PHRASES, NOTES_CFG.PHRASES_DEFAULT); return raw.split(',').map(s=>s.trim()).filter(Boolean); }
+    // --- Helper für Phrasen-Check: Regex-Escape & Wortgrenzen
+    function escapeRegex(s) { return (s ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+    // Unicode-Wortgrenzen: matcht nur, wenn links/rechts kein Buchstabe/Ziffer/Unterstrich
+    function wordBoundaryRegex(term) {
+        const esc = escapeRegex(term);
+        return new RegExp(`(^|[^\\p{L}\\p{N}_])(${esc})(?=($|[^\\p{L}\\p{N}_]))`, 'giu');
     }
-    const current = (target.value ?? '').toString().trim();
-    const onlyEightDigits = /^\d{8}$/.test(current) || current === '';
 
-    const values = await captureAllThree();
-    const { text: proposed, kw, kuerzel } = computeFinalFileName(values, target);
-
-    if (onlyEightDigits) {
-      writeFinalToTarget(target, proposed);
-      return;
+    // Blacklist aus dem Store lesen
+    function getPhraseExcludeList() {
+        const raw = SN_STORE.get(NOTES_CFG.SKEY_PHRASES_EXCLUDE, NOTES_CFG.PHRASES_EXCLUDE_DEFAULT);
+        return raw.split(',').map(s => s.trim()).filter(Boolean);
     }
 
-    showConfirmOverlay({
-      currentValue: current,
-      proposedValue: proposed,
-      kwPreview: kw,
-      kuerzelPreview: kuerzel,
-      onConfirm: () => writeFinalToTarget(target, proposed)
+    // Blacklist im Text "rausmaskieren", bevor wir nach Treffern suchen
+    function scrubPhraseExclusions(textLower) {
+        let out = textLower;
+        for (const ex of getPhraseExcludeList()) {
+            if (!ex) continue;
+            const re = new RegExp(escapeRegex(ex.toLowerCase()), 'giu');
+            out = out.replace(re, ' ');
+        }
+        return out;
+    }
+
+    // --- ERSETZT die alte findPhraseHits-Version:
+    function findPhraseHits(text) {
+        const lower = (text ?? '').toLowerCase();
+        const scan = scrubPhraseExclusions(lower); // Blacklist zuerst rausnehmen
+        const hits = new Set();
+        for (const p of getPhraseList()) {
+            const term = p.toLowerCase();
+            const re = NOTES_CFG.phraseWholeWord
+            ? wordBoundaryRegex(term)                 // nur "echte" Worttreffer (z. B. "morgen")
+            : new RegExp(escapeRegex(term), 'giu');   // optional: Substring-Matching
+
+            if (re.test(scan)) hits.add(p);
+        }
+        return [...hits];
+    }
+
+  function getTagTable(){ const raw=SN_STORE.get(NOTES_CFG.SKEY_TAG_TABLE, NOTES_CFG.TAG_TABLE_DEFAULT); const lines=raw.split('\n').map(s=>s.trim()).filter(Boolean); const table=[]; for(const line of lines){ const ix=line.indexOf(':'); if(ix<0) continue; const tag=line.slice(0,ix).trim().toUpperCase(); const items=line.slice(ix+1).split(',').map(s=>s.trim()).filter(Boolean); if(tag && items.length) table.push({tag, items}); } return table; }
+  function countTagHits(text){ const lower=(text ?? '').toLowerCase(); const table=getTagTable(); const results=[]; for(const row of table){ let hits=0; for(const term of row.items){ const t=term.toLowerCase(); if(!t) continue; let idx=lower.indexOf(t); while(idx>=0){ hits++; idx=lower.indexOf(t, idx+t.length); } } if(hits>0) results.push({tag:row.tag, hits}); } results.sort((a,b)=>{ const d=b.hits-a.hits; return d!==0?d:a.tag.localeCompare(b.tag,'de'); }); return results.map(x=>x.tag); }
+
+  // ===== Kombiniertes Overlay =====
+  let combinedOverlayEl = null;
+  function escapeHTML(s){ return (s ?? '').replace(/[<>&'\"]/g, c => ({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;' }[c])); }
+  function showCombinedConfirmOverlay(sections, onAction){
+    // sections: [{key:'red'|'notes', title, current, proposed, meta: {kw?, kuerzel?}}]
+    try{
+      if (combinedOverlayEl) combinedOverlayEl.remove();
+      combinedOverlayEl = document.createElement('div');
+      combinedOverlayEl.style.cssText = `position:fixed;top:12px;right:12px;z-index:2147483647;background:#0b1e2d;color:#fff;font:13px/1.35 system-ui,Segoe UI,Arial,sans-serif;border:1px solid #0d3a5c;border-radius:8px;padding:12px 14px;max-width:680px;box-shadow:0 8px 24px rgba(0,0,0,.25);`;
+      const btn = (bg)=>`display:inline-block;margin:6px 6px 0 0;padding:6px 10px;border-radius:6px;background:${bg};color:#fff;border:0;cursor:pointer`;
+      const sectionHTML = sections.map(sec => {
+        const metaLine = sec.key==='red' ? `<div style="opacity:.8;margin:6px 0 2px 0"><b>Kürzel</b>: <code style="background:#07233a;padding:2px 4px;border-radius:4px">#${escapeHTML(sec.meta.kuerzel||'')}</code><span style="margin-left:10px"><b>KW</b>: ${escapeHTML(sec.meta.kw||'(inaktiv)')}</span></div>` : '';
+        return `
+          <div style="margin:8px 0 10px 0">
+            <div style="font-weight:600;margin-bottom:4px;">${escapeHTML(sec.title)}</div>
+            <div style="margin-bottom:6px"><b>Aktuell</b>:<br><code style="display:inline-block;background:#07233a;padding:4px 6px;border-radius:4px;max-width:100%;white-space:pre-wrap;word-break:break-word">${escapeHTML(sec.current || '(leer)')}</code></div>
+            <div><b>Neu</b>:<br><code style="display:inline-block;background:#07233a;padding:4px 6px;border-radius:4px;max-width:100%;white-space:pre-wrap;word-break:break-word">${escapeHTML(sec.proposed)}</code></div>
+            ${metaLine}
+          </div>`;
+      }).join('');
+      const actionsHTML = (()=>{
+        if (sections.length===1){
+          const single = sections[0];
+          return `<button id="co_act_${single.key}" style="${btn('#1b8d3d')}">Überschreiben</button>`;
+        }
+        return `
+          <button id="co_act_red" style="${btn('#1b8d3d')}">Dateiname überschreiben</button>
+          <button id="co_act_notes" style="${btn('#1b8d3d')}">Notizen überschreiben</button>
+          <button id="co_act_both" style="${btn('#1565c0')}">Beide überschreiben</button>`;
+      })();
+      combinedOverlayEl.innerHTML = `
+        <div style="font-weight:700;margin-bottom:6px;">SuperRED – Überschreiben bestätigen</div>
+        <div style="opacity:.8;margin-bottom:8px">${new Date().toLocaleTimeString()}</div>
+        ${sectionHTML}
+        <div style="margin-top:8px">
+          ${actionsHTML}
+          <button id="co_cancel" style="${btn('#3a3a3a')}">Abbrechen</button>
+        </div>
+      `;
+      document.body.appendChild(combinedOverlayEl);
+      const call = (what)=>{ try{ combinedOverlayEl.remove(); }catch{} onAction?.(what); };
+      combinedOverlayEl.querySelector('#co_act_red')?.addEventListener('click', ()=>call('red'));
+      combinedOverlayEl.querySelector('#co_act_notes')?.addEventListener('click', ()=>call('notes'));
+      combinedOverlayEl.querySelector('#co_act_both')?.addEventListener('click', ()=>call('both'));
+      combinedOverlayEl.querySelector(`#co_act_${sections[0]?.key}`)?.addEventListener('click', ()=>call(sections[0]?.key));
+      combinedOverlayEl.querySelector('#co_cancel')?.addEventListener('click', ()=>{ try{ combinedOverlayEl.remove(); }catch{} });
+    }catch(err){ console.error('[SuperRED] Combined-Overlay-Fehler:', err); alert('SuperRED: Overlay-Fehler (siehe Konsole).'); }
+  }
+
+  // ===== Builder für Dateiname + Notizen =====
+  function computeFinalFileName(values, targetInputEl) {
+    const cfg = SUPERRED_CONFIG.filename;
+    const nummerExisting = getExistingNumberFromField(targetInputEl);
+    const nummerGuessed  = guessEightDigitNumber([values.headline, values.subline, values.body]);
+    let nummer = nummerExisting; if (!nummer) nummer = nummerGuessed; if (!nummer && cfg.requireEightDigitId) nummer = (cfg.missingIdPlaceholder ?? '');
+    let baseHeadline = (values.headline ?? '').trim(); if (!baseHeadline) baseHeadline = (values.subline ?? '').trim();
+    if (!baseHeadline) { const body = (values.body ?? '').replace(/\s+/g,' ').trim(); baseHeadline = body.split(' ').slice(0, 10).join(' '); if (!baseHeadline) baseHeadline = 'ohne Titel'; }
+    const headline = safeHeadline(baseHeadline);
+    const stichwort = extractStichwort(values);
+    const kw = (cfg.useKW) ? (cfg.kwMode === 'redaktionsschluss' ? redaktionsKWString(new Date(), cfg.redaktionsschlussWeekday) : isoWeekString(new Date())) : '';
+    const kuerzel = computeAusgabeKuerzel(values);
+    return { text: buildFileName({ kw, kuerzel, nummer, headline, stichwort }), kw, kuerzel };
+  }
+  function buildNotesLines({ subline, body }) {
+  const sections = []; // [{ k: 'termin'|'checken'|'tags', text: '...' }]
+  const allText = `${subline ?? ''}\n${body ?? ''}`;
+
+  // 1) Termin (optional)
+  const dtLine = computeTerminLine(allText);
+  if (dtLine) sections.push({ k: 'termin', text: dtLine });
+
+  // 2) CHECKEN (optional, inkl. Phrasen)
+  const phrases = findPhraseHits(allText);
+  if (phrases.length) {
+    sections.push({
+      k: 'checken',
+      text: `CHECKEN!${NOTES_CFG.showPhraseHits ? ' ' + phrases.join(', ') : ''}`,
     });
   }
 
-  // ===== Hotkeys =====
-  window.addEventListener('keydown', (e) => {
+  // 3) TAGs (optional)
+  const tags = countTagHits(allText);
+  if (tags.length) {
+    const room = Math.max(0, NOTES_CFG.tagMaxCount);
+    const picked = tags.slice(0, room);
+    // Beibehaltung Deiner bisherigen Darstellung: jede weitere Zeile mit führendem Leerzeichen
+    sections.push({ k: 'tags', text: picked.join(' | ') });
+  }
+
+  // --- NEU: Inline-Separator " || " nur anhängen, wenn danach noch Inhalt folgt
+  const sepInline = (NOTES_CFG.inlineSep ?? '').toString();
+  for (let i = 0; i < sections.length - 1; i++) {
+    if ((sections[i].k === 'termin' || sections[i].k === 'checken') && sepInline) {
+      sections[i].text += sepInline;
+    }
+  }
+
+  // Rückgabe bleibt ein Array von Zeilen; Join passiert später mit NOTES_CFG.sep
+  return sections.map(s => s.text);
+}
+
+
+  // ===== Orchestrator: kombiniertes Verhalten auf STRG+ALT+R =====
+  async function performCombinedFill(){
+    const target = findArticleDescriptionInput();
+    const notesEl = findNotesField();
+    if (!target && !notesEl){ alert('SuperRED: Weder Artikelbeschreibung noch Notizen-Feld gefunden.'); return; }
+
+    const values = await captureAllThree();
+
+    // --- Dateiname (RED)
+    let red = null;
+    if (target){
+      const currentRED = (target.value ?? '').toString().trim();
+      const onlyEightDigits = /^\d{8}$/.test(currentRED) || currentRED === '';
+      const { text: proposedRED, kw, kuerzel } = computeFinalFileName(values, target);
+      red = { current: currentRED, proposed: proposedRED, onlyEightDigits, kw, kuerzel };
+    }
+
+    // --- Notizen (NOTES)
+    let notes = null;
+    if (notesEl){
+      const currentNOTES = (notesEl.value ?? notesEl.textContent ?? '').trim();
+      const isTrivial = currentNOTES === '' || /^\d{8}$/.test(currentNOTES);
+      const notesText = buildNotesLines({ subline: values.subline, body: values.body }).join(NOTES_CFG.sep);
+      notes = { current: currentNOTES, proposed: notesText, isTrivial };
+    }
+
+    // --- Sofort schreiben (ohne Overlay) & sammeln, was bestätigt werden muss
+    const toConfirm = [];
+
+    if (red){
+      if (red.proposed === red.current){ /* nix tun, Overlay unterdrücken */ }
+      else if (red.onlyEightDigits){ setInputValueReactSafe(target, red.proposed); try{ target.selectionStart=target.selectionEnd=target.value.length; }catch{} }
+      else { toConfirm.push({ key:'red', title:'Artikelbeschreibung (Dateiname)', current:red.current, proposed:red.proposed, meta:{ kw:red.kw, kuerzel:red.kuerzel } }); }
+    }
+
+    if (notes){
+      if (notes.proposed === notes.current){ /* nix tun, Overlay unterdrücken */ }
+      else if (notes.isTrivial || !NOTES_CFG.warnIfNonTrivialExisting){ const ok=setNotesReactSafe(notesEl, notes.proposed); flashNotes(notesEl, ok); }
+      else { toConfirm.push({ key:'notes', title:'Notizen', current:notes.current, proposed:notes.proposed, meta:{} }); }
+    }
+
+    if (toConfirm.length === 0) return; // nichts mehr zu bestätigen
+
+    // --- Kombiniertes Overlay zeigen
+    showCombinedConfirmOverlay(toConfirm, (what)=>{
+      if ((what==='red' || what==='both') && red && target && red.proposed !== red.current){ setInputValueReactSafe(target, red.proposed); try{ target.selectionStart=target.selectionEnd=target.value.length; }catch{} }
+      if ((what==='notes' || what==='both') && notes && notesEl && notes.proposed !== notes.current){ const ok=setNotesReactSafe(notesEl, notes.proposed); flashNotes(notesEl, ok); }
+    });
+  }
+
+  // ===== Hotkey =====
+  window.addEventListener('keydown', async (e) => {
     const k = e.key?.toLowerCase?.() ?? '';
-    const fill = (e.ctrlKey && e.altKey && k === 'r');
-    if (fill) { e.preventDefault(); actionFillWithConditionalOverlay(); }
+    const comboR = (e.ctrlKey && e.altKey && k === 'r');
+    if (!comboR) return;
+    e.preventDefault();
+    try { await performCombinedFill(); } catch(err){ console.warn('[SuperRED] Fehler in performCombinedFill:', err); }
   }, true);
 
 })();
 
     // ---- Menü: Anzeigen / Zurücksetzen / Diagnose ----------------------------
-
 
     GM_registerMenuCommand("SuperMAX-Shortcuts anzeigen", () => {
     alert(
@@ -1951,7 +2057,8 @@ document.addEventListener('keydown', function(e) {
         "STRG+ALT+L → URL kürzen mit YOURLS\n" +
         "Menü → YOURLS-Token setzen/anzeigen/löschen\n\n" +
         "SuperRED Tastaturkürzel:\n" +
-        "STRG+ALT+R → Artikelbeschreibung erzeugen\n\n" +
+        "STRG+ALT+R → Artikelbeschreibung erzeugen\n" +
+        "STRG+ALT+R → Notizen mit Textanalyse erzeugen\n\n" +
         "Auch hilfreich im PPS Texteditor:\n" +
         "STRG+A > Alles markieren\n" +
         "STRG+C > Auswahl kopieren\n" +
