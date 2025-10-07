@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.4.1
+// @name         SuperMAX 3.4.2
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.4.1
+// @version      3.4.2
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. SuperRED erzeugt Artikelbeschreibung per STRG+R. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.4.1 gestartet");
+    console.log("SuperMAX v3.4.2 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -579,7 +579,7 @@ const baseReplacements = [
     [/\b(PIN-Code|PIN-Nummer)/g, "PIN"],
     [/\b(Email|EMail|eMail|e-Mail|E–Mail)/g, "E-Mail"],
     [/\b(Spammail|Spam–Mail)/g, "Spam-Mail"],
-    [/\b(auf|unter):/g, "$1"], // Doppelpunkt entfernen
+    [/\b(auf|unter):(?=\s*(¿|https?:\/\/|www\.))/g, "$1"], // Doppelpunkt entfernen
     [/\b(https:\s*\/\/\s*|http:\s*\/\/\s*)/g, ""],
     [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})/g, "/$2/$4"], // zwei Slashs in URL ohne Leerzeichen
     [/(\s*?\/\s*?)([0-9a-zA-ZäöüÄÖÜß\-_.~+=&%$§|?#:]{1,})(\s*?\/\s*?)/g, "/$2/"], // zwei Slashs in URL ohne Leerzeichen
@@ -637,7 +637,7 @@ const hashtagReplacements = [
     [/#BVG/g, "Berliner Verkehrsbetriebe (BVG)"],
     [/#BVV/g, "Bezirksverordnetenversammlung (BVV)"],
     [/#BWB/g, "Berliner Wasserbetriebe (BWB)"],
-    [/#CO2/g, "Kohlendioxid (CO2)"],
+    [/#CO2/g, "Kohlendioxid (CO₂)"],
     [/#CO₂/g, "Kohlendioxid (CO₂)"],
     [/#CSD/g, "Christopher Street Day (CSD)"],
     [/#DAB/g, "Digital Audio Broadcasting (DAB)"],
@@ -1676,7 +1676,7 @@ document.addEventListener('keydown', function(e) {
     labelRegex: /notiz|notizen|notes?/i,
     warnIfNonTrivialExisting: true,
     SKEY_PHRASES: 'sn_phrases_v16',
-    PHRASES_DEFAULT: 'alles für deutschland, durch den rost, eskimo, getürkt, hitler, gestern, heute, morgen, letzte, mohrenstraße, nächste, neger, selbstmord, suizid, unserer redaktion, vergasung, zigeuner',
+    PHRASES_DEFAULT: '29. Februar, alles für deutschland, durch den rost, eskimo, getürkt, hitler, gestern, heute, morgen, letzte, mohrenstraße, nächste, neger, selbstmord, suizid, unserer redaktion, vergasung, zigeuner',
     SKEY_TAG_TABLE: 'sn_tag_table_v16',
     TAG_TABLE_DEFAULT: [
         'BAUEN: abriss, archiologe, architekt, ausgrabung, bagger, bauabnahme, bauantrag, bauarbeit, baubeginn, bauen, baufällig, baugenehmigung, baugrube, bauherr, bauleitung, baumaßnahme, baupläne, baustelle, baustopp, bauverzögerung, bebauung, brückenbau, dachausbau, denkmalschutz, ersatzverkehr, fertigstellung, glasfassade, gleisbau, grundstück, hochbau, immobilie, innenausbau, lückenbau, mietwohnung, modularbau, planfeststellung, randbebauung, restaurierung, richtfest, rückbau, signalbau, spatenstich, sperrung, stahlbeton, straßenbau, streckenausbau, streckenbau, tiefbau, wohnungsbau, wolkenkratzer',
