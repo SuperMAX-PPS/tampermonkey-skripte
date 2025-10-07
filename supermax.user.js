@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         SuperMAX 3.4.2
+// @name         SuperMAX 3.4.3
 // @author       Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @namespace    https://pps.berliner-woche.de
-// @version      3.4.2
+// @version      3.4.3
 // @description  Grundregeln per STRG+S. #-Textphrasen per STRG+ALT+S. SuperERASER entfernt Umbrüche, Makros und Hyperlinks per STRG+E. SuperLINK kürzt URLs per STRG+L. SuperRED erzeugt Artikelbeschreibung per STRG+R. Token-Verwaltung. Updates via GitHub.
 // @updateURL    https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL  https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -44,7 +44,7 @@ console.log("SuperMAX läuft!");
 
 (function () {
     'use strict';
-    console.log("SuperMAX v3.4.2 gestartet");
+    console.log("SuperMAX v3.4.3 gestartet");
 
 // === RegEx-Listen ===
 // === STRG+S: Grundregeln ===
@@ -670,7 +670,7 @@ const hashtagReplacements = [
     [/#FSJ/g, "FSJ (Freiwilliges Soziales Jahr)"],
     [/#FU/g, "Freie Universität Berlin (FU Berlin)"],
     [/#GKV/g, "Gesetzliche Krankenversicherung (GKV)"],
-    [/#HTW/g, "Hochschuhe für Technik und Wirtschaft Berlin (HTW)"],
+    [/#HTW/g, "Hochschule für Technik und Wirtschaft Berlin (HTW)"],
     [/#HU/g, "Humboldt-Universität zu Berlin (HU Berlin)"],
     [/#HWK/g, "Handwerkskammer Berlin (HWK Berlin)"],
     [/#HWR/g, "Hochschule für Wirtschaft und Recht Berlin (HWR)"],
