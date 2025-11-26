@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        SuperMAX 4.2.9
+// @name        SuperMAX 4.2.10
 // @namespace   https://pps.berliner-woche.de
-// @version 4.2.9
+// @version 4.2.10
 // @author      Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @description OneClick (STRG+S) mit RegEx (Basis/Hashtag) auf Head/Sub/Body/BU, SuperERASER (STRG+E), SuperLINK (STRG+ALT+L), SuperRED+NOTES (STRG+ALT+R), SuperPORT (STRG+ALT+P). Fixes: BU-Handling via Editor-API/Layout-Kacheln, Termin-Logik (Listen/Monat), TAG-Joiner konfigurierbar, Regex-Fixes (extractExistingPrefix, kwFromCurrent, Hashtag-Patterns). – 4.2.4: BU-Handling (aktives Feld zuerst, robustere Caption-Erkennung, Navigation angepasst). – 4.2.6: Bei Start in BU wird Body garantiert mitbearbeitet; Fokus bleibt Text.
 // @updateURL   https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -390,6 +390,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\bAntiaging", flags: "gu", replacement: "Anti-Aging" },
         { pattern: "\\bBroccoli", flags: "gu", replacement: "Brokkoli" },
         { pattern: "\\bBezirksbürgermeister", flags: "gu", replacement: "Bürgermeister" },
+        { pattern: "\\bBezirksparlament", flags: "gu", replacement: "Bezirksverordnetenversammlung (BVV)" },
         { pattern: "\\bBezirkstadtr", flags: "gu", replacement: "Stadtr" },
         { pattern: "\\bBVV-Vorsteh", flags: "gu", replacement: "BV-Vorsteh" },
         { pattern: "(B|b?)üfett", flags: "gu", replacement: "$(1)uffet" },
@@ -398,6 +399,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\bdie Tickethotline lautet", flags: "gu", replacement: "Eintrittskarten gibt es unter" },
         { pattern: "\\bDisko", flags: "gu", replacement: "Disco" },
         { pattern: "ehemalige(n?) DDR", flags: "gu", replacement: "DDR" },
+        { pattern: "\\bElternvertretende", flags: "gu", replacement: "Elternvertreter" },
         { pattern: "\\bFahrkosten", flags: "gu", replacement: "Fahrtkosten" },
         { pattern: "\\bFahrtzeit", flags: "gu", replacement: "Fahrzeit" },
         { pattern: "\\bHandikap", flags: "gu", replacement: "Handicap" },
@@ -1279,7 +1281,7 @@ window.addEventListener('keydown', e=>{ const k=e.key?.toLowerCase?.()||''; if((
  *****************************/
 (function(){
  'use strict';
- console.log('[SuperRED] 4.2.9 geladen @', location.href);
+ console.log('[SuperRED] 4.2.10 geladen @', location.href);
  function normalizeSpace(s){ return (s??'').replace(/[\u00A0\u2005]/g,' ').replace(/\s+/g,' ').trim(); }
  const deepQSA=(selector, root=document)=>{ const out=new Set(); function walk(n){ if(!n) return; if(n.querySelectorAll) n.querySelectorAll(selector).forEach(el=>out.add(el)); const all=n.querySelectorAll? n.querySelectorAll('*'):[]; all.forEach(el=>{ if(el.shadowRoot) walk(el.shadowRoot);}); } walk(root); return Array.from(out); };
  const deepQS=(selector, root=document)=>{ const list=deepQSA(selector, root); return list.length? list[0]:null; };
@@ -1693,4 +1695,4 @@ const beforeRED=(function(){ try { return ((document.querySelector('#moduleTitle
 }
 async function runSuperRedNotes(){ try{ const { values, captions } = await (window.__SMX__?.captureValuesAndCaptionsOnce?.() || { values:{headline:'',subline:'',body:''}, captions:[] }); await window.__SMX__?.performCombinedFill?.(values, captions); await new Promise(r=>setTimeout(r,20)); await focusBodyPM(); }catch(err){ console.warn('SuperRED run error', err); smxToast('SuperRED/NOTES: Fehler.'); } }
 window.addEventListener('keydown', (e)=>{ const k=e.key?.toLowerCase?.()||''; if(e.ctrlKey && !e.altKey && !e.shiftKey && k==='s'){ e.preventDefault(); runOneClick(); return; } if(e.ctrlKey && e.altKey && k==='r'){ e.preventDefault(); runSuperRedNotes(); return; } if(e.ctrlKey && e.altKey && k==='p'){ e.preventDefault(); runSuperPORT(); return; } }, true);
-console.log('SuperMAX 4.2.9 bereit.'); console.info('[SuperMAX] formatting-preserve: ON');
+console.log('SuperMAX 4.2.10 bereit.'); console.info('[SuperMAX] formatting-preserve: ON');
