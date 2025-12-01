@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        SuperMAX 4.2.10
+// @name        SuperMAX 4.3.1
 // @namespace   https://pps.berliner-woche.de
-// @version 4.2.10
+// @version 4.3.1
 // @author      Frank Luhn, Berliner Woche ©2025 (optimiert für PPS unter PEIQ)
 // @description OneClick (STRG+S) mit RegEx (Basis/Hashtag) auf Head/Sub/Body/BU, SuperERASER (STRG+E), SuperLINK (STRG+ALT+L), SuperRED+NOTES (STRG+ALT+R), SuperPORT (STRG+ALT+P). Fixes: BU-Handling via Editor-API/Layout-Kacheln, Termin-Logik (Listen/Monat), TAG-Joiner konfigurierbar, Regex-Fixes (extractExistingPrefix, kwFromCurrent, Hashtag-Patterns). – 4.2.4: BU-Handling (aktives Feld zuerst, robustere Caption-Erkennung, Navigation angepasst). – 4.2.6: Bei Start in BU wird Body garantiert mitbearbeitet; Fokus bleibt Text.
 // @updateURL   https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -99,18 +99,18 @@ const CFG_DEFAULTS = {
         { pattern: "\\.\\s*11\\.(2025|25)\\b", flags: "gu", replacement: ". November" },
         { pattern: "\\.\\s*12\\.(2025|25)\\b", flags: "gu", replacement: ". Dezember" },
         { pattern: "\\.\\s*0?1\\.(2026|26)\\b", flags: "gu", replacement: ". Januar" },
-        { pattern: "\\.\\s*0?1\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Januar $(1)" },
-        { pattern: "\\.\\s*0?2\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Februar $(1)" },
-        { pattern: "\\.\\s*0?3\\.(\\d{2,4})\\b", flags: "gu", replacement: ". März $(1)" },
-        { pattern: "\\.\\s*0?4\\.(\\d{2,4})\\b", flags: "gu", replacement: ". April $(1)" },
-        { pattern: "\\.\\s*0?5\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Mai $(1)" },
-        { pattern: "\\.\\s*0?6\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Juni $(1)" },
-        { pattern: "\\.\\s*0?7\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Juli $(1)" },
-        { pattern: "\\.\\s*0?8\\.(\\d{2,4})\\b", flags: "gu", replacement: ". August $(1)" },
-        { pattern: "\\.\\s*0?9\\.(\\d{2,4})\\b", flags: "gu", replacement: ". September" },
-        { pattern: "\\.\\s*10\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Oktober" },
-        { pattern: "\\.\\s*11\\.(\\d{2,4})\\b", flags: "gu", replacement: ". November" },
-        { pattern: "\\.\\s*12\\.(\\d{2,4})\\b", flags: "gu", replacement: ". Dezember" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?1\\.", flags: "gu", replacement: "$(1). Januar" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?2\\.", flags: "gu", replacement: "$(1). Februar" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?3\\.", flags: "gu", replacement: "$(1). März" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?4\\.", flags: "gu", replacement: "$(1). April" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?5\\.", flags: "gu", replacement: "$(1). Mai" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?6\\.", flags: "gu", replacement: "$(1). Juni" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?7\\.", flags: "gu", replacement: "$(1). Juli" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?8\\.", flags: "gu", replacement: "$(1). August" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*0?9\\.", flags: "gu", replacement: "$(1). September" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*10\\.", flags: "gu", replacement: "$(1). Oktober" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*11\\.", flags: "gu", replacement: "$(1). November" },
+        { pattern: "\\b(\\d{1,2})\\.\\s*12\\.", flags: "gu", replacement: "$(1). Dezember" },
         { pattern: "\\b0([1-9])\\. (?=Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)", flags: "gu", replacement: "$(1). " },
         { pattern: "\\b(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\\s*[-–]\\s*(\\d{1,2})", flags: "gu", replacement: "$(1) bis $(2)" },
 
@@ -1281,7 +1281,7 @@ window.addEventListener('keydown', e=>{ const k=e.key?.toLowerCase?.()||''; if((
  *****************************/
 (function(){
  'use strict';
- console.log('[SuperRED] 4.2.10 geladen @', location.href);
+ console.log('[SuperRED] 4.3.1 geladen @', location.href);
  function normalizeSpace(s){ return (s??'').replace(/[\u00A0\u2005]/g,' ').replace(/\s+/g,' ').trim(); }
  const deepQSA=(selector, root=document)=>{ const out=new Set(); function walk(n){ if(!n) return; if(n.querySelectorAll) n.querySelectorAll(selector).forEach(el=>out.add(el)); const all=n.querySelectorAll? n.querySelectorAll('*'):[]; all.forEach(el=>{ if(el.shadowRoot) walk(el.shadowRoot);}); } walk(root); return Array.from(out); };
  const deepQS=(selector, root=document)=>{ const list=deepQSA(selector, root); return list.length? list[0]:null; };
@@ -1695,4 +1695,4 @@ const beforeRED=(function(){ try { return ((document.querySelector('#moduleTitle
 }
 async function runSuperRedNotes(){ try{ const { values, captions } = await (window.__SMX__?.captureValuesAndCaptionsOnce?.() || { values:{headline:'',subline:'',body:''}, captions:[] }); await window.__SMX__?.performCombinedFill?.(values, captions); await new Promise(r=>setTimeout(r,20)); await focusBodyPM(); }catch(err){ console.warn('SuperRED run error', err); smxToast('SuperRED/NOTES: Fehler.'); } }
 window.addEventListener('keydown', (e)=>{ const k=e.key?.toLowerCase?.()||''; if(e.ctrlKey && !e.altKey && !e.shiftKey && k==='s'){ e.preventDefault(); runOneClick(); return; } if(e.ctrlKey && e.altKey && k==='r'){ e.preventDefault(); runSuperRedNotes(); return; } if(e.ctrlKey && e.altKey && k==='p'){ e.preventDefault(); runSuperPORT(); return; } }, true);
-console.log('SuperMAX 4.2.10 bereit.'); console.info('[SuperMAX] formatting-preserve: ON');
+console.log('SuperMAX 4.3.1 bereit.'); console.info('[SuperMAX] formatting-preserve: ON');
