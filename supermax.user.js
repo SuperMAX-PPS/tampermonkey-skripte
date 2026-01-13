@@ -1,15 +1,16 @@
 // ==UserScript==
-// @name SuperMAX 5.1.1 Multi-Site Struktur
+// @name SuperMAX 5.1.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.1.1
+// @version 5.1.4
 // @author Frank Luhn, Berliner Woche ©2026
-// @description SuperPORT+ (Multi-)Textfelderkennung | SuperBRIDGE (PPS->CUE) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | Multi-Site Struktur
+// @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @connect bwurl.de
 // @match https://pps.berliner-woche.de/*
 // @match https://cue.funke.cue.cloud/*
-// @match :///contao/*
+// @match https://contao/*
+// @match https://text-resizing-348470635809.europe-west3.run.app/*
 // @run-at document-end
 // @grant GM_xmlhttpRequest
 // @grant GM_getValue
@@ -121,7 +122,10 @@ function superbridgeExtractOrtsteileFromConfigText(txt){
 // Globales Set für Ortsteile (SuperBRIDGE/SuperRED)
 window.SUPERBRIDGE_ORTSTEILE = new Set(superbridgeExtractOrtsteileFromConfigText(SUPERRED_CONFIG_TEXT));
 
-//// KAPITEL 1.3 // CFG SuperRED & SuperNOTES ////////////////////////////////////////////////////////////
+//// KAPITEL 1.3 // CFG SuperSHIRT ///////////////////////////////////////////////////////////////////////
+//// (Platzhalter - Konfigurationen)
+
+//// KAPITEL 1.4 // CFG SuperRED & SuperNOTES ////////////////////////////////////////////////////////////
 const CFG = {
 SUPERRED:{
 filenameOrder: 'S', // 'H' | 'S' | 'S!' (nur Stichwort)
@@ -215,7 +219,7 @@ WIRTSCHAFT: angestellte, arbeit, autovermiet, bankrott, baumarkt, baumärkte, bu
 }
 };
 
-//// KAPITEL 1.4 // CFG SuperMAX mit RegEx und Hashtag-Regeln ////////////////////////////////////////////
+//// KAPITEL 1.5 // CFG SuperMAX mit RegEx und Hashtag-Regeln ////////////////////////////////////////////
 const CFG_DEFAULTS = {
   FEATURES:{ runHashtagOnOneClick:true, saveAfterOneClick:false, confirmOverwrite:true },
   REGEX:{
@@ -226,9 +230,10 @@ const CFG_DEFAULTS = {
         { pattern: "Die drei !{3}", flags: "gu", replacement: "DREI_AUSRUFE" }, // Debugging
         { pattern: "\\b(\\d{1,4})\\s*[–-]\\s*(\\d{1,4})\\b", flags: "gu", replacement: "$(1)-$(2)" }, // Gedankenstrich zwischen zwei Zahlen wird Bindestrich
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" }, // Gedankenstrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
-        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
         { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s*/\\s*(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u202F/\u202F" },    // Slash zwischen zwei Wörtern vorweg mit geschütztem Leerzeichen
         { pattern: "(\\(?\\d+)(\\s*)(/)(\\s*)(\\(?\\d+)", flags: "gu", replacement: "$(1)$(3)$(5)" }, // Slash zwischen zwei Zahlen ohne Leerzeichen
+        { pattern: "\\*\\*", flags: "g", replacement: "" }, // Pseudofettung in Text Resizing
 
         // An- und Abführungszeichen sowie Auslassungszeichen vereinheitlichen
         // Apostroph
@@ -1967,8 +1972,10 @@ return data;
 const LABELS = {
 headline_pro:['headline_pro'],
 headline:['überschrift','headline','titel'],
-subline:['unterzeile','subheadline'],
+subline:['unterzeile','subheadline','autorenzeile'],
 body:['text','fließtext','body','artikeltext','absatz'],
+body_input:['text','textarea','body','artikeltext','absatz'],             // nur ARTICLE RESIZER
+body_output:['text','textarea','body','ergebnis','artikeltext','absatz'], // nur ARTICLE RESIZER
 print_filename:['print_filename','manueller print-dateiname','manueller print-dateiname'],
 articleDescription:['artikelbeschreibung','dateiname','filename','file name'],
 notes:['notiz','notizen','notes'],
@@ -2599,7 +2606,9 @@ write:['headline','headline_pro','subline','locality','body','caption','credit']
 SuperRED:{ read:['headline','headline_pro','subline','locality','body','caption','credit','print_et','id'],
 write:['locality','print_filename','articleDescription','notes','print_et'] },
 SuperBRIDGE:{ read:['headline','subline','body','caption','credit','locality'],
-write:['headline','subline','locality','body'] }
+write:['headline','subline','locality','body'] },
+SuperSHIRT:{ read:['headline','subline','body'], write:['headline','subline','body'] },
+articleRESIZER:{ read:['headline','subline','body','body_output'], write:['body','body_input'] }
 };
 let ACTIVE_PROFILE = null;
 try { ACTIVE_PROFILE = GM_getValue('supermax_active_profile', null); } catch {}
@@ -2795,6 +2804,7 @@ return changed;
 }
 
 //// KAPITEL 5 //// MODULE ///////////////////////////////////////////////////////////////////////////////
+//// KAPITEL 5.1 // SuperPORT ////////////////////////////////////////////////////////////////////////////
 const SNIPPETS = {
 headline_pro:'Überschrift 2 – Platzhalter',
 headline:'Überschrift 1 – Platzhalter',
@@ -2810,7 +2820,6 @@ print_filename:'Dateiname – Platzhalter',
 id:'ID – Platzhalter'
 };
 
-//// KAPITEL 5.1 // SuperPORT ////////////////////////////////////////////////////////////////////////////
 function collectAllTargets(){
 const adapter=currentAdapter();
 
@@ -3041,10 +3050,10 @@ return;
 }
 
 //// KAPITEL 5.3 // SuperSHIRT ///////////////////////////////////////////////////////////////////////////
-// (Platzhalter)
+//// (Platzhalter - Modul)
 
 //// KAPITEL 5.4 // SuperCLIPP ///////////////////////////////////////////////////////////////////////////
-// (Platzhalter)
+//// (Platzhalter)
 
 
 //// KAPITEL 5.5 // SuperLINK ////////////////////////////////////////////////////////////////////////////
