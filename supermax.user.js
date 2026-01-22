@@ -1,15 +1,17 @@
 // ==UserScript==
-// @name SuperMAX 5.1.4 Multi-Site Struktur
+// @name SuperMAX 5.3.1 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.1.4
+// @version 5.3.1
 // @author Frank Luhn, Berliner Woche ©2026
-// @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
+// @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @downloadURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
 // @connect bwurl.de
 // @match https://pps.berliner-woche.de/*
 // @match https://cue.funke.cue.cloud/*
-// @match https://contao/*
+// @match https://funkemediende.layoutpreview.aptoma.no/*
+// @match https://funkemediende.drpublish.aptoma.no/*
+// @match https://contao.org/de/*
 // @match https://text-resizing-348470635809.europe-west3.run.app/*
 // @run-at document-end
 // @grant GM_xmlhttpRequest
@@ -123,7 +125,36 @@ function superbridgeExtractOrtsteileFromConfigText(txt){
 window.SUPERBRIDGE_ORTSTEILE = new Set(superbridgeExtractOrtsteileFromConfigText(SUPERRED_CONFIG_TEXT));
 
 //// KAPITEL 1.3 // CFG SuperSHIRT ///////////////////////////////////////////////////////////////////////
-//// (Platzhalter - Konfigurationen)
+/* SuperSHIRT – Artikel-Kurz/Lang via ARTICLE RESIZER
+   – Selektor-/Text-Hints passend zur NiceGUI/Quasar-Struktur
+   – URL: siehe @match im UserScript-Header
+*/
+const CFG_SUPERSHIRT = {
+  URL: 'https://text-resizing-348470635809.europe-west3.run.app/',
+  // Headings/Texthints (RegExp, deutsch – robust gegen kleine Layout-Varianten)
+  headings: {
+    input: /Bitte\s+einen\s+Artikeltext\s+eingeben:/i,
+    output: /Ergebnis/i,
+    headlinePick: /Bitte\s+eine\s+Überschrift\s+wählen:/i,
+    sublinePick: /Bitte\s+(?:bei\s+Bedarf\s+)?eine\s+Autorenzeile\s+wählen:/i
+  },
+  // textarea/Radio-Erkennung (Klassen in NiceGUI/Quasar)
+selectors: {
+  textareas: 'textarea.q-field__native',
+  radiogroup: 'div.q-option-group[role="radiogroup"]', // präziser als nur [role="radiogroup"]
+  radioItem: '.q-radio[aria-checked="true"]',
+  radioLabel: '.q-radio__label'
+},
+  // Storage-Keys (GM_setValue/GM_getValue)
+  store: {
+    payloadKey: 'supershirt_payload_v1', // CUE -> RESIZER
+    resultKey:  'supershirt_result_v1'   // RESIZER -> CUE
+  },
+  // --- One-Click Optionen ---
+  autoApplyToCUE: true,        // wenn im AR ein Ergebnis gespeichert wird, automatisch in CUE anwenden
+  autoOpenCUEOnHarvest: true,  // wenn cueUrl bekannt: CUE-Artikel beim Ernten öffnen
+  autoApplyOnCUELoad: true,    // wenn CUE Tab frisch geöffnet wird und Result liegt vor: automatisch anwenden
+};
 
 //// KAPITEL 1.4 // CFG SuperRED & SuperNOTES ////////////////////////////////////////////////////////////
 const CFG = {
@@ -1177,7 +1208,6 @@ const CFG_DEFAULTS = {
   }
   };
 
-
 //// KAPITEL 2 //// UTILITIES ////////////////////////////////////////////////////////////////////////////
 //// KAPITEL 2.1 // Mini-UI //////////////////////////////////////////////////////////////////////////////
 function smxToast(msg, ok = true) {
@@ -1213,7 +1243,369 @@ return cfg?.[adapterId] || {};
 } catch { return {}; }
 }
 
-//// KAPITEL 2.3 // Hilfsfunktionen //////////////////////////////////////////////////////////////////////
+
+//// KAPITEL 2.3 // GLOBALE HELPER für "Absatz einfügen" & Body-Editoren /////////////////////////////////
+/*
+ * CUE: Body besteht aus mehreren "Paragraph"-Story-Elementen.
+ * Vor dem Neuschreiben müssen diese leer + (bis auf eines) gelöscht werden.
+ *
+ * Ergebnis: genau 1 sichtbarer Body-Paragraph bleibt, leer (Quill-Empty = "\n").
+ *
+ * @param {object} opts
+ * @param {Document|Element} opts.scope DOM-Scope (Tabpanel o.ä.)
+ * @param {number} opts.keep Wie viele Paragraph-Elemente sollen bleiben? (Default 1)
+ * @param {number} opts.maxRemove Sicherheitslimit gegen Endlosschleifen
+ * @param {boolean} opts.toast Kurzes Feedback per smxToast
+ * @returns {Promise<{ok:boolean, removed:number, remaining:number, cleared:number}>}
+ */
+
+
+// --- KAPITEL 2.3: GLOBALE Helper für "Absatz einfügen" & Body-Editoren -----------------
+
+/** Findet den "Absatz einfügen"-Button (harter Selector nach deinem DOM-Snippet) */
+function cueFindAddParagraphButtonStrict(root = document) {
+  return (
+    deepQS('div.cue-icon.paragraph.predefined[title*="Absatz einfügen" i]', root) ||
+    deepQS('div.cue-icon.paragraph.predefined[title*="absatz" i]', root)
+  );
+}
+
+/** Klickt "Absatz einfügen" (erst Adapter-Helper, dann harter Selector) */
+async function cueClickAddParagraph(root = document) {
+  // 1) Adapter-Helper (falls vorhanden)
+  try {
+    const btn = (typeof CUE === 'object' && CUE?._tabs?.cueFindAddParagraphButton)
+      ? CUE._tabs.cueFindAddParagraphButton(root)
+      : null;
+    if (btn) { btn.click(); await sleep(120); return true; }
+  } catch {}
+
+  // 2) Harte Variante
+  const strict = cueFindAddParagraphButtonStrict(root);
+  if (strict) { strict.click(); await sleep(120); return true; }
+
+  return false;
+}
+
+/** Liefert deduplizierte Liste der echten Body-Editoren (1 Editor pro Absatz) */
+function cueGetBodyParagraphEditors(scope = document) {
+  const pickEditor = (root) =>
+    deepQS('.ql-editor[contenteditable="true"]', root) ||
+    deepQS('[contenteditable="true"]', root) ||
+    deepQS('textarea, [role="textbox"]', root);
+
+  let editors = [];
+
+  // Primär: Story-Container (stabil pro Absatz)
+  const story = deepQSA('[data-testid="story-element-se_paragraph"]', scope).filter(isVisible);
+  if (story.length) {
+    for (const c of story) {
+      const ed = pickEditor(c);
+      if (ed) editors.push(ed);
+    }
+  } else {
+    // Fallback: Feld-Container
+    const fields = deepQSA('[data-testid="se_paragraph_field"]', scope).filter(isVisible);
+    for (const f of fields) {
+      const ed = pickEditor(f);
+      if (ed) editors.push(ed);
+    }
+  }
+
+  // Dedupe nach Element-Referenz
+  const uniq = [];
+  const seen = new Set();
+  for (const ed of editors) {
+    if (!seen.has(ed)) { seen.add(ed); uniq.push(ed); }
+  }
+  return uniq;
+}
+
+/**
+ * Stellt sicher, dass mindestens `need` Body-Absätze existieren.
+ * Erst CUE._tabs.cueEnsureBodyParagraphElements versuchen, dann Click-Fallback.
+ */
+async function cueEnsureBodyParagraphEditorsStrict(need, scope = document, { timeout = 7000 } = {}) {
+  need = Math.max(1, Number(need || 1));
+
+  // 1) Erst Adapter-Funktion (wenn vorhanden)
+  try {
+    if (typeof CUE === 'object' && CUE?._tabs?.cueEnsureBodyParagraphElements) {
+      await CUE._tabs.cueEnsureBodyParagraphElements(need, scope);
+      await sleep(150);
+    }
+  } catch {}
+
+  // 2) Prüfen
+  let editors = cueGetBodyParagraphEditors(scope);
+  if (editors.length >= need) return editors;
+
+  // 3) Click-Fallback: "Absatz einfügen" bis genug da sind
+  const start = Date.now();
+  while (editors.length < need && (Date.now() - start) < timeout) {
+    const ok = await cueClickAddParagraph(scope);
+    if (!ok) break;
+
+    // warten bis ein weiterer Editor auftaucht
+    const prev = editors.length;
+    await waitFor(() => cueGetBodyParagraphEditors(scope).length > prev, { timeout: 3000, poll: 80, root: document.body });
+
+    editors = cueGetBodyParagraphEditors(scope);
+  }
+
+  return editors;
+}
+
+async function cueCleanBodyToSingleParagraph(opts = {}) {
+  const scope = opts.scope ?? document;
+  const keep = Math.max(1, Number(opts.keep ?? 1));
+  const maxRemove = Math.max(1, Number(opts.maxRemove ?? 30));
+  const doToast = opts.toast ?? false;
+
+  // simple Lock (verhindert Doppelklick/Parallelruns)
+  if (cueCleanBodyToSingleParagraph.__lock) {
+    return { ok: true, removed: 0, remaining: 0, cleared: 0 };
+  }
+  cueCleanBodyToSingleParagraph.__lock = true;
+
+  let removed = 0;
+  let cleared = 0;
+
+  try {
+    // Body TESTIDs – zur Laufzeit vorhanden (CUE ist in Kap. 3.4 definiert)
+    const bodyIds =
+      (typeof CUE === 'object' && CUE?._tabs?.TESTIDS?.body) ??
+      ['se_paragraph_field', 'story-element-se_paragraph'];
+
+    const hostSelector = bodyIds.map(id => `[data-testid="${id}"]`).join(',');
+
+    const getHosts = () =>
+      deepQSA(hostSelector, scope).filter(isVisible);
+
+    const pickEditor = (host) =>
+      deepQS('.ql-editor[contenteditable="true"]', host) ||
+      deepQS('[contenteditable="true"]', host) ||
+      deepQS('textarea, input[type="text"], input[type="search"], [role="textbox"]', host);
+
+    const getQuill = (editorEl) => {
+      try {
+        const container =
+          editorEl?.closest?.('.ql-container') ||
+          editorEl?.closest?.('[class*="ql-container"]');
+        return container?.__quill ?? null;
+      } catch { return null; }
+    };
+
+    const clearEditor = (editorEl) => {
+      if (!editorEl) return false;
+      if (typeof SMX_DRY_RUN !== 'undefined' && SMX_DRY_RUN) return true;
+
+      // Quill leer machen (Quill-Empty = "\n")
+      try {
+        const q = getQuill(editorEl);
+        if (q) {
+          q.focus?.();
+          try { q.deleteText(0, Math.max(0, (q.getLength?.() ?? 0)), 'user'); } catch {}
+          try { q.setText('', 'user'); } catch {}
+          // Events
+          try { (q.root ?? editorEl).dispatchEvent(new InputEvent('input', { bubbles: true })); } catch {}
+          try { (q.root ?? editorEl).dispatchEvent(new Event('change', { bubbles: true })); } catch {}
+          return true;
+        }
+      } catch {}
+
+      // Fallback: generisch
+      try {
+        writeGeneric(editorEl, '');
+        return true;
+      } catch {}
+      return false;
+    };
+
+    const findDeleteButtonForHost = (host) => {
+      // Wir suchen in Host + bis zu 4 Eltern-Containern nach "Löschen/Entfernen"
+      const delRe = /\b(löschen|entfernen|delete|remove|trash)\b/i;
+
+      const candidatesIn = (root) => {
+        const btnSel = 'button, [role="button"], [data-testid], .MuiButton-root, [class*="button"], [class*="IconButton"]';
+        return deepQSA(btnSel, root).filter(isVisible);
+      };
+
+      const scoreBtn = (btn) => {
+        const txt = (btn.innerText ?? btn.textContent ?? '').trim();
+        const aria = (btn.getAttribute?.('aria-label') ?? btn.getAttribute?.('title') ?? '').trim();
+        const tid = (btn.getAttribute?.('data-testid') ?? '').trim();
+        const all = `${txt} ${aria} ${tid}`.toLowerCase();
+
+        let s = 0;
+        if (delRe.test(all)) s += 50;
+        if (/delete|remove|trash|löschen|entfernen/i.test(tid)) s += 25;
+        // Icon-only Buttons: oft aria-label enthält delete/remove
+        if (!txt && aria) s += 5;
+        return s;
+      };
+
+      let node = host;
+      for (let i = 0; i < 5 && node; i++) {
+        const btns = candidatesIn(node);
+        let best = null, bestScore = 0;
+        for (const b of btns) {
+          const sc = scoreBtn(b);
+          if (sc > bestScore) { bestScore = sc; best = b; }
+        }
+        if (best && bestScore >= 35) return best;
+        node = node.parentElement;
+      }
+      return null;
+    };
+
+    const tryConfirmDeleteModal = async () => {
+      // Manche UIs fragen nach Bestätigung ("Löschen" / "Delete")
+      const dialog =
+        deepQS('[role="dialog"]') ||
+        deepQS('.MuiDialog-root, .MuiModal-root, [class*="Dialog"], [class*="Modal"]');
+      if (!dialog || !isVisible(dialog)) return false;
+
+      const btns = deepQSA('button, [role="button"], .MuiButton-root', dialog).filter(isVisible);
+      const okRe = /\b(löschen|delete|entfernen|remove|ok|bestätigen|confirm)\b/i;
+      const cancelRe = /\b(abbrechen|cancel|zurück|nein)\b/i;
+
+      let best = null;
+      for (const b of btns) {
+        const t = ((b.innerText ?? b.textContent ?? '') + ' ' +
+                   (b.getAttribute?.('aria-label') ?? '') + ' ' +
+                   (b.getAttribute?.('title') ?? '')).trim();
+        if (!t) continue;
+        if (cancelRe.test(t)) continue;
+        if (okRe.test(t)) { best = b; break; }
+      }
+      if (best) {
+        best.click();
+        await sleep(120);
+        return true;
+      }
+      return false;
+    };
+
+    // 1) Hosts holen – wenn keine: ggf. Add klicken (falls vorhanden)
+    let hosts = getHosts();
+    if (!hosts.length) {
+      try {
+        const addBtn = (typeof CUE === 'object' && CUE?._tabs?.cueFindAddParagraphButton)
+          ? CUE._tabs.cueFindAddParagraphButton(scope)
+          : null;
+        if (addBtn) {
+          addBtn.click();
+          await sleep(120);
+          // auf neuen Editor warten
+          if (typeof CUE === 'object' && CUE?._tabs?.cueWaitForEditableInside) {
+            await CUE._tabs.cueWaitForEditableInside(bodyIds, { timeout: 2500, scope });
+          } else {
+            await sleep(500);
+          }
+          hosts = getHosts();
+        }
+      } catch {}
+    }
+
+    if (!hosts.length) {
+      if (doToast) smxToast('CUE Absatz-Cleaner: Keine Body-Absätze gefunden.', false);
+      return { ok: false, removed: 0, remaining: 0, cleared: 0 };
+    }
+
+    // 2) Alle Editoren leeren (auch die, die gleich gelöscht werden)
+    for (const h of hosts) {
+      const ed = pickEditor(h);
+      if (clearEditor(ed)) cleared++;
+    }
+
+    // 3) Überschüssige Paragraph-Story-Elemente löschen, bis nur "keep" übrig sind
+    let safety = 0;
+    while (hosts.length > keep && safety < maxRemove) {
+      safety++;
+
+      // Wir lassen den ersten Host stehen, löschen ab Index 1 rückwärts (stabiler)
+      const toDelete = hosts.slice(keep).reverse();
+      let didDeleteAny = false;
+
+      for (const h of toDelete) {
+        // delete Button finden
+        const delBtn = findDeleteButtonForHost(h);
+        if (!delBtn) {
+          // kein Delete-Button → wenigstens leer lassen
+          continue;
+        }
+
+        // Klick + ggf. Modal bestätigen
+        delBtn.click();
+        await sleep(120);
+        await tryConfirmDeleteModal();
+
+        // warten, dass Host aus reflektiertem DOM verschwindet
+        await waitFor(() => !document.contains(h), { timeout: 2500, poll: 80, root: document.body });
+
+        removed++;
+        didDeleteAny = true;
+      }
+
+      // neu evaluieren
+      hosts = getHosts();
+
+      // Wenn nichts gelöscht wurde, brechen wir ab (sonst Endlosschleife)
+      if (!didDeleteAny) break;
+    }
+
+    // 4) Sicherstellen: mindestens 1 Host existiert
+    hosts = getHosts();
+    if (!hosts.length) {
+      try {
+        if (typeof CUE === 'object' && CUE?._tabs?.cueEnsureBodyParagraphElements) {
+          await CUE._tabs.cueEnsureBodyParagraphElements(1, scope);
+        } else {
+          const addBtn = (typeof CUE === 'object' && CUE?._tabs?.cueFindAddParagraphButton)
+            ? CUE._tabs.cueFindAddParagraphButton(scope)
+            : null;
+          if (addBtn) addBtn.click();
+        }
+        await sleep(150);
+      } catch {}
+      hosts = getHosts();
+    }
+
+    // 5) Final: den verbleibenden ersten Editor garantiert leer machen
+    const first = hosts[0];
+    const firstEd = first ? pickEditor(first) : null;
+    if (clearEditor(firstEd)) cleared++;
+
+
+    // --- NEU: Wenn CUE am Ende alle Absätze entfernt hat -> einen neuen erzeugen ---
+    hosts = getHosts();
+    if (hosts.length < keep) {
+      const added = await cueClickAddParagraph(scope);
+      if (added) {
+        // warten, bis mindestens 1 Body-Host wieder da ist
+        await waitFor(() => getHosts().length >= 1, { timeout: 3000, poll: 80, root: document.body });
+        hosts = getHosts();
+
+        // den neu erzeugten Absatz sicher leer lassen
+        const ed = hosts[0] ? pickEditor(hosts[0]) : null;
+        if (clearEditor(ed)) cleared++;
+      }
+    }
+
+    if (doToast) smxToast(`CUE Absatz-Cleaner: ${removed} gelöscht, ${hosts.length} übrig.`);
+    return { ok: true, removed, remaining: hosts.length, cleared };
+  } catch (e) {
+    try { console.warn('[SMX][CUE][Absatz-Cleaner] Fehler:', e); } catch {}
+    if (doToast) smxToast('CUE Absatz-Cleaner: Fehler (Konsole prüfen).', false);
+    return { ok: false, removed, remaining: 0, cleared };
+  } finally {
+    cueCleanBodyToSingleParagraph.__lock = false;
+  }
+}
+
+
+//// KAPITEL 2.4 // Hilfsfunktionen //////////////////////////////////////////////////////////////////////
 function normalizeSpace(s){ return String(s ?? '').replace(/\s+/g,' ').trim(); }
 function normalizePreserveNewlines(s){ return String(s ?? '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim(); }
 function deepQS(sel, root=document){ try{ return root.querySelector(sel); }catch{ return null; } }
@@ -1258,7 +1650,7 @@ function readGeneric(el){ try{ if(!el) return ''; const t=el.value ?? el.innerTe
 function writeGeneric(el, value){ try{ const str=String(value ?? ''); if(!el) return false; if('value' in el){ el.value=str; el.dispatchEvent?.(new InputEvent('input',{bubbles:true})); el.dispatchEvent?.(new Event('change',{bubbles:true})); return true; } el.textContent=str; el.dispatchEvent?.(new InputEvent('input',{bubbles:true})); el.dispatchEvent?.(new Event('change',{bubbles:true})); return true; }catch{ return false; } }
 function highlight(el,color='#1b8d3d'){ if(!el) return; const prev=el.style.outline; el.style.outline=`2px solid ${color}`; el.scrollIntoView?.({block:'center',behavior:'smooth'}); setTimeout(()=>{ el.style.outline=prev; },1200); }
 
-//// KAPITEL 2.4 // Shared Site Helpers (ehem. in Modulen) ///////////////////////////////////////////////
+//// KAPITEL 2.5 // Shared Site Helpers (ehem. in Modulen) ///////////////////////////////////////////////
 // — Ortsmarken —
 const ORTSTEILE =
 (window.SUPERBRIDGE_ORTSTEILE instanceof Set && window.SUPERBRIDGE_ORTSTEILE.size)
@@ -1419,7 +1811,6 @@ function smxFindLocalityViaAliases(text) {
 
    return best.locality || '';
   }
-
 
 // CUE-Workflow für 'locality':
 // Behalte vorhandene gültige Ortsmarke (≠ Berlin) → dann Aliases (bevorzugt) → dann editionMap → Fallback Berlin
@@ -1720,7 +2111,7 @@ function smxBuildFileName({ kw, kuerzel, nummer, headline, stichwort }){
   return parts.join(delim); // "KW II AKZ II Artikel-ID II Überschrift (Stichwort)"
 }
 
-// >>> KAPITEL 2.4 – Helper: Artikel-ID aus CUE lesen (global verfügbar)
+// Helper: Artikel-ID aus CUE lesen (global verfügbar)
 function cueReadArticleIdSafe(){
   try{
     // 1) Primäre Scopes: rechte Metadaten-Spalte / Panels
@@ -1830,13 +2221,13 @@ const str = String(value ?? '');
         const role = String(opts?.role ?? '').toLowerCase();
         const canPasteHtml = !!(quill.clipboard?.dangerouslyPasteHTML);
 
-        // === STRG+V-ähnlicher Pfad NUR für CUE-Body ===
+        // === CTRL+V-ähnlicher Pfad NUR für CUE-Body ===
         if (role === 'body') {
           // 1) Editor sicher vollständig leeren
           try { quill.deleteText(0, Math.max(0, (quill.getLength?.() ?? 0)), 'user'); } catch {}
 
           // 2) Möglichst echte "Paste"-Semantik: Plain-Text einfügen
-          //    -> Quill/CUE erzeugen Absätze aus \n\n wie bei STRG+V.
+          //    -> Quill/CUE erzeugen Absätze aus \n\n wie bei CTRL+V.
           //    Zuerst versuchen wir den Browserpfad:
           let okExec = false;
           try {
@@ -1972,10 +2363,12 @@ return data;
 const LABELS = {
 headline_pro:['headline_pro'],
 headline:['überschrift','headline','titel'],
-subline:['unterzeile','subheadline','autorenzeile'],
+headlinePick:['überschrift','headline','titel'],
+subline:['unterzeile','subheadline','autorenzeile'],                 // nur ARTICLE RESIZER
+sublinePick:['unterzeile','subheadline','autorenzeile'],             // nur ARTICLE RESIZER
 body:['text','fließtext','body','artikeltext','absatz'],
-body_input:['text','textarea','body','artikeltext','absatz'],             // nur ARTICLE RESIZER
-body_output:['text','textarea','body','ergebnis','artikeltext','absatz'], // nur ARTICLE RESIZER
+input:['text','textarea','body','artikeltext','absatz'],             // nur ARTICLE RESIZER
+output:['text','textarea','body','ergebnis','artikeltext','absatz'], // nur ARTICLE RESIZER
 print_filename:['print_filename','manueller print-dateiname','manueller print-dateiname'],
 articleDescription:['artikelbeschreibung','dateiname','filename','file name'],
 notes:['notiz','notizen','notes'],
@@ -2088,7 +2481,10 @@ const ok = await waitFor(() => !!deepQSA(editableSel).some(isVisible), { timeout
 return !!ok;
 }
 
-//// KAPITEL 3.3 // CUE-ADAPTER //////////////////////////////////////////////////////////////////////////
+//// KAPITEL 3.3 // ARTICLE RESIZER-ADAPTER //////////////////////////////////////////////////////////////
+// (Platzhalter)
+
+//// KAPITEL 3.4 // CUE-ADAPTER //////////////////////////////////////////////////////////////////////////
 const CUE = (() => {
 const DEFAULT_TESTIDS = {
 headline_pro: ['se_headline_pro_field','story-element-se_headline_pro'],
@@ -2268,8 +2664,12 @@ const targetCache = new WeakMap();
 async function cueWriteIntoTestIdsVerified(ids, value, role, { attempts=3, delay=150, scope=document } = {}){
 
 
-// --- ANWENDERLOGIK für BODY: STRG+V wenn aktiv, sonst "im Stück" in den ersten Body-Host ---
+// --- ANWENDERLOGIK für BODY: CTRL+V wenn aktiv, sonst "im Stück" in den ersten Body-Host ---
 if (role === 'body') {
+  try {
+  // Erst alles auf "genau 1 leerer Absatz" zurücksetzen
+  await cueCleanBodyToSingleParagraph({ scope, keep: 1, maxRemove: 30, toast: false });
+  } catch {}
   const raw = String(value ?? '').replace(/\r\n/g, '\n');
 
   // 1) Ist aktuell ein Body-Editor aktiv? (Cursor steht im CUE-Body)
@@ -2277,14 +2677,14 @@ if (role === 'body') {
   const isActiveBody = !!active && (CUE.inferActiveRole?.(active) === 'body');
 
   if (isActiveBody) {
-    // → Wie STRG+V: Quill-aware Einfügen mit Absatz-Erhalt (Newlines → echte Absätze)
+    // → Wie CTRL+V: Quill-aware Einfügen mit Absatz-Erhalt (Newlines → echte Absätze)
     const ok = writeWithQuillAware(active, raw, { role: 'body' });
     await sleep(delay);
     if (ok) {
       highlight(active, '#1b8d3d');
       return 1; // Body erledigt; Rest der Felder füllt der Aufrufer "wie gehabt"
     }
-    // Wenn STRG+V-Pfad wider Erwarten nicht klappt, unten normal weiter
+    // Wenn CTRL+V-Pfad wider Erwarten nicht klappt, unten normal weiter
   }
 
   // 2) Kein aktiver Body: "im Stück" in den ersten sichtbaren Body-Host schreiben
@@ -2434,6 +2834,11 @@ try {
     role() {
       try { return CUE.inferActiveRole(getActiveEditable()); } catch(e) { return 'ERR: '+e; }
     },
+    cleanBody(scope=document) {
+    try { return cueCleanBodyToSingleParagraph({ scope, toast: true }); }
+    catch (e) { console.warn(e); return Promise.resolve({ ok:false, removed:0, remaining:0, cleared:0 }); }
+    },
+
     addBtn(scope=document) { try { return CUE._tabs.cueFindAddParagraphButton(scope); } catch(e){ return null; } },
     bodyHosts(n=1, scope=document) { try { return CUE._tabs.cueEnsureBodyParagraphElements(n, scope); } catch(e){ return Promise.resolve([]); } }
   };
@@ -2511,10 +2916,10 @@ return false;
 }
 })();
 
-//// KAPITEL 3.4 // CONTAO-ADAPTER ///////////////////////////////////////////////////////////////////////
+//// KAPITEL 3.5 // CONTAO-ADAPTER ///////////////////////////////////////////////////////////////////////
 // Placeholder für zukünftige Integration
 
-//// KAPITEL 3.5 // Adapter-Auswahl //////////////////////////////////////////////////////////////////////
+//// KAPITEL 3.6 // Adapter-Auswahl //////////////////////////////////////////////////////////////////////
 const ADAPTERS=[PPS,CUE];
 function currentAdapter(){
 for(const a of ADAPTERS){ try{ if(a.detect()) return a; }catch{} }
@@ -2565,6 +2970,11 @@ const combo = smxKeyCombo(e);
 const action = map?.[combo];
 if (!action) return false;
 e.preventDefault();
+// --- CUE-Schutz: verhindere CUE-eigene Hotkey-Handler (Scroll zur Bildübersicht etc.) ---
+if (siteId === 'CUE' && combo === 'Ctrl+Alt+R') {
+  try { e.stopImmediatePropagation(); } catch {}
+  try { e.stopPropagation(); } catch {}
+}
 const [mod, fn] = action.split('.');
 const m = MODULES[mod];
 if (m && typeof m[fn] === 'function') { m[fn](); return true; }
@@ -2607,8 +3017,8 @@ SuperRED:{ read:['headline','headline_pro','subline','locality','body','caption'
 write:['locality','print_filename','articleDescription','notes','print_et'] },
 SuperBRIDGE:{ read:['headline','subline','body','caption','credit','locality'],
 write:['headline','subline','locality','body'] },
-SuperSHIRT:{ read:['headline','subline','body'], write:['headline','subline','body'] },
-articleRESIZER:{ read:['headline','subline','body','body_output'], write:['body','body_input'] }
+SuperSHIRT:{ read:['headline','headlinePick','subline','sublinePick','body','output'], write:['headline','subline','body','input'] },
+articleRESIZER:{ read:['headline','subline','body','output','headlinePick','sublinePick'], write:['headline','subline','body','input'] }
 };
 let ACTIVE_PROFILE = null;
 try { ACTIVE_PROFILE = GM_getValue('supermax_active_profile', null); } catch {}
@@ -2967,7 +3377,7 @@ SuperERASER: { run: () => superEraserOnSelection() },
 SuperRED: { run: () => superREDRun() },
 SuperNOTES: { run: () => superNOTESRun() },
 SuperMAX:    { oneClick: () => superMAX_OneClick() },
-SuperSHIRT:  { run: () => smxToast('SuperSHIRT: kommt als Nächstes (STRG+ALT+S).') }
+SuperSHIRT: { run: () => superSHIRTRun() }
 };
 
 //// KAPITEL 5.2 // SuperBRIDGE //////////////////////////////////////////////////////////////////////////
@@ -3026,7 +3436,7 @@ if (bodyOut) parts.push(bodyOut);
 const out = parts.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 try { GM_setClipboard(normalizePreserveNewlines(out), {type:'text', mimetype:'text/plain'}); } catch {}
 setTimeout(()=>{ try { GM_setClipboard('', {type:'text', mimetype:'text/plain'}); } catch {} }, 20000);
-smxToast('SuperBRIDGE: Inhalte aus PPS gespeichert. Wechsel zu CUE und drücke STRG+ALT+B zum Einfügen.');
+smxToast('SuperBRIDGE: Inhalte aus PPS gespeichert. Wechsel zu CUE und drücke CTRL+ALT+B zum Einfügen.');
 return;
 }
 // >>> In superBridgeAction den kompletten if(adapter.id==='cue'){...} Block durch Folgendes ersetzen
@@ -3049,11 +3459,494 @@ return;
 } smxToast('SuperBRIDGE aktuell nur PPS → CUE implementiert.', false);
 }
 
+
 //// KAPITEL 5.3 // SuperSHIRT ///////////////////////////////////////////////////////////////////////////
-//// (Platzhalter - Modul)
+/**
+ * SuperSHIRT – 2-Wege Workflow:
+ *  - CUE -> ARTICLE RESIZER: sammelt headline/subline/body und füllt Resizer-Input
+ *  - ARTICLE RESIZER -> CUE: erntet ausgewählte Headline/Subline + Output und schreibt zurück nach CUE
+ * Trigger: Ctrl+Alt+S (siehe Hotkeys / MODULES Registry)
+ */
+async function superSHIRTRun() {
+  try {
+    const isCUE = (typeof CUE === 'object' && CUE?.detect?.());
+    const isResizer = smxIsOnArticleResizer();
+
+    if (isCUE) {
+      // Wenn ein Result aus Resizer bereitliegt -> anwenden
+      const res = smxSuperSHIRT_LoadResult();
+      if (res?.from === 'resizer' && res?.data) {
+        const ok = await smxSuperSHIRT_ApplyResultToCUE(res.data);
+        if (ok) {
+          smxToast('SuperSHIRT: Ergebnis aus ARTICLE RESIZER in CUE übernommen.');
+          // optional: Result nach Anwendung leeren (damit nächster Run wieder "senden" ist)
+          smxSuperSHIRT_ClearResult();
+          return;
+        }
+      }
+
+      // sonst: CUE -> Resizer senden
+      const payload = await smxSuperSHIRT_CollectFromCUE();
+      if (!payload) {
+        smxToast('SuperSHIRT: Konnte CUE-Daten nicht sammeln.', false);
+        return;
+      }
+      smxSuperSHIRT_SavePayload(payload);
+      smxToast('SuperSHIRT: Daten an ARTICLE RESIZER übergeben – öffne Resizer…');
+
+      // Resizer öffnen
+      try { window.open(CFG_SUPERSHIRT.URL, '_blank', 'noopener'); } catch { location.href = CFG_SUPERSHIRT.URL; }
+      return;
+    }
+
+    if (isResizer) {
+      // Resizer: wenn Payload da und Input leer -> auto-fill
+      const didFill = await smxSuperSHIRT_AutoFillResizerFromPayload({ force: false });
+      if (didFill) {
+        smxToast('SuperSHIRT: Input im ARTICLE RESIZER gefüllt. Bearbeite manuell, dann Ctrl+Alt+S zum Ernten.');
+        return;
+      }
+
+      // sonst: Ernten und zurück nach CUE
+      const harvested = await smxSuperSHIRT_HarvestFromResizer();
+      if (!harvested) {
+        smxToast('SuperSHIRT: Konnte im ARTICLE RESIZER kein Ergebnis finden.', false);
+        return;
+      }
+      smxSuperSHIRT_SaveResult(harvested);
+
+      const cueUrl = smxSuperSHIRT_LoadPayload()?.cueUrl || '';
+      if (cueUrl && CFG_SUPERSHIRT?.autoOpenCUEOnHarvest) {
+      smxToast('SuperSHIRT: Ergebnis gespeichert – öffne CUE…');
+      try { window.open(cueUrl, '_blank', 'noopener'); } catch { /* ignore */ }
+      } else {
+      smxToast('SuperSHIRT: Ergebnis gespeichert. (One‑Click übernimmt automatisch, sobald CUE offen ist.)');
+      }
+      return;
+      }
+
+    // Fallback: unbekannte Seite
+    smxToast('SuperSHIRT: Diese Seite ist nicht CUE oder ARTICLE RESIZER.', false);
+
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] Fehler:', e);
+    smxToast('SuperSHIRT: Fehler (Konsole prüfen).', false);
+  }
+}
+
+/** Erkennung ARTICLE RESIZER Seite */
+function smxIsOnArticleResizer() {
+  try {
+    return String(location.href).startsWith(String(CFG_SUPERSHIRT?.URL ?? ''));
+  } catch { return false; }
+}
+
+/** Storage Keys (dev-suffix wie in anderen Modulen üblich) */
+function smxSuperSHIRT_Keys() {
+  const dev = (typeof SMX_DEV_MODE !== 'undefined' && SMX_DEV_MODE) ? '_dev' : '';
+  return {
+    payload: String(CFG_SUPERSHIRT?.store?.payloadKey ?? 'supershirt_payload_v1') + dev,
+    result:  String(CFG_SUPERSHIRT?.store?.resultKey  ?? 'supershirt_result_v1') + dev
+  };
+}
+
+function smxSuperSHIRT_SavePayload(payload) {
+  const k = smxSuperSHIRT_Keys().payload;
+  try { GM_setValue(k, payload); } catch {}
+}
+function smxSuperSHIRT_LoadPayload() {
+  const k = smxSuperSHIRT_Keys().payload;
+  try { return GM_getValue(k, null); } catch { return null; }
+}
+function smxSuperSHIRT_SaveResult(result) {
+  const k = smxSuperSHIRT_Keys().result;
+  try { GM_setValue(k, result); } catch {}
+}
+function smxSuperSHIRT_LoadResult() {
+  const k = smxSuperSHIRT_Keys().result;
+  try { return GM_getValue(k, null); } catch { return null; }
+}
+function smxSuperSHIRT_ClearResult() {
+  const k = smxSuperSHIRT_Keys().result;
+  try { GM_setValue(k, null); } catch {}
+}
+
+// --- One-Click: Ergebnis-Listener (tab-übergreifend) -----------------------------------
+function smxSuperSHIRT_InitOneClickAutoApply() {
+  try {
+    // Nur aktiv, wenn gewünscht
+    if (!CFG_SUPERSHIRT?.autoApplyToCUE) return;
+
+    // Listener API verfügbar?
+    if (typeof GM_addValueChangeListener !== 'function') {
+      console.warn('[SMX][SuperSHIRT] GM_addValueChangeListener nicht verfügbar – One-Click AutoApply deaktiviert.');
+      return;
+    }
+
+    const key = smxSuperSHIRT_Keys().result;
+
+    GM_addValueChangeListener(key, async (name, oldValue, newValue, remote) => {
+      try {
+        // remote=true: Änderung kam aus einem anderen Tab/Origin – genau das wollen wir
+        // (Wenn remote false ist, war es derselbe Tab – das ignorieren wir, um Doppel-Aktionen zu vermeiden)
+        if (!remote) return;
+
+        // Nur in CUE anwenden
+        const isCUE = (typeof CUE === 'object' && CUE?.detect?.());
+        if (!isCUE) return;
+
+        if (!newValue?.data) return;
+
+        // Kleiner Delay, damit DOM/Tab sicher bereit ist
+        await sleep(300);
+
+        // Anwenden
+        const ok = await smxSuperSHIRT_ApplyResultToCUE(newValue.data);
+        if (ok) {
+          smxToast('SuperSHIRT One‑Click: Ergebnis automatisch übernommen.');
+          smxSuperSHIRT_ClearResult();
+        }
+      } catch (e) {
+        console.warn('[SMX][SuperSHIRT] AutoApply Listener error:', e);
+      }
+    });
+
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] InitOneClickAutoApply error:', e);
+  }
+}
+
+/** ------------- CUE -> Payload ------------- */
+async function smxSuperSHIRT_CollectFromCUE() {
+  try {
+    // Storyline Tab aktivieren (robust)
+    await smxCueActivateStorylineTab();
+
+    const f = CUE.getFields?.() ?? {};
+    const headline = String(readGeneric(f.headline) ?? '').trim();
+    const subline  = String(readGeneric(f.subline) ?? '').trim();
+    const body     = String(cueReadAllBodyParagraphsText(document) ?? '').trim(); // sammelt alle Absätze
+
+    // Payload (inkl. Rücksprung-URL nach CUE)
+    return {
+      from: 'cue',
+      at: Date.now(),
+      cueUrl: String(location.href),
+      data: { headline, subline, body }
+    };
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] CollectFromCUE error:', e);
+    return null;
+  }
+}
+
+/** ------------- Resizer: Auto-Fill input ------------- */
+async function smxSuperSHIRT_AutoFillResizerFromPayload({ force=false } = {}) {
+  try {
+    const payload = smxSuperSHIRT_LoadPayload();
+    if (!payload?.data) return false;
+
+    const inputEl = smxResizerFindTextareaByHeading(CFG_SUPERSHIRT.headings.input);
+    if (!inputEl) return false;
+
+    const current = String(inputEl.value ?? '').trim();
+    if (current && !force) return false;
+
+    const { headline, subline, body } = payload.data;
+    const combined = [headline, subline, body].filter(Boolean).join('\n\n').trim();
+
+    if (!combined) return false;
+    writeGeneric(inputEl, combined);
+    highlight(inputEl, '#8bc34a');
+    return true;
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] AutoFillResizer error:', e);
+    return false;
+  }
+}
+
+/** ------------- Resizer -> Result ------------- */
+async function smxSuperSHIRT_HarvestFromResizer() {
+  try {
+    const outEl = smxResizerFindTextareaByHeading(CFG_SUPERSHIRT.headings.output, { prefer: 'after' });
+    if (!outEl) return null;
+    const output = String(outEl.value ?? '').trim();
+    if (!output) return null;
+
+    const pickedHeadline = smxResizerGetSelectedRadioTextByHeading(CFG_SUPERSHIRT.headings.headlinePick);
+    const pickedSubline  = smxResizerGetSelectedRadioTextByHeading(CFG_SUPERSHIRT.headings.sublinePick);
+
+    return {
+      from: 'resizer',
+      at: Date.now(),
+      data: {
+        id: 'res_' + Date.now() + '_' + Math.random().toString(16).slice(2),
+        headline: pickedHeadline || '',
+        subline: pickedSubline || '',
+        body: output
+      }
+    };
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] HarvestFromResizer error:', e);
+    return null;
+  }
+}
+
+/** ------------- Apply Result in CUE ------------- */
+async function smxSuperSHIRT_ApplyResultToCUE(data) {
+  try {
+    await smxCueActivateStorylineTab();
+
+    const f = CUE.getFields?.() ?? {};
+    const newHeadline = String(data?.headline ?? '').trim();
+    const newSubline  = String(data?.subline ?? '').trim();
+    const newBody     = String(data?.body ?? '').replace(/\r\n/g, '\n').trim();
+
+    // Headline/Subline nur setzen, wenn im Resizer aktiv gewählt
+    if (newHeadline && f.headline) {
+      writeWithQuillAware(f.headline, newHeadline, { role: 'headline' });
+      highlight(f.headline, '#b06ac2');
+    }
+    if (newSubline && f.subline) {
+      writeWithQuillAware(f.subline, newSubline, { role: 'subline' });
+      highlight(f.subline, '#b06ac2');
+    }
+
+    // Body: Cleaner + Split in Story-Absätze
+    if (newBody) {
+      const okBody = await smxCueWriteBodySplitToParagraphElements(newBody);
+      if (!okBody) {
+        // Fallback: wenigstens im ersten Body-Host schreiben (Quill macht Absätze intern)
+        if (f.body) {
+          writeWithQuillAware(f.body, newBody, { role: 'body' });
+          highlight(f.body, '#8bc34a');
+        }
+      }
+    }
+    return true;
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] ApplyResultToCUE error:', e);
+    return false;
+  }
+}
+
+/** Aktiviert den Storyline/Content Tab in CUE (damit Felder sicher vorhanden sind) */
+async function smxCueActivateStorylineTab() {
+  try {
+    const tabs = CUE?._tabs?.cueGetAllTabs?.() ?? [];
+    const storyTab = tabs.find(t => /storyline|story|inhalt/i.test((t.innerText ?? t.textContent ?? ''))) ?? tabs[0];
+    if (storyTab) {
+      await CUE._tabs.cueActivateTab(storyTab);
+      await sleep(80);
+    }
+  } catch {}
+}
+
+/**
+ * CUE: Body-Text in einzelne Story-Absätze splitten und pro Story-Element schreiben.
+ * Split-Regel: 2 oder mehr \n => neuer Absatz-Block.
+ */
+async function smxCueWriteBodySplitToParagraphElements(text) {
+  try {
+    const scope = document;
+
+    // 1) Erst auf genau 1 leeren Absatz resetten (nutzt Deinen Cleaner)
+    await cueCleanBodyToSingleParagraph({ scope, keep: 1, maxRemove: 30, toast: false });
+
+    // 2) Absätze splitten
+    const normalized = String(text ?? '').replace(/\r\n/g, '\n').trim();
+    const parts = normalized
+      .split(/\n{2,}/g)
+      .map(s => s.replace(/\s+\n/g, '\n').trim())
+      .filter(Boolean);
+
+    // Wenn Resizer nur einen Block liefert: trotzdem in einem Absatz schreiben
+    const need = Math.max(1, parts.length);
+
+
+// 3) Genug Story-Paragraph-Editoren erzeugen (ROBUST, inkl. Click-Fallback)
+    //    -> nutzt cueEnsureBodyParagraphEditorsStrict() aus KAPITEL 2.3 (global!)
+    let editors = await cueEnsureBodyParagraphEditorsStrict(need, scope, { timeout: 7000 });
+
+    // Sicherheitsfallback: wenn gar kein Editor gefunden wird
+    if (!editors || editors.length < 1) return false;
+
+    // 4) Schreiben: exakt 1 Absatz pro Editor
+    const n = Math.min(need, editors.length);
+
+    for (let i = 0; i < n; i++) {
+      const ed = editors[i];
+      const txt = (parts[i] ?? '');
+
+      writeWithQuillAware(ed, txt, { role: 'body' });
+      highlight(ed, '#8bc34a');
+      await sleep(60);
+    }
+
+    // 5) Optional: überzählige Editoren leeren (wenn Ergebnis weniger Absätze als vorher hatte)
+    for (let i = n; i < editors.length; i++) {
+      writeWithQuillAware(editors[i], '', { role: 'body' });
+    }
+
+    return true;
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] WriteBodySplit error:', e);
+    return false;
+  }
+}
+
+/** ----------- Resizer DOM-Helfer ----------- */
+
+/** Findet im Resizer die passende textarea anhand einer Überschrift-RegExp (CFG_SUPERSHIRT.headings.*) */
+
+function smxResizerFindTextareaByHeading(headingRe, opts = {}) {
+  const { prefer = 'after' } = opts; // 'after' | 'first'
+  try {
+    const taSel = CFG_SUPERSHIRT?.selectors?.textareas ?? 'textarea.q-field__native';
+
+    const isShortHeading = (el) => {
+      const t = (el.innerText ?? el.textContent ?? '').trim();
+      return t && t.length <= 180;
+    };
+
+    // 1) Heading-Element finden
+    const headingEl = deepQSA('div, h1, h2, h3, p, span')
+      .filter(isVisible)
+      .find(el => isShortHeading(el) && headingRe?.test((el.innerText ?? el.textContent ?? '').trim()));
+
+    if (!headingEl) {
+      // Fallback: irgendein sichtbares textarea
+      const any = deepQSA(taSel).filter(isVisible);
+      return any[0] ?? null;
+    }
+
+    // 2) Block/Spalte bestimmen (NiceGUI-Layout)
+    const block =
+      headingEl.closest('.nicegui-column') ||
+      headingEl.closest('section') ||
+      headingEl.closest('main') ||
+      headingEl.parentElement;
+
+    if (!block) return null;
+
+    const tas = deepQSA(taSel, block).filter(isVisible);
+    if (!tas.length) return null;
+
+    // 3) Wichtig: output/input-Felder liegen oft in derselben Spalte.
+    // Deshalb: nimm das erste textarea, das im DOM NACH der Heading liegt.
+    if (prefer === 'after') {
+      for (const ta of tas) {
+        // ist ta nach headingEl?
+        const pos = headingEl.compareDocumentPosition(ta);
+        if (pos & Node.DOCUMENT_POSITION_FOLLOWING) {
+          return ta;
+        }
+      }
+    }
+
+    // 4) Fallback: erstes textarea in diesem Block
+    return tas[0] ?? null;
+
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] smxResizerFindTextareaByHeading error:', e);
+    return null;
+  }
+}
+
+/** Liest im Resizer die aktiv gewählte Radio-Option (Label) für einen Bereich mit Heading */
+function smxResizerGetSelectedRadioTextByHeading(headingRe) {
+  try {
+    const groupSel = CFG_SUPERSHIRT?.selectors?.radiogroup ?? 'div.q-option-group[role="radiogroup"]';
+
+    // 1) Heading-Element finden (kurzer Text)
+    const headingEl = deepQSA('div, h1, h2, h3, p, span')
+      .filter(isVisible)
+      .find(el => {
+        const t = (el.innerText ?? el.textContent ?? '').trim();
+        if (!t) return false;
+        if (t.length > 160) return false;
+        return headingRe ? headingRe.test(t) : false;
+      });
+
+    if (!headingEl) return '';
+
+    // 2) Block/Spalte um die Heading bestimmen (hier sitzt der Radiogroup wirklich drin)
+    const block =
+      headingEl.closest('.nicegui-column') ||
+      headingEl.closest('section') ||
+      headingEl.parentElement;
+
+    if (!block) return '';
+
+    // 3) Radiogroup innerhalb dieses Blocks suchen
+    const groups = deepQSA(groupSel, block).filter(isVisible);
+    if (!groups.length) return '';
+
+    // 4) Checked Item finden und Label lesen
+    // Wichtig: Wir nehmen "role=radio[aria-checked=true]" – damit erwischen wir nicht die Modell-Auswahl,
+    // sondern genau die Radiogroup im richtigen Block.
+    const checkedRadio = deepQS('div[role="radio"][aria-checked="true"]', groups[0]);
+    if (!checkedRadio) return '';
+
+    // Label: entweder im .q-radio__label oder aus aria-label
+    const lab = deepQS(CFG_SUPERSHIRT?.selectors?.radioLabel ?? '.q-radio__label', checkedRadio);
+    let txt = (lab?.innerText ?? lab?.textContent ?? '').trim();
+
+    if (!txt) {
+      txt = String(checkedRadio.getAttribute?.('aria-label') ?? '').trim();
+    }
+
+    // Spezialfall: "KEINE AUTORENZEILE" -> so behandeln, als ob nichts gewählt wurde
+    if (/^\s*KEINE\s+AUTORENZEILE\s*$/i.test(txt)) return '';
+
+    return txt;
+  } catch {
+    return '';
+  }
+}
+
+/** Auto-Fill beim Laden der Resizer-Seite (wenn Payload vorhanden & input leer) */
+(function smxSuperSHIRT_BootstrapResizerAutofill(){
+  try {
+    if (!smxIsOnArticleResizer()) return;
+    // kleiner Delay, damit NiceGUI/Quasar DOM fertig ist
+    setTimeout(() => { smxSuperSHIRT_AutoFillResizerFromPayload({ force:false }); }, 600);
+  } catch {}
+})();
+
+// --- One-Click Bootstrap: Listener registrieren + AutoApply beim CUE-Laden -------------
+(function smxSuperSHIRT_BootstrapOneClick(){
+  try {
+    // 1) Listener immer registrieren (wenn aktiv)
+    smxSuperSHIRT_InitOneClickAutoApply();
+
+    // 2) Wenn wir gerade in CUE sind und Result liegt schon vor -> automatisch anwenden
+    const isCUE = (typeof CUE === 'object' && CUE?.detect?.());
+    if (!isCUE) return;
+
+    if (!CFG_SUPERSHIRT?.autoApplyOnCUELoad) return;
+
+    const res = smxSuperSHIRT_LoadResult();
+    if (res?.from === 'resizer' && res?.data) {
+      // Delay, damit CUE-Felder sicher da sind
+      setTimeout(async () => {
+        try {
+          const ok = await smxSuperSHIRT_ApplyResultToCUE(res.data);
+          if (ok) {
+            smxToast('SuperSHIRT One‑Click: Ergebnis beim Laden übernommen.');
+            smxSuperSHIRT_ClearResult();
+          }
+        } catch (e) {
+          console.warn('[SMX][SuperSHIRT] AutoApplyOnLoad error:', e);
+        }
+      }, 900);
+    }
+  } catch {}
+})();
+
 
 //// KAPITEL 5.4 // SuperCLIPP ///////////////////////////////////////////////////////////////////////////
-//// (Platzhalter)
+//// (Platzhalter - Modul)
 
 
 //// KAPITEL 5.5 // SuperLINK ////////////////////////////////////////////////////////////////////////////
@@ -3180,7 +4073,7 @@ async function superEraserOnSelection(){
 try {
 const selInfo = await smxCaptureSelectionText();
 const raw = (selInfo.text || '').trim();
-if (!raw) { smxToast('SuperERASER: Bitte Text markieren (ggf. vorher STRG+C).', false); return false; }
+if (!raw) { smxToast('SuperERASER: Bitte Text markieren (ggf. vorher CTRL+C).', false); return false; }
 const cleaned = smxCleanTextForEraser(raw);
 if (typeof SMX_DRY_RUN !== 'undefined' && SMX_DRY_RUN) {
 smxToast('SuperERASER (Dry-Run): würde Auswahl bereinigen/Format entfernen – keine Änderungen geschrieben.');
@@ -3340,66 +4233,69 @@ if(adapter.id === 'pps'){
     const notesText = buildNotesLine({ subline: values.subline, body: values.body, captions, kwHint: parseInt(kw,10) || null });
     plan.push({ role:'notes', el: fields.notes, val: notesText });
   }
+
 }else{
-  // CUE: Tab-gezieltes Schreiben
-  // 0) Storyline aktivieren und locality schreiben (Workflow)
-  try {
-    const tabs = CUE._tabs.cueGetAllTabs();
-    const storyTab = tabs.find(t => /storyline|story|inhalt/i.test((t.innerText ?? t.textContent ?? ''))) ?? tabs[0];
-    if (storyTab) {
-    await CUE._tabs.cueActivateTab(storyTab);
-    const scope = CUE._tabs.cueGetTabPanel(storyTab) ?? document;
-    await CUE._tabs.cueWaitForTestIds(CUE._tabs.TESTIDS.locality ?? [], { timeout: 2500, scope });
-    await sleep(80);
+  // CUE: Tab-gezieltes Schreiben (ROBUST: Fields pro Tab neu holen + Scope im Plan merken)
+  const tabsAll = CUE._tabs.cueGetAllTabs?.() ?? [];
+
+  const findTab = (re) =>
+    tabsAll.find(t => re.test(String(t.innerText ?? t.textContent ?? '').toLowerCase())) ?? null;
+
+  const activateAndScope = async (tab, waitIds = []) => {
+    if(!tab) return document;
+    await CUE._tabs.cueActivateTab(tab);
+    const scope = CUE._tabs.cueGetTabPanel(tab) ?? document;
+
+    if (waitIds.length) {
+      await CUE._tabs.cueWaitForTestIds(waitIds, { timeout: 3000, scope });
+      await CUE._tabs.cueWaitForEditableInside(waitIds, { timeout: 2200, scope });
     }
-  } catch {}
-  if (fields.locality) {
-    plan.push({ role:'locality', el: fields.locality, val: values.locality });
+    await sleep(120);
+    return scope;
+  };
+
+  // 0) Storyline -> locality
+  const storyTab = findTab(/storyline|story|inhalt/i) ?? tabsAll[0];
+  const storyScope = await activateAndScope(storyTab, CUE._tabs.TESTIDS.locality ?? []);
+  const fStory = CUE.getFields?.(storyScope) ?? {};
+  if (fStory.locality) {
+    plan.push({ role:'locality', el: fStory.locality, val: values.locality, scope: storyScope });
   }
 
-  // 1) "print metadaten" Tab aktivieren und print_filename befüllen
-  try{
-    const tabs = CUE._tabs.cueGetAllTabs();
-    const printTab = tabs.find(t => /print|meta|druck/i.test((t.innerText ?? t.textContent ?? '').toLowerCase())) ?? null;
-    if(printTab){
-      await CUE._tabs.cueActivateTab(printTab);
-      const scope = CUE._tabs.cueGetTabPanel(printTab) ?? document;
-      await CUE._tabs.cueWaitForTestIds(CUE._tabs.TESTIDS.print_filename ?? [], { timeout: 2500, scope });
-    }
-  }catch{}
-  if(fields.print_filename){
-    plan.push({ role:'print_filename', el: fields.print_filename, val: fileName }); // enthält Artikel-ID
+  // 1) Print Metadaten -> print_filename + print_et
+  const printTab = findTab(/print|meta|druck/i);
+  const printIds = [
+    ...(CUE._tabs.TESTIDS.print_filename ?? []),
+    ...(CUE._tabs.TESTIDS.print_et ?? [])
+  ];
+  const printScope = await activateAndScope(printTab, printIds);
+  const fPrint = CUE.getFields?.(printScope) ?? {};
+
+  if (fPrint.print_filename) {
+    plan.push({ role:'print_filename', el: fPrint.print_filename, val: fileName, scope: printScope });
   }
 
-  // 2) "Notizen" Tab aktivieren und notes mit 2 Zeilen befüllen:
-  //    erste Zeile = Artikelbeschreibung (fileName), zweite Zeile = SuperNOTES-Text
-  try{
-    const tabs = CUE._tabs.cueGetAllTabs();
-    const notesTab = tabs.find(t => /notiz/i.test((t.innerText ?? t.textContent ?? '').toLowerCase())) ?? null;
-    if(notesTab){
-      await CUE._tabs.cueActivateTab(notesTab);
-      const scope = CUE._tabs.cueGetTabPanel(notesTab) ?? document;
-      await CUE._tabs.cueWaitForTestIds(CUE._tabs.TESTIDS.notes ?? [], { timeout: 2500, scope });
-      await sleep(140); // Quill vollständig bereit
-    }
-  }catch{}
-  if(fields.notes){
-    const notesText = buildNotesLine({ subline: values.subline, body: values.body, captions, kwHint: parseInt(kw,10) || null });
-    const combined  = `${fileName}\n${notesText}`;     // <— Zeilenumbruch als Trennzeichen
-    plan.push({ role:'notes', el: fields.notes, val: combined });
-  }
-
-  // Optional: locality & print_et weiterhin setzen (falls gewünscht)
-  if(fields.print_et){
+  if (fPrint.print_et) {
     const d = resolveIssueDateFromKW(parseInt(kw,10)||null, cfg.appearanceWeekday ?? 6, new Date());
     const pad2 = n => String(n).padStart(2,'0');
     const valDate = `${pad2(d.getDate())}.${pad2(d.getMonth()+1)}.${d.getFullYear()}`;
-    plan.push({ role:'print_et', el: fields.print_et, val: valDate });
+    plan.push({ role:'print_et', el: fPrint.print_et, val: valDate, scope: printScope });
+  }
+
+  // 2) Notizen -> notes (2 Zeilen: fileName + SuperNOTES Text)
+  const notesTab = findTab(/notiz/i);
+  const notesScope = await activateAndScope(notesTab, CUE._tabs.TESTIDS.notes ?? []);
+  const fNotes = CUE.getFields?.(notesScope) ?? {};
+
+  if (fNotes.notes) {
+    const notesText = buildNotesLine({ subline: values.subline, body: values.body, captions, kwHint: parseInt(kw,10) || null });
+    const combined  = `${fileName}\n${notesText}`;
+    plan.push({ role:'notes', el: fNotes.notes, val: combined, scope: notesScope });
   }
 }
 
 // Profil-Filter
-const filtered = filterByProfile(plan.map(p => ({role:p.role, el:p.el, val:p.val})), 'write');
+const filtered = filterByProfile(plan.map(p => ({ role:p.role, el:p.el, val:p.val, scope:p.scope })), 'write');
 
     // --- 5) Optionaler Überschreibschutz (nur bei nicht-trivialen Inhalten) ---
     const needConfirm = [];  // {label, current, proposed, el}
@@ -3456,25 +4352,50 @@ const filtered = filterByProfile(plan.map(p => ({role:p.role, el:p.el, val:p.val
     }
 
     // --- 6) Schreiben ---
-    let ok = 0;
-for(const p of filtered){
-if (adapter.id === 'cue' && p.role === 'locality') {
-  try {
-    const ids = CUE._tabs.TESTIDS.locality ?? [];
-    const tries = 5, dly = 200;
-    const wrote = await CUE._tabs.cueWriteIntoTestIdsVerified(ids, p.val, 'locality', { attempts: tries, delay: dly, scope: document });
-    if (wrote > 0) { highlight(p.el, '#8bc34a'); ok++; continue; }
-  } catch {}
-}
-  if(writeWithQuillAware(p.el, p.val)){
-    highlight(p.el, '#8bc34a'); ok++;
-      }
+
+let ok = 0;
+
+for (const p of filtered) {
+  if (!p?.el) continue;
+
+  // In CUE: für mehrere Rollen robust via cueWriteIntoTestIdsVerified (inkl. Retries + Scope)
+  if (adapter.id === 'cue') {
+    const ids = CUE._tabs.TESTIDS?.[p.role] ?? [];
+    const useVerified = ['locality','print_filename','print_et','notes'].includes(p.role);
+
+    if (useVerified && ids.length) {
+      const tries = (p.role === 'notes') ? 6 : (p.role === 'locality') ? 5 : 4;
+      const dly   = (p.role === 'notes') ? 240 : (p.role === 'locality') ? 200 : 180;
+      const sc    = p.scope ?? document;
+
+      try {
+        const wrote = await CUE._tabs.cueWriteIntoTestIdsVerified(ids, p.val, p.role, {
+          attempts: tries,
+          delay: dly,
+          scope: sc
+        });
+        if (wrote > 0) {
+          highlight(p.el, '#8bc34a');
+          ok++;
+          continue;
+        }
+      } catch {}
+      // Falls Verified fehlschlägt: fällt unten auf QuillAware zurück
     }
+  }
+
+  // Fallback: generisch schreiben
+  if (writeWithQuillAware(p.el, p.val, { role: p.role })) {
+    highlight(p.el, '#8bc34a');
+    ok++;
+  }
+}
+    // Abschlussmeldung
     smxToast(`SuperRED: ${ok}/${filtered.length} Feld(er) geschrieben.`);
-  }catch(err){
+    } catch (err) {
     console.warn('[SuperRED] Fehler:', err);
     smxToast('SuperRED: Fehler (Konsole prüfen).', false);
-  }
+    }
 }
 
 //// KAPITEL 5.8 // SuperNOTES ///////////////////////////////////////////////////////////////////////////
@@ -3837,37 +4758,41 @@ GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
     <div style="font-weight:700;margin-bottom:8px">SuperMAX – Tastaturkürzel</div>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperMAX Tastaturkürzel:</b></li>
-      <li>STRG+S > RegEx- und Hashtag-Regeln</li>
+      <li>CTRL+S > RegEx- und Hashtag-Regeln</li>
+    </ul>
+    <ul style="margin-top:10px;padding-left:18px">
+      <li><b>SuperSHIRT Tastaturkürzel:</b></li>
+      <li>CTRL+ALT+S > Artikel aus CUE an AR übergeben</li>
+      <li>CTRL+ALT+S > Ergebnis aus AR an CUE übergeben</li>
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperERASER Tastaturkürzel:</b></li>
-      <li>STRG+E > Umbrüche, Makros und Links entfernen</li>
+      <li>CTRL+E > Umbrüche, Makros und Links entfernen</li>
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperLINK Tastaturkürzel:</b></li>
-      <li>STRG+ALT+L > URL kürzen mit YOURLS</li>
+      <li>CTRL+ALT+L > URL kürzen mit YOURLS</li>
       <li>Menü > YOURLS-Token setzen/anzeigen/löschen</li>
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperBRIDGE Tastaturkürzel:</b></li>
-      <li>STRG+ALT+B > Artikel an Zwischenablage</li>
-      <li>STRG+V > Artikel aus Zwischenablage</li>
-      <li>STRG+ALT+B > Artikel an Redaktionssystem</li>
+      <li>CTRL+ALT+B > Artikel aus PPS an Zwischenablage</li>
+      <li>CTRL+V > Artikel aus Zwischenablage</li>
+      <li>CTRL+ALT+B > Artikel aus Zwischenablage in CUE</li>
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperRED Tastaturkürzel:</b></li>
-      <li>STRG+ALT+R > Artikelbeschreibung erzeugen</li>
-      <li>STRG+ALT+R > Notizen mit Textanalyse erzeugen</li>
+      <li>CTRL+ALT+R > Artikelbeschreibung erzeugen</li>
+      <li>CTRL+ALT+R > Notizen mit Textanalyse erzeugen</li>
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>Auch hilfreich im PPS Texteditor:</b></li>
-      <li>STRG+A > Alles markieren</li>
-      <li>STRG+C > Auswahl kopieren</li>
-      <li>STRG+X > Auswahl ausschneiden</li>
-      <li>STRG+V > Auswahl einfügen</li>
-      <li>STRG+Z > Aktion rückgängig machen</li>
-      <li>STRG+Y > Aktion wieder herstellen</li>
-      <li>STRG+SHIFT+S > Speichern und schließen</li>
+      <li>CTRL+A > Alles markieren</li>
+      <li>CTRL+C > Auswahl kopieren</li>
+      <li>CTRL+X > Auswahl ausschneiden</li>
+      <li>CTRL+V > Auswahl einfügen</li>
+      <li>CTRL+Z > Aktion rückgängig machen</li>
+      <li>CTRL+Y > Aktion wieder herstellen</li>
     </ul>
     <div style="margin-top:12px"><button id="smx_cfg_cancel" style="margin-left:6px;background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">Schließen</button></div>`;
    document.body.appendChild(box); const close=()=>{ try{ box.remove(); }catch{} }; box.querySelector('#smx_cfg_cancel').addEventListener('click', close); }catch(err){ console.error('Shortcut-Menü Fehler:', err); }
@@ -4169,7 +5094,7 @@ return { text: txt, index: -1, length: txt.length, quill: quill || null };
 return { text: '', index: -1, length: 0, quill: quill || null };
 }
 
-// Ersetzen "wie STRG+V": Quill strikt bevorzugen; Quill vorhanden → kein DOM-Fallback
+// Ersetzen "wie CTRL+V": Quill strikt bevorzugen; Quill vorhanden → kein DOM-Fallback
 function smxReplaceSelectionWith(str, selInfo) {
 const resolved = smxResolveQuillRange(selInfo);
 let { quill, index, length, text } = resolved;
