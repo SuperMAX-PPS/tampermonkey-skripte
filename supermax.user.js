@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.3.1 Multi-Site Struktur
+// @name SuperMAX 5.3.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.3.1
+// @version 5.3.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17,6 +17,7 @@
 // @grant GM_xmlhttpRequest
 // @grant GM_getValue
 // @grant GM_setValue
+// @grant GM_addValueChangeListener
 // @grant GM_setClipboard
 // @grant GM_registerMenuCommand
 // @grant unsafeWindow
@@ -151,9 +152,11 @@ selectors: {
     resultKey:  'supershirt_result_v1'   // RESIZER -> CUE
   },
   // --- One-Click Optionen ---
-  autoApplyToCUE: true,        // wenn im AR ein Ergebnis gespeichert wird, automatisch in CUE anwenden
-  autoOpenCUEOnHarvest: true,  // wenn cueUrl bekannt: CUE-Artikel beim Ernten öffnen
-  autoApplyOnCUELoad: true,    // wenn CUE Tab frisch geöffnet wird und Result liegt vor: automatisch anwenden
+autoApplyToCUE: true,        // wenn im AR ein Ergebnis gespeichert wird, automatisch in CUE anwenden
+autoOpenCUEOnHarvest: false, // IMPORTANT: verhindert neuen CUE-Tab => keine Versionskonflikte
+autoCloseResizerOnHarvest: true, // optional: Resizer-Tab nach Ernten schließen (wenn per Script geöffnet)
+autoCloseDelayMs: 650, // Schließen mit kurzem Delay (ms)
+autoApplyOnCUELoad: true,    // wenn CUE Tab frisch geöffnet wird und Result liegt vor: automatisch anwenden
 };
 
 //// KAPITEL 1.4 // CFG SuperRED & SuperNOTES ////////////////////////////////////////////////////////////
@@ -1285,6 +1288,69 @@ async function cueClickAddParagraph(root = document) {
   if (strict) { strict.click(); await sleep(120); return true; }
 
   return false;
+}
+
+// ---- CUE: Speichern-Button Helper (SuperSHIRT Safety) -----------------------
+function cueFindSaveButtonStrict(root = document) {
+  try {
+    // 1) Harte Selektoren (dein Umgebungscode)
+    const hard =
+      deepQS('input#save[data-testid="online-media-editor-save-button"]', root) ||
+      deepQS('input#save', root) ||
+      deepQS('input[data-testid="online-media-editor-save-button"]', root) ||
+      deepQS('button#save', root) ||
+      deepQS('button[data-testid="online-media-editor-save-button"]', root);
+
+    if (hard && isVisible(hard)) return hard;
+
+    // 2) Fallback: sichtbarer Button/Input mit Text/Value "Speichern"
+    const candidates = deepQSA('button, input[type="button"], input[type="submit"]', root).filter(isVisible);
+    const btn = candidates.find(el => {
+      const t = String(el.value || el.innerText || el.textContent || '').trim();
+      return /speichern/i.test(t);
+    });
+    return btn || null;
+  } catch {
+    return null;
+  }
+}
+
+async function cueClickSaveButtonSafe({ timeout = 6000, quiet = true } = {}) {
+  const btn = cueFindSaveButtonStrict(document);
+  if (!btn) {
+    if (!quiet) smxToast('SuperSHIRT: Speichern-Button nicht gefunden (übersprungen).', false);
+    return false;
+  }
+
+  const isDisabled = (el) =>
+    !!(el.disabled ||
+       el.getAttribute?.('aria-disabled') === 'true' ||
+       el.hasAttribute?.('disabled'));
+
+  try { btn.click(); } catch { try { btn.dispatchEvent(new MouseEvent('click', { bubbles: true })); } catch {} }
+
+  // Viele UIs setzen kurz disabled/aria-disabled. Wir warten kurz auf "busy" und dann auf "ready".
+  const start = Date.now();
+  let sawBusy = false;
+
+  // 1) kurze Phase: Busy erkennen (max 900ms)
+  while (Date.now() - start < Math.min(900, timeout)) {
+    if (isDisabled(btn)) { sawBusy = true; break; }
+    await sleep(60);
+  }
+
+  // 2) wenn busy gesehen: auf Ende warten (bis timeout)
+  if (sawBusy) {
+    while (Date.now() - start < timeout) {
+      if (!isDisabled(btn)) break;
+      await sleep(90);
+    }
+  } else {
+    // ansonsten nur Mini-Delay (klick registrieren lassen)
+    await sleep(220);
+  }
+
+  return true;
 }
 
 /** Liefert deduplizierte Liste der echten Body-Editoren (1 Editor pro Absatz) */
@@ -2983,6 +3049,9 @@ return false;
 try { console.log('[SMX][Hotkey]', { siteId, combo, action }); } catch {}
 if (!action) return false;
 }
+
+// SuperSHIRT: Auto-Apply Hooks im CUE-Tab aktivieren
+try { smxSuperSHIRT_ArmAutoApplyHooks(); } catch {}
 window.addEventListener('keydown', (e) => {
 if (smxRouteHotkey(e)) return;
 
@@ -3485,18 +3554,22 @@ async function superSHIRTRun() {
         }
       }
 
-      // sonst: CUE -> Resizer senden
-      const payload = await smxSuperSHIRT_CollectFromCUE();
-      if (!payload) {
-        smxToast('SuperSHIRT: Konnte CUE-Daten nicht sammeln.', false);
-        return;
-      }
-      smxSuperSHIRT_SavePayload(payload);
-      smxToast('SuperSHIRT: Daten an ARTICLE RESIZER übergeben – öffne Resizer…');
 
-      // Resizer öffnen
-      try { window.open(CFG_SUPERSHIRT.URL, '_blank', 'noopener'); } catch { location.href = CFG_SUPERSHIRT.URL; }
-      return;
+    // sonst: CUE -> Resizer senden
+    smxToast('SuperSHIRT: Öffne ARTICLE RESIZER… (Sammle Daten im Hintergrund)');
+
+    // Resizer sofort öffnen (gefühlt schneller)
+    try { window.open(CFG_SUPERSHIRT.URL, '_blank', 'noopener'); } catch { /* ignore */ }
+
+    // Danach erst: speichern + sammeln + payload ablegen
+    const payload = await smxSuperSHIRT_CollectFromCUE();
+    if (!payload) {
+    smxToast('SuperSHIRT: Konnte CUE-Daten nicht sammeln.', false);
+    return;
+    }
+    smxSuperSHIRT_SavePayload(payload);
+    smxToast('SuperSHIRT: Daten an ARTICLE RESIZER übergeben.');
+    return;
     }
 
     if (isResizer) {
@@ -3515,14 +3588,28 @@ async function superSHIRTRun() {
       }
       smxSuperSHIRT_SaveResult(harvested);
 
-      const cueUrl = smxSuperSHIRT_LoadPayload()?.cueUrl || '';
-      if (cueUrl && CFG_SUPERSHIRT?.autoOpenCUEOnHarvest) {
-      smxToast('SuperSHIRT: Ergebnis gespeichert – öffne CUE…');
-      try { window.open(cueUrl, '_blank', 'noopener'); } catch { /* ignore */ }
-      } else {
-      smxToast('SuperSHIRT: Ergebnis gespeichert. (One‑Click übernimmt automatisch, sobald CUE offen ist.)');
-      }
-      return;
+
+const cueUrl = smxSuperSHIRT_LoadPayload()?.cueUrl || '';
+
+// NICHT mehr automatisch neuen CUE-Tab öffnen (Versionskonflikte vermeiden)
+smxToast('SuperSHIRT: Ergebnis gespeichert. Wechsel zurück zum CUE-Tab – One‑Click übernimmt automatisch.');
+
+// Optional: Resizer-Tab schließen (wenn er per window.open vom Script geöffnet wurde)
+if (CFG_SUPERSHIRT?.autoCloseResizerOnHarvest) {
+  const delay = Number(CFG_SUPERSHIRT?.autoCloseDelayMs ?? 650);
+  setTimeout(() => {
+    try { window.close(); } catch {}
+  }, Math.max(0, delay));
+}
+
+// Wenn du dennoch in seltenen Fällen einen CUE-Tab öffnen willst:
+// (z.B. wenn du CUE vorher geschlossen hast) -> setze oben autoOpenCUEOnHarvest wieder true.
+if (cueUrl && CFG_SUPERSHIRT?.autoOpenCUEOnHarvest) {
+  // Achtung: erzeugt ggf. wieder zweite Artikelinstanz -> nur bewusst benutzen
+  try { window.open(cueUrl, '_blank', 'noopener'); } catch { /* ignore */ }
+}
+
+return;
       }
 
     // Fallback: unbekannte Seite
@@ -3571,6 +3658,81 @@ function smxSuperSHIRT_ClearResult() {
   try { GM_setValue(k, null); } catch {}
 }
 
+// ---- SuperSHIRT: Auto-Apply im bestehenden CUE-Tab --------------------------
+function smxSuperSHIRT_TryAutoApplyInCUE(reason = '') {
+  try {
+    // nur auf CUE-Seiten aktiv
+    const isCUE = (typeof CUE === 'object' && CUE?.detect?.());
+    if (!isCUE) return false;
+
+    // Lock gegen parallele Läufe
+    if (smxSuperSHIRT_TryAutoApplyInCUE.__lock) return false;
+
+    const res = smxSuperSHIRT_LoadResult();
+    if (!(res?.from === 'resizer' && res?.data)) return false;
+
+    smxSuperSHIRT_TryAutoApplyInCUE.__lock = true;
+
+    // Async ausführen (wir sind evtl. in Event-Handlern ohne await)
+    (async () => {
+      try {
+        // Mini-Delay: CUE-UI/Quill ist manchmal noch am „Aufwachen“
+        await sleep(120);
+
+        const ok = await smxSuperSHIRT_ApplyResultToCUE(res.data);
+        if (ok) {
+          smxToast('SuperSHIRT: Ergebnis automatisch in CUE übernommen.');
+          smxSuperSHIRT_ClearResult(); // damit es nicht erneut applied
+        }
+      } catch (e) {
+        console.warn('[SMX][SuperSHIRT] AutoApply error:', e, { reason });
+      } finally {
+        smxSuperSHIRT_TryAutoApplyInCUE.__lock = false;
+      }
+    })();
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function smxSuperSHIRT_ArmAutoApplyHooks() {
+  try {
+    const isCUE = (typeof CUE === 'object' && CUE?.detect?.());
+    if (!isCUE) return;
+
+    // nur einmal installieren
+    if (smxSuperSHIRT_ArmAutoApplyHooks.__armed) return;
+    smxSuperSHIRT_ArmAutoApplyHooks.__armed = true;
+
+    const key = smxSuperSHIRT_Keys().result;
+
+    // 1) Reaktiv: ValueChangeListener (wenn vorhanden)
+    if (typeof GM_addValueChangeListener === 'function') {
+      try {
+        GM_addValueChangeListener(key, (_name, _oldVal, _newVal, _remote) => {
+          // sobald Resizer speichert, übernimmt CUE automatisch
+          smxSuperSHIRT_TryAutoApplyInCUE('valueChange');
+        });
+      } catch (e) {
+        console.warn('[SMX][SuperSHIRT] GM_addValueChangeListener failed:', e);
+      }
+    }
+
+    // 2) Fallback: wenn Fokus zurückkommt oder Tab sichtbar wird
+    window.addEventListener('focus', () => smxSuperSHIRT_TryAutoApplyInCUE('focus'), { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) smxSuperSHIRT_TryAutoApplyInCUE('visibility');
+    }, { passive: true });
+
+    // 3) Bonus: beim Initial-Laden kurz prüfen (falls Result schon da ist)
+    setTimeout(() => smxSuperSHIRT_TryAutoApplyInCUE('boot'), 600);
+
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] ArmAutoApplyHooks error:', e);
+  }
+}
 // --- One-Click: Ergebnis-Listener (tab-übergreifend) -----------------------------------
 function smxSuperSHIRT_InitOneClickAutoApply() {
   try {
@@ -3621,6 +3783,10 @@ async function smxSuperSHIRT_CollectFromCUE() {
   try {
     // Storyline Tab aktivieren (robust)
     await smxCueActivateStorylineTab();
+
+    // Safety: vor dem Export einmal speichern (verhindert "Verwerfen/Wiederherstellen" Rennen)
+    // (quiet=true => keine Toast-Spam; falls du Feedback willst: quiet:false)
+    await cueClickSaveButtonSafe({ timeout: 7000, quiet: true });
 
     const f = CUE.getFields?.() ?? {};
     const headline = String(readGeneric(f.headline) ?? '').trim();
@@ -3693,6 +3859,7 @@ async function smxSuperSHIRT_HarvestFromResizer() {
 }
 
 /** ------------- Apply Result in CUE ------------- */
+
 async function smxSuperSHIRT_ApplyResultToCUE(data) {
   try {
     await smxCueActivateStorylineTab();
@@ -3702,14 +3869,18 @@ async function smxSuperSHIRT_ApplyResultToCUE(data) {
     const newSubline  = String(data?.subline ?? '').trim();
     const newBody     = String(data?.body ?? '').replace(/\r\n/g, '\n').trim();
 
+    let didWrite = false;
+
     // Headline/Subline nur setzen, wenn im Resizer aktiv gewählt
     if (newHeadline && f.headline) {
       writeWithQuillAware(f.headline, newHeadline, { role: 'headline' });
       highlight(f.headline, '#b06ac2');
+      didWrite = true;
     }
     if (newSubline && f.subline) {
       writeWithQuillAware(f.subline, newSubline, { role: 'subline' });
       highlight(f.subline, '#b06ac2');
+      didWrite = true;
     }
 
     // Body: Cleaner + Split in Story-Absätze
@@ -3720,9 +3891,22 @@ async function smxSuperSHIRT_ApplyResultToCUE(data) {
         if (f.body) {
           writeWithQuillAware(f.body, newBody, { role: 'body' });
           highlight(f.body, '#8bc34a');
+          didWrite = true;
         }
+      } else {
+        didWrite = true;
       }
     }
+
+    // Auto-Save nach erfolgreichem Apply (verhindert erneut "Verwerfen/Wiederherstellen" Stress)
+    if (didWrite && CFG_SUPERSHIRT?.autoSaveAfterApply) {
+      const ms = Number(CFG_SUPERSHIRT?.autoSaveDelayMs ?? 850);
+      await sleep(Math.max(0, ms));
+      // nutzt deinen Save-Helper (cueClickSaveButtonSafe), den du bereits eingebaut hast
+      await cueClickSaveButtonSafe({ timeout: 8000, quiet: true });
+      smxToast('SuperSHIRT: Übernommen & gespeichert.');
+    }
+
     return true;
   } catch (e) {
     console.warn('[SMX][SuperSHIRT] ApplyResultToCUE error:', e);
@@ -3905,45 +4089,39 @@ function smxResizerGetSelectedRadioTextByHeading(headingRe) {
   }
 }
 
-/** Auto-Fill beim Laden der Resizer-Seite (wenn Payload vorhanden & input leer) */
+
+/* Resizer: AutoFill (Polling, damit frühes Öffnen trotzdem zuverlässig füllt) */
 (function smxSuperSHIRT_BootstrapResizerAutofill(){
   try {
     if (!smxIsOnArticleResizer()) return;
-    // kleiner Delay, damit NiceGUI/Quasar DOM fertig ist
-    setTimeout(() => { smxSuperSHIRT_AutoFillResizerFromPayload({ force:false }); }, 600);
-  } catch {}
-})();
 
-// --- One-Click Bootstrap: Listener registrieren + AutoApply beim CUE-Laden -------------
-(function smxSuperSHIRT_BootstrapOneClick(){
-  try {
-    // 1) Listener immer registrieren (wenn aktiv)
-    smxSuperSHIRT_InitOneClickAutoApply();
+    const maxMs = 6500;   // wie lange versuchen (ms)
+    const poll  = 220;    // Intervall (ms)
+    const start = Date.now();
 
-    // 2) Wenn wir gerade in CUE sind und Result liegt schon vor -> automatisch anwenden
-    const isCUE = (typeof CUE === 'object' && CUE?.detect?.());
-    if (!isCUE) return;
+    const tick = async () => {
+      try {
+        // wenn input bereits gefüllt ist, brechen wir ab
+        const inputEl = smxResizerFindTextareaByHeading(CFG_SUPERSHIRT.headings.input);
+        const hasText = inputEl && String(inputEl.value ?? '').trim();
+        if (hasText) return;
 
-    if (!CFG_SUPERSHIRT?.autoApplyOnCUELoad) return;
+        // versuchen zu füllen (nur wenn payload da ist)
+        const did = await smxSuperSHIRT_AutoFillResizerFromPayload({ force:false });
+        if (did) return;
 
-    const res = smxSuperSHIRT_LoadResult();
-    if (res?.from === 'resizer' && res?.data) {
-      // Delay, damit CUE-Felder sicher da sind
-      setTimeout(async () => {
-        try {
-          const ok = await smxSuperSHIRT_ApplyResultToCUE(res.data);
-          if (ok) {
-            smxToast('SuperSHIRT One‑Click: Ergebnis beim Laden übernommen.');
-            smxSuperSHIRT_ClearResult();
-          }
-        } catch (e) {
-          console.warn('[SMX][SuperSHIRT] AutoApplyOnLoad error:', e);
+        if (Date.now() - start < maxMs) {
+          setTimeout(tick, poll);
         }
-      }, 900);
-    }
+      } catch {
+        if (Date.now() - start < maxMs) setTimeout(tick, poll);
+      }
+    };
+
+    // kleiner Initial-Delay, damit NiceGUI/Quasar DOM überhaupt da ist
+    setTimeout(tick, 300);
   } catch {}
 })();
-
 
 //// KAPITEL 5.4 // SuperCLIPP ///////////////////////////////////////////////////////////////////////////
 //// (Platzhalter - Modul)
