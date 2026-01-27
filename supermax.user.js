@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.3.4 Multi-Site Struktur
+// @name SuperMAX 5.3.5 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.3.4
+// @version 5.3.5
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -9,8 +9,6 @@
 // @connect bwurl.de
 // @match https://pps.berliner-woche.de/*
 // @match https://cue.funke.cue.cloud/*
-// @match https://funkemediende.layoutpreview.aptoma.no/*
-// @match https://funkemediende.drpublish.aptoma.no/*
 // @match https://contao.org/de/*
 // @match https://text-resizing-348470635809.europe-west3.run.app/*
 // @run-at document-end
