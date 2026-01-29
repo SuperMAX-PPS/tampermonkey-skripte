@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.3.6 Multi-Site Struktur
+// @name SuperMAX 5.4.2 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.3.6
+// @version 5.4.2
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -9,6 +9,8 @@
 // @connect bwurl.de
 // @match https://pps.berliner-woche.de/*
 // @match https://cue.funke.cue.cloud/*
+// @match https://funkemediende.layoutpreview.aptoma.no/*
+// @match https://funkemediende.drpublish.aptoma.no/*
 // @match https://contao.org/de/*
 // @match https://text-resizing-348470635809.europe-west3.run.app/*
 // @run-at document-end
@@ -57,9 +59,107 @@ smxToast('Soft Hyphen: ' + (STRIP_SOFT_HYPHEN ? 'AN' : 'AUS'));
 }
 
 //// KAPITEL 1 //// KONFIGURATION ////////////////////////////////////////////////////////////////////////
-//// KAPITEL 1.1 // CFG SuperPORT ////////////////////////////////////////////////////////////////////////
-// Multi-Site CFG
+// Multi-Site CFG + STELLWERK (zentraler Hotkey-Schalter pro Anwendung/Domain)
 window.SMX_CFG = window.SMX_CFG || { profiles: {} };
+
+// --- STELLWERK: Domain -> AppId (Profile) + Hotkeys + Modul-Whitelist -----------------
+window.SMX_CFG.STELLWERK = window.SMX_CFG.STELLWERK || {
+  // Reihenfolge wichtig: erstes Match gewinnt
+  ROUTES: [
+    { id: 'PPS',        host: /^pps\.berliner-woche\.de$/i },
+    { id: 'CUE',        host: /^cue\.funke\.cue\.cloud$/i },
+    { id: 'PUBLISH',    host: /^funkemediende\.drpublish\.aptoma\.no$/i },
+    { id: 'EDITION',    host: /^funkemediende\.layoutpreview\.aptoma\.no$/i },
+    { id: 'APTOMA',     host: /aptoma/i },
+    { id: 'CONTAO',     host: /contao/i },
+  ],
+  DEFAULT_ID: 'PPS'
+};
+
+// Liefert die aktive AppId anhand ROUTES (PPS/CUE/APTOMA)
+function smxStellwerkGetAppId() {
+  try {
+    const host = location.hostname || '';
+    const routes = window.SMX_CFG?.STELLWERK?.ROUTES || [];
+    for (const r of routes) {
+      if (r?.host && r.host.test(host)) return r.id;
+    }
+    return window.SMX_CFG?.STELLWERK?.DEFAULT_ID || 'PPS';
+  } catch {
+    return 'PPS';
+  }
+}
+
+// --- Profiles vorbereiten ------------------------------------------------------------
+window.SMX_CFG.profiles.PPS     = window.SMX_CFG.profiles.PPS     || {};
+window.SMX_CFG.profiles.CUE     = window.SMX_CFG.profiles.CUE     || {};
+window.SMX_CFG.profiles.EDITION = window.SMX_CFG.profiles.EDITION || {};
+window.SMX_CFG.profiles.PUBLISH = window.SMX_CFG.profiles.PUBLISH || {};
+window.SMX_CFG.profiles.APTOMA  = window.SMX_CFG.profiles.APTOMA  || {};
+window.SMX_CFG.profiles.CONTAO  = window.SMX_CFG.profiles.CONTAO  || {};
+// --- SuperADD-spezifische Zusatzregeln (nur EDITION/PUBLISH) --------------------------
+window.SMX_CFG.profiles.EDITION.SUPERADD = window.SMX_CFG.profiles.EDITION.SUPERADD || {};
+window.SMX_CFG.profiles.PUBLISH.SUPERADD = window.SMX_CFG.profiles.PUBLISH.SUPERADD || {};
+
+
+// --- STELLWERK: Hotkey-Mapping pro App (Hotkey -> "Modul.Methode") -------------------
+// Hinweis: Strings müssen zum Format passen, das euer Hotkey-System nutzt (z.B. "Ctrl+Alt+S").
+// Hier sind sinnvolle Defaults (PPS/CUE identisch). Du kannst pro App abweichende Hotkeys setzen.
+window.SMX_CFG.profiles.PPS.HOTKEYS = window.SMX_CFG.profiles.PPS.HOTKEYS || {
+  'Ctrl+S': 'SuperMAX.oneClick',
+  'Ctrl+Alt+S': 'SuperSHIRT.run',
+  'Ctrl+Alt+B': 'SuperBRIDGE.run',
+  'Ctrl+Alt+Shift+P': 'SuperPORT.fillAll',
+  'Ctrl+Alt+P': 'SuperPORT.probe',
+  'Ctrl+Alt+L': 'SuperLINK.run',
+  'Ctrl+Shift+L': 'SuperLINK.run',
+  'Ctrl+Shift+Alt+L': 'SuperLINK.run',
+  'Ctrl+E': 'SuperERASER.run',
+  'Ctrl+Alt+R': 'SuperRED.run'
+};
+
+window.SMX_CFG.profiles.CUE.HOTKEYS = window.SMX_CFG.profiles.CUE.HOTKEYS || {
+  'Ctrl+S': 'SuperMAX.oneClick',
+  'Ctrl+Alt+S': 'SuperSHIRT.run',
+  'Ctrl+Alt+B': 'SuperBRIDGE.run',
+  'Ctrl+Alt+Shift+P': 'SuperPORT.fillAll',
+  'Ctrl+Alt+P': 'SuperPORT.probe',
+  'Ctrl+Alt+L': 'SuperLINK.run',
+  'Ctrl+E': 'SuperERASER.run',
+  'Ctrl+Alt+R': 'SuperRED.run'
+};
+
+// EDITION: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
+window.SMX_CFG.profiles.EDITION.HOTKEYS = window.SMX_CFG.profiles.EDITION.HOTKEYS || {
+  'Ctrl+S': 'SuperADD.oneClick',
+};
+
+// PUBLISH: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
+window.SMX_CFG.profiles.PUBLISH.HOTKEYS = window.SMX_CFG.profiles.PUBLISH.HOTKEYS || {
+  'Ctrl+S': 'SuperADD.oneClick',
+  'Ctrl+Alt+L': 'SuperADD.link',
+  'Ctrl+E': 'SuperADD.eraser',
+};
+
+// --- Optional: Modul-Whitelist pro App (zusätzliche Sicherheitsbremse) ----------------
+// Wenn ALLOW_MODULES gesetzt ist, werden nur diese Module per Hotkey ausgeführt.
+window.SMX_CFG.profiles.PPS.ALLOW_MODULES = window.SMX_CFG.profiles.PPS.ALLOW_MODULES || [
+  'SuperMAX', 'SuperSHIRT', 'SuperBRIDGE', 'SuperPORT', 'SuperLINK', 'SuperERASER', 'SuperRED', 'SuperNOTES'
+];
+
+window.SMX_CFG.profiles.CUE.ALLOW_MODULES = window.SMX_CFG.profiles.CUE.ALLOW_MODULES || [
+  'SuperMAX', 'SuperSHIRT', 'SuperBRIDGE', 'SuperPORT', 'SuperLINK', 'SuperERASER', 'SuperRED', 'SuperNOTES'
+];
+
+window.SMX_CFG.profiles.EDITION.ALLOW_MODULES = window.SMX_CFG.profiles.EDITION.ALLOW_MODULES || [
+  'SuperADD' // später erweitern
+];
+
+window.SMX_CFG.profiles.PUBLISH.ALLOW_MODULES = window.SMX_CFG.profiles.PUBLISH.ALLOW_MODULES || [
+  'SuperADD' // später erweitern
+];
+
+//// KAPITEL 1.1 // CFG SuperPORT ////////////////////////////////////////////////////////////////////////
 
 // CUE: Tabs/Rollen-Mapping und Heuristik-Hints
 window.SMX_CFG.profiles.CUE = window.SMX_CFG.profiles.CUE || {};
@@ -265,7 +365,7 @@ const CFG_DEFAULTS = {
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
         { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s*/\\s*(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u202F/\u202F" },    // Slash zwischen zwei Wörtern vorweg mit geschütztem Leerzeichen
         { pattern: "(\\(?\\d+)(\\s*)(/)(\\s*)(\\(?\\d+)", flags: "gu", replacement: "$(1)$(3)$(5)" }, // Slash zwischen zwei Zahlen ohne Leerzeichen
-        { pattern: "#+", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
+        { pattern: "#\\+", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
         { pattern: "\\*\\*", flags: "g", replacement: "" }, // Pseudofettung in Article Resizing
 
         // An- und Abführungszeichen sowie Auslassungszeichen vereinheitlichen
@@ -1208,6 +1308,24 @@ const CFG_DEFAULTS = {
         ]
   }
   };
+// Beispiel: hier kommen eure wenigen APTOMA-Sonderregeln rein:
+window.SMX_CFG.profiles.EDITION.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profiles.EDITION.SUPERADD.EXTRA_REGEX_BASE || [
+        // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" }
+        ];
+window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE || [
+        // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" }
+        ];
+
+// Optional: Hashtag-Regeln in APTOMA mitlaufen lassen?
+window.SMX_CFG.profiles.EDITION.SUPERADD.RUN_HASHTAGS ??= true;
+window.SMX_CFG.profiles.PUBLISH.SUPERADD.RUN_HASHTAGS ??= true;
+
 
 //// KAPITEL 2 //// UTILITIES ////////////////////////////////////////////////////////////////////////////
 //// KAPITEL 2.1 // Mini-UI //////////////////////////////////////////////////////////////////////////////
@@ -3048,31 +3166,170 @@ try { console.log('[SMX][Hotkey]', { siteId, combo, action }); } catch {}
 if (!action) return false;
 }
 
-// SuperSHIRT: Auto-Apply Hooks im CUE-Tab aktivieren
-try { smxSuperSHIRT_ArmAutoApplyHooks(); } catch {}
 window.addEventListener('keydown', (e) => {
-if (smxRouteHotkey(e)) return;
+  // 1) Erst das reguläre Routing (inkl. Stellwerk-Gatekeeper-Patch)
+  if (smxRouteHotkey(e)) return;
 
-const k = e.key?.toLowerCase?.() ?? '';
-if (e.ctrlKey && e.altKey && !e.shiftKey && k === 'b') { e.preventDefault(); superBridgeAction(); return; }
-if (e.ctrlKey && e.altKey && e.shiftKey && k === 'p') { e.preventDefault(); fillAllEverywhere(); return; }
-if (e.ctrlKey && e.altKey && !e.shiftKey && k === '0') { e.preventDefault(); setRoleProfile(null); return; }
-if (e.ctrlKey && e.altKey && !e.shiftKey && k === 'p') {
-e.preventDefault();
-try {
-const adapter=currentAdapter();
-const active=getActiveEditable();
-const role=adapter.inferActiveRole?.(active);
-if(!role){ smxToast('Feld nicht erkannt – bitte DOM/Labels prüfen.', false); return; }
-const label=ROLE_TO_DE[role]??role;
-let target=active;
-if((role==='articleDescription'||role==='notes')){ const fixed=adapter.getFields?.()[role]; if(fixed) target=fixed; }
-highlight(target);
-const ok=adapter.write?.(target, SNIPPETS?.[role] ?? label);
-smxToast(ok?`→ ${label} geschrieben`:'Schreiben fehlgeschlagen', !!ok);
-}catch(err){ console.warn('[SuperMAX v5][Prüfer] Fehler:', err); smxToast('Fehler (Konsole prüfen).', false); }
-}
+  // 2) STELLWERK-GUARD:
+  //    Verhindert, dass die "Fallback/Specialcases" in EDITION/PUBLISH/CONTAO etc. durchrutschen.
+  //    In PPS/CUE bleibt alles wie gewohnt.
+  let swAppId = null, swProfile = null, swAllow = null, swHasProfile = false, swIsCore = false;
+  try {
+    swAppId = (typeof smxStellwerkGetAppId === 'function') ? smxStellwerkGetAppId() : null;
+    swProfile = swAppId ? (smxGetCfgProfile?.(swAppId) || window.SMX_CFG?.profiles?.[swAppId] || null) : null;
+
+    // Wichtig: {} (leeres HOTKEYS-Objekt) zählt als "Profil ist aktiv".
+    swHasProfile = !!(swProfile && swProfile.HOTKEYS !== undefined);
+
+    // PPS/CUE = "Core-Umgebungen": dort dürfen die Fallbacks wie bisher.
+    swIsCore = (swAppId === 'PPS' || swAppId === 'CUE');
+
+    // Whitelist: wenn vorhanden, können wir Module gezielt erlauben
+    swAllow = Array.isArray(swProfile?.ALLOW_MODULES) ? new Set(swProfile.ALLOW_MODULES) : null;
+  } catch {}
+
+  const allowFallback = (moduleName) => {
+    if (!swHasProfile) return true;      // kein Stellwerk-Profil -> altes Verhalten
+    if (swIsCore) return true;           // PPS/CUE -> altes Verhalten
+    if (!moduleName) return false;       // Profil aktiv -> ohne Modulname sperren
+    return !!(swAllow && swAllow.has(moduleName));
+  };
+
+  const k = e.key?.toLowerCase?.() ?? '';
+
+  // --- Specialcases nur, wenn in der Umgebung erlaubt (oder PPS/CUE) ---
+  if (e.ctrlKey && e.altKey && !e.shiftKey && k === 'b') {
+    if (!allowFallback('SuperBRIDGE')) return;
+    e.preventDefault();
+    superBridgeAction();
+    return;
+  }
+
+  if (e.ctrlKey && e.altKey && e.shiftKey && k === 'p') {
+    if (!allowFallback('SuperPORT')) return;
+    e.preventDefault();
+    fillAllEverywhere();
+    return;
+  }
+
+  if (e.ctrlKey && e.altKey && !e.shiftKey && k === '0') {
+    // Profil-Reset nur in PPS/CUE (oder wenn Stellwerk gar nicht aktiv ist)
+    if (swIsCore || !swHasProfile) {
+      e.preventDefault();
+      setRoleProfile(null);
+    }
+    return;
+  }
+
+  if (e.ctrlKey && e.altKey && !e.shiftKey && k === 'p') {
+    // "Prüfer"-Pfad: nur PPS/CUE oder wenn explizit erlaubt
+    if (!swIsCore && swHasProfile && !allowFallback('SuperPORT')) return;
+
+    e.preventDefault();
+    try {
+      const adapter = currentAdapter();
+      const active = getActiveEditable();
+      const role = adapter.inferActiveRole?.(active);
+      if (!role) { smxToast('Feld nicht erkannt – bitte DOM/Labels prüfen.', false); return; }
+      const label = ROLE_TO_DE[role] ?? role;
+      let target = active;
+      if ((role === 'articleDescription' || role === 'notes')) {
+        const fixed = adapter.getFields?.()[role];
+        if (fixed) target = fixed;
+      }
+      highlight(target);
+      const ok = adapter.write?.(target, SNIPPETS?.[role] ?? label);
+      smxToast(ok ? `→ ${label} geschrieben` : 'Schreiben fehlgeschlagen', !!ok);
+    } catch (err) {
+      console.warn('[SuperMAX v5][Prüfer] Fehler:', err);
+      smxToast('Fehler (Konsole prüfen).', false);
+    }
+  }
 }, true);
+
+//// KAPITEL 4.1 // STELLWERK-GATEKEEPER (Hotkeys pro Domain/App erlauben/verbieten) /////////////////////
+(function smxInstallStellwerkGatekeeper(){
+  // Wir patchen smxRouteHotkey nur, wenn es existiert.
+  // Vorteil: keine großen Umbauten am bestehenden Hotkey-System.
+  try {
+    if (typeof smxRouteHotkey !== 'function') return;
+
+    const _orig = smxRouteHotkey;
+
+    // Helfer: action "SuperMAX.oneClick" -> {mod:"SuperMAX", fn:"oneClick"}
+    function parseAction(action){
+      const s = String(action || '').trim();
+      const m = s.match(/^([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)$/);
+      if (!m) return null;
+      return { mod: m[1], fn: m[2] };
+    }
+
+    // Helfer: Modul aus Registry ausführen (nutzt euer bestehendes MODULES-Objekt)
+    function execAction(action){
+      const p = parseAction(action);
+      if (!p) return false;
+
+      const reg = (typeof MODULES === 'object' && MODULES) ? MODULES : null;
+      const modObj = reg?.[p.mod];
+      const fn = modObj?.[p.fn];
+
+      if (typeof fn !== 'function') {
+        try { smxToast?.(`Stellwerk: Aktion nicht gefunden: ${action}`, false); } catch {}
+        return false;
+      }
+      fn();
+      return true;
+    }
+
+    // Patch
+    smxRouteHotkey = function(e){
+      // AppId per Stellwerk (KAPITEL 1)
+      const appId = (typeof smxStellwerkGetAppId === 'function')
+        ? smxStellwerkGetAppId()
+        : null;
+
+      // Falls kein Stellwerk-AppId ermittelbar: Originalverhalten
+      if (!appId) return _orig.call(this, e);
+
+      // Profil laden (ihr habt smxGetCfgProfile in KAPITEL 2.2)
+      const profile = (typeof smxGetCfgProfile === 'function')
+        ? (smxGetCfgProfile(appId) || {})
+        : (window.SMX_CFG?.profiles?.[appId] || {});
+
+      const hotkeys = profile?.HOTKEYS || null;
+      const allowList = Array.isArray(profile?.ALLOW_MODULES) ? new Set(profile.ALLOW_MODULES) : null;
+
+      // Wenn das Profil keine HOTKEYS definiert: Originalverhalten (Fallback auf DEFAULT_HOTKEYS etc.)
+      if (!hotkeys) return _orig.call(this, e);
+
+      // Kombi aus eurem bestehenden Hotkey-Formatter holen
+      const combo = (typeof smxKeyCombo === 'function') ? smxKeyCombo(e) : null;
+      if (!combo) return _orig.call(this, e);
+
+      const action = hotkeys[combo];
+      if (!action) {
+        // Nicht gemappt => Hotkey wird nicht von SuperMAX verarbeitet (verhindert Konflikte)
+        return false;
+      }
+
+      // Optional: Modul-Whitelist
+      const parsed = parseAction(action);
+      if (allowList && parsed?.mod && !allowList.has(parsed.mod)) {
+        try { smxToast?.(`Stellwerk: ${parsed.mod} ist in ${appId} gesperrt`, false); } catch {}
+        return true; // true = handled (wir blocken bewusst)
+      }
+
+      // Ausführen + Hotkey blocken
+      try { e.preventDefault(); } catch {}
+      try { e.stopPropagation(); } catch {}
+      try { e.stopImmediatePropagation?.(); } catch {}
+
+      return execAction(action);
+    };
+
+    try { smxToast?.('Stellwerk: Hotkey-Gate aktiv', true); } catch {}
+  } catch {}
+})();
 
 //// KAPITEL 4.2 // Module-Profile/Persistenz ////////////////////////////////////////////////////////////
 const ROLE_PROFILES = {
@@ -5401,4 +5658,220 @@ out = out.trim();
 
 return out;
 }
+
+//// KAPITEL 8 //// SUPERADD (APTOMA) ////////////////////////////////////////////////////////////////
+// Ziel: APTOMA EDITION/PUBLISH nutzen SuperADD-OneClick (RegEx/Hashtag) + SuperLINK + SuperERASER,
+//       ohne Rule-Duplikate und ohne Namenskollisionen.
+
+// --- kleine, lokale Helper (namespaced) ---
+function smxAdd_compileRules(specs){
+  return (specs ?? []).map(o => {
+    const pat = String(o?.pattern ?? '');
+    let flags = String(o?.flags ?? 'gu');
+    if (!flags.includes('g')) flags += 'g';
+    flags = Array.from(new Set(flags.split(''))).join('');
+    return [new RegExp(pat, flags), String(o?.replacement ?? '')];
+  });
+}
+
+function smxAdd_applyRules(text, compiled){
+  let out = String(text ?? '');
+  for (const [re, repl] of (compiled ?? [])) {
+    out = out.replace(re, (...args) => {
+      const maybeGroups = args[args.length - 1];
+      const hasGroupsObj = (maybeGroups && typeof maybeGroups === 'object' && !(maybeGroups instanceof String));
+      const capCount = args.length - (hasGroupsObj ? 3 : 2);
+      return String(repl).replace(/\$\((\d+)\)/g, (_m, n) => {
+        const i = parseInt(n, 10);
+        if (!Number.isFinite(i) || i < 1 || i > capCount) return '';
+        const v = args[i];
+        return (v == null) ? '' : String(v);
+      });
+    });
+  }
+  return out;
+}
+
+function smxAdd_replaceTextNodes(rootEl, compiled){
+  if (!rootEl) return false;
+  const w = document.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT, null, false);
+  let n, changed = false;
+  while ((n = w.nextNode())) {
+    const orig = n.nodeValue ?? '';
+    const rep  = smxAdd_applyRules(orig, compiled);
+    if (rep !== orig) { n.nodeValue = rep; changed = true; }
+  }
+  return changed;
+}
+
+function smxAdd_getActiveEditable(){
+  // nutzt eure bereits vorhandene Heuristik, falls vorhanden
+  try { if (typeof getActiveEditable === 'function') return getActiveEditable(); } catch {}
+  try {
+    const sel = window.getSelection?.();
+    const n = sel?.anchorNode;
+    const el = (n && n.nodeType === 1) ? n : n?.parentElement;
+    return el?.closest?.('.ql-editor[contenteditable="true"], .ProseMirror[contenteditable="true"], [contenteditable="true"], textarea, input[type="text"], [role="textbox"]')
+      || document.activeElement;
+  } catch {
+    return document.activeElement;
+  }
+}
+
+// --- RegEx-Quellen: SuperMAX v5 (Kapitel 1) ---
+function smxAdd_getBaseSpecs(){
+  // CFG_DEFAULTS ist in SuperMAX v5 vorhanden (Kapitel 1.5)
+  try { return CFG_DEFAULTS?.REGEX?.base ?? []; } catch { return []; }
+}
+function smxAdd_getHashtagSpecs(){
+  try { return CFG_DEFAULTS?.REGEX?.hashtag ?? []; } catch { return []; }
+}
+
+// --- Profil-Extras (EDITION/PUBLISH) ---
+function smxAdd_getProfile(){
+  try {
+    const appId = (typeof smxStellwerkGetAppId === 'function') ? smxStellwerkGetAppId() : null;
+    return appId ? (smxGetCfgProfile?.(appId) || window.SMX_CFG?.profiles?.[appId] || {}) : {};
+  } catch { return {}; }
+}
+
+function smxAdd_getExtraBaseSpecs(profile){
+  return profile?.SUPERADD?.EXTRA_REGEX_BASE ?? [];
+}
+
+function smxAdd_shouldRunHashtags(profile){
+  const v = profile?.SUPERADD?.RUN_HASHTAGS;
+  return (v === undefined) ? true : !!v;
+}
+
+// --- Aktionen: OneClick / Eraser / Link ---
+async function smxAdd_oneClick(){
+  const profile = smxAdd_getProfile();
+  const el = smxAdd_getActiveEditable();
+  if (!el) { try { smxToast('SuperADD: Kein aktives Feld.', false); } catch {} return false; }
+
+  const baseCompiled   = smxAdd_compileRules(smxAdd_getBaseSpecs());
+  const extraCompiled  = smxAdd_compileRules(smxAdd_getExtraBaseSpecs(profile));
+  const hashCompiled   = smxAdd_compileRules(smxAdd_getHashtagSpecs());
+  const runHash = smxAdd_shouldRunHashtags(profile);
+
+  // textarea/input
+  if (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'search'))) {
+    const orig = el.value ?? '';
+    let out = smxAdd_applyRules(orig, baseCompiled);
+    out = smxAdd_applyRules(out, extraCompiled);
+    if (runHash) out = smxAdd_applyRules(out, hashCompiled);
+
+    if (out !== orig) {
+      el.value = out;
+      el.dispatchEvent(new Event('input', { bubbles:true }));
+      el.dispatchEvent(new Event('change', { bubbles:true }));
+      try { smxToast('SuperADD: angewendet.', true); } catch {}
+      return true;
+    }
+    try { smxToast('SuperADD: nichts zu ändern.', true); } catch {}
+    return false;
+  }
+
+  // contenteditable (ProseMirror/Quill/sonstige) – textnode-wise, Format bleibt erhalten
+  const root = el.isContentEditable ? el : (el.querySelector?.('[contenteditable="true"]') || el);
+  if (!root?.isContentEditable) { try { smxToast('SuperADD: Feld nicht editierbar.', false); } catch {} return false; }
+
+  let changed = smxAdd_replaceTextNodes(root, baseCompiled);
+  changed = smxAdd_replaceTextNodes(root, extraCompiled) || changed;
+  if (runHash) changed = smxAdd_replaceTextNodes(root, hashCompiled) || changed;
+
+  if (changed) {
+    try { root.dispatchEvent(new InputEvent('input', { bubbles:true })); } catch {}
+    try { root.dispatchEvent(new Event('change', { bubbles:true })); } catch {}
+    try { smxToast('SuperADD: angewendet.', true); } catch {}
+  } else {
+    try { smxToast('SuperADD: nichts zu ändern.', true); } catch {}
+  }
+  return changed;
+}
+
+function smxAdd_eraser(){
+  const sel = window.getSelection?.();
+  const range = (sel && sel.rangeCount > 0) ? sel.getRangeAt(0) : null;
+  const txt = (sel?.toString?.() ?? '');
+  if (!range || !txt.trim()) { try { smxToast('SuperERASER: Bitte Text auswählen.', false); } catch {} return false; }
+
+  const cleaned = txt
+    .replace(/(\r\n|\n|\r)/gm,' ')
+    .replace(/[\u200B\uFEFF]/g,'')
+    .replace(/<o:p>.*?<\/o:p>/gi,'')
+    .replace(/<span[^>]*mso-[^>]*>.*?<\/span>/gi,'')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+
+  try { range.deleteContents(); range.insertNode(document.createTextNode(cleaned)); sel.removeAllRanges(); }
+  catch { document.execCommand?.('insertText', false, cleaned); }
+
+  // optional: Preview refresh bei ProseMirror
+  try {
+    const pm = document.activeElement?.closest?.('.ProseMirror[contenteditable="true"], [contenteditable="true"]');
+    if (pm && typeof forcePreviewRefresh === 'function') forcePreviewRefresh(pm);
+  } catch {}
+
+  try { smxToast('SuperERASER: bereinigt.', true); } catch {}
+  return true;
+}
+
+async function smxAdd_link(){
+  const sel = window.getSelection?.();
+  const range = (sel && sel.rangeCount > 0) ? sel.getRangeAt(0) : null;
+  const raw = (sel?.toString?.() ?? '').trim();
+  if (!range || !raw) { try { smxToast('SuperLINK: Keine URL markiert.', false); } catch {} return false; }
+
+  let url = raw;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  if (!/^https?:\/\/\S+$/i.test(url)) { try { smxToast('SuperLINK: Ungültige URL.', false); } catch {} return false; }
+
+  const tokenKey = (typeof SMX_STORE_KEYS === 'object' && SMX_STORE_KEYS?.YOURLS_TOKEN) ? SMX_STORE_KEYS.YOURLS_TOKEN : 'yourlsToken';
+  const signature = (typeof GM_getValue === 'function') ? GM_getValue(tokenKey, '') : '';
+  if (!signature) { try { smxToast('SuperLINK: Kein YOURLS-Token gesetzt.', false); } catch {} return false; }
+
+  const api =
+    'https://bwurl.de/yourls-api.php?action=shorturl&format=simple' +
+    '&signature=' + encodeURIComponent(signature) +
+    '&url=' + encodeURIComponent(url);
+
+  return new Promise((resolve) => {
+    try {
+      GM_xmlhttpRequest({
+        method: 'GET',
+        url: api,
+        onload: (resp) => {
+          const shortUrl = (resp.responseText ?? '').trim();
+          if (/^https?:\/\/\S+$/.test(shortUrl)) {
+            try { range.deleteContents(); range.insertNode(document.createTextNode(shortUrl)); sel.removeAllRanges(); }
+            catch { document.execCommand?.('insertText', false, shortUrl); }
+            try { smxToast('SuperLINK: ShortURL eingefügt.', true); } catch {}
+            resolve(true);
+          } else {
+            try { smxToast('SuperLINK: Ungültige YOURLS-Antwort.', false); } catch {}
+            resolve(false);
+          }
+        },
+        onerror: () => { try { smxToast('SuperLINK: Verbindungsfehler.', false); } catch {} resolve(false); }
+      });
+    } catch {
+      try { smxToast('SuperLINK: Request nicht möglich.', false); } catch {}
+      resolve(false);
+    }
+  });
+}
+
+// --- als Modul in die Registry hängen (Hotkey-Router nutzt MODULES[mod][fn]) ---
+try {
+  if (typeof MODULES === 'object' && MODULES) {
+    MODULES.SuperADD = {
+      oneClick: smxAdd_oneClick,
+      eraser: smxAdd_eraser,
+      link: smxAdd_link
+    };
+  }
+} catch {}
+
 })();
