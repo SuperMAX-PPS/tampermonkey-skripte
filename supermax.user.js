@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.2 Multi-Site Struktur
+// @name SuperMAX 5.4.3 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.2
+// @version 5.4.3
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -816,7 +816,7 @@ const CFG_DEFAULTS = {
         { pattern: "(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})", flags: "gu", replacement: "/$(2)/$(4)" }, // zwei Slashs in URL ohne Leerzeichen
         { pattern: "(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})(\\s*?/\\s*?)", flags: "gu", replacement: "/$(2)/" }, // zwei Slashs in URL ohne Leerzeichen
         { pattern: "(\\.)([a-zA-ZäöüÄÖÜß]{2,6})(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})", flags: "gu", replacement: ".$(2)/$(4)" }, // ein Slash nach Domainendung ohne Leerzeichen
-        { pattern: "\\.(com|de|info|berlin|org|net)(/\\s|/\\.)", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL entfernen.
+        { pattern: "\\.(com|community|de|info|berlin|org|net)(/\\s|/\\.)", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL entfernen.
 
         // Finishing
         { pattern: "\\u0020{2,}", flags: "gu", replacement: " " }, // Mehrere Leerzeichen reduzieren
@@ -934,6 +934,7 @@ const CFG_DEFAULTS = {
         { pattern: "#RAW", flags: "gu", replacement: "Reichsbahnausbesserungswerk (RAW)" },
         { pattern: "#RBB", flags: "gu", replacement: "Rundfunk Berlin-Brandenburg (RBB)" },
         { pattern: "#RDE", flags: "gu", replacement: "Luftschadstoff-Emissionen im realen Betrieb (RDE)" },
+        { pattern: "#RKI", flags: "gu", replacement: "Robert Koch-Institut (RKI)" },
         { pattern: "#RV", flags: "gu", replacement: "Rentenversicherung (RV)" },
         { pattern: "#SGB", flags: "gu", replacement: "Sozialgesetzbuch (SGB)" },
         { pattern: "#SLZB", flags: "gu", replacement: "Schul- und Leistungssportzentrum Berlin (SLZB)" },
@@ -941,6 +942,7 @@ const CFG_DEFAULTS = {
         { pattern: "#SPSG", flags: "gu", replacement: "Stiftung Preußische Schlösser und Gärten Berlin-Brandenburg (SPSG)" },
         { pattern: "#Stasi", flags: "gu", replacement: "Ministerium für Staatssicherheit der DDR (MfS)" },
         { pattern: "#StGB", flags: "gu", replacement: "Strafgesetzbuch (StGB)" },
+        { pattern: "#STIKO", flags: "gu", replacement: "Ständige Impfkommisson (STIKO)" },
         { pattern: "#StVO", flags: "gu", replacement: "Straßenverkehrs-Ordnung (StVO)" },
         { pattern: "#StVZO", flags: "gu", replacement: "Straßenverkehrs-Zulassungs-Ordnung (StVZO)" },
         { pattern: "#SWP", flags: "gu", replacement: "Stiftung Wissenschaft und Politik (SWP)" },
@@ -1213,6 +1215,7 @@ const CFG_DEFAULTS = {
         { pattern: "#(?:Studentinnen\\s*und\\s*Studenten|Studenten\\s*und\\s*Studentinnen)\\b", flags: "giu", replacement: "Studenten" },
         { pattern: "#Student(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Studenten" },
         { pattern: "#Studierende\\b", flags: "giu", replacement: "Studenten" },
+        { pattern: "#Studierenden\\b", flags: "giu", replacement: "Studenten" },
 
         // REGULÄRE FORMEN (Doppelform + Markerform)
         { pattern: "#(?:Anwohnerinnen\\s*und\\s*Anwohner|Anwohner\\s*und\\s*Anwohnerinnen)\\b", flags: "giu", replacement: "Anwohner" },
