@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.3 Multi-Site Struktur
+// @name SuperMAX 5.4.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.3
+// @version 5.4.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -375,17 +375,17 @@ const CFG_DEFAULTS = {
         { pattern: "(^|[\\s([{<–—])\"(?=\\S)", flags: "gu", replacement: "$(1)„" },
         { pattern: "(^|[\\s([{<–—])\\u201E(?=\\S)", flags: "gu", replacement: "$(1)„" },
         // Schließende doppelte
-        { pattern: "\"(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "”" },
-        { pattern: "\\u201F(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "”" },
-        { pattern: "\"", flags: "gu", replacement: "”" },
+        { pattern: "\"(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "“" },
+        { pattern: "\\u201F(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "“" },
+        { pattern: "\"", flags: "gu", replacement: "“" },
         // Öffnende einfache
         { pattern: "(^|[\\s([{<–—])'(?=\\S)", flags: "gu", replacement: "$(1)‚" },
         // Schließende einfache
-        { pattern: "'(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "’" },
-        { pattern: "'", flags: "gu", replacement: "’" },
+        { pattern: "'(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "‘" },
+        { pattern: "'", flags: "gu", replacement: "‘" },
         // Optional Guillemets
         { pattern: "»\\s*", flags: "g", replacement: "„" },
-        { pattern: "\\s*«", flags: "g", replacement: "”" },
+        { pattern: "\\s*«", flags: "g", replacement: "“" },
         // Auslassungszeichen
         // 1) Apostroph innerhalb des Wortes
         { pattern: "(?<=\\p{L})’(?!\\s)(?=\\p{L})", flags: "gu", replacement: "'" },
@@ -445,7 +445,8 @@ const CFG_DEFAULTS = {
         // Telefonnummern für CUE optimieren
         { pattern: "\\b(?:Telefon|t)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "giu", replacement: "Tel. " },
         { pattern: "\\u00BF\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
-        { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" },
+        // { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" }, // schmales, geschütztes Leerzeichen
+        { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (Testweise)
 
         // Kalendermonate mit Regeln zu 2026
         { pattern: "(\\d{1,2})\\.\\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\\s*)(2026|26)", flags: "gu", replacement: "$(1). $(2)" },
@@ -637,7 +638,11 @@ const CFG_DEFAULTS = {
         { pattern: "\\(l\\.\\)", flags: "gu", replacement: "(links)" },
         { pattern: "\\(r\\.\\)", flags: "gu", replacement: "(rechts)" },
         { pattern: "\\bFFS\\b", flags: "giu", replacement: "FUNKE Foto Services" },
-        { pattern: "Foto:\\s*/\\s*", flags: "giu", replacement: "Foto: " }, // Fotonachweis von eingehenden Slash bereinigen
+        { pattern: "Foto:\\s*/\\s*", flags: "giu", replacement: "" }, // Fotonachweis bereinigen
+        { pattern: "Grafik:\\s*/\\s*", flags: "giu", replacement: "" }, // Grafiknachweis bereinigen
+        { pattern: "Copyright:\\s*/\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
+        { pattern: "©\\s*/\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
+        { pattern: "©\\s*/\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
 
         // Lokales
         { pattern: "\\bBerlin-Adlershof", flags: "gu", replacement: "Adlershof" },
@@ -1316,13 +1321,25 @@ window.SMX_CFG.profiles.EDITION.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profi
         // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
-        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" }
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        // Fotocredit bereinigen
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Woche(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*BM(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "^\\s*([^/]+?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
         ];
 window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE || [
         // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
-        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" }
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        // Fotocredit bereinigen
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Woche(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*BM(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "^\\s*([^/]+?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
         ];
 
 // Optional: Hashtag-Regeln in APTOMA mitlaufen lassen?
