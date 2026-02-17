@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.5 Multi-Site Struktur
+// @name SuperMAX 5.4.6 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.5
+// @version 5.4.6
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -638,9 +638,9 @@ const CFG_DEFAULTS = {
         { pattern: "\\(l\\.\\)", flags: "gu", replacement: "(links)" },
         { pattern: "\\(r\\.\\)", flags: "gu", replacement: "(rechts)" },
         { pattern: "\\bFFS\\b", flags: "giu", replacement: "FUNKE Foto Services" },
-        { pattern: "^\\sFoto:\\s*", flags: "giu", replacement: "" }, // Fotonachweis bereinigen
-        { pattern: "^\\sGrafik:\\s*", flags: "giu", replacement: "" }, // Grafiknachweis bereinigen
-        { pattern: "^\\sCopyright:\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
+        { pattern: "Foto:\\s*", flags: "giu", replacement: "" }, // Fotonachweis bereinigen
+        { pattern: "Grafik:\\s*", flags: "giu", replacement: "" }, // Grafiknachweis bereinigen
+        { pattern: "Copyright:\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
         { pattern: "©\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
 
         // Lokales
