@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.6 Multi-Site Struktur
+// @name SuperMAX 5.4.7 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.6
+// @version 5.4.7
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -3819,31 +3819,63 @@ async function superSHIRTRun() {
       // Wenn ein Result aus Resizer bereitliegt -> anwenden
       const res = smxSuperSHIRT_LoadResult();
       if (res?.from === 'resizer' && res?.data) {
-        const ok = await smxSuperSHIRT_ApplyResultToCUE(res.data);
-        if (ok) {
-          smxToast('SuperSHIRT: Ergebnis aus ARTICLE RESIZER in CUE übernommen.');
-          // optional: Result nach Anwendung leeren (damit nächster Run wieder "senden" ist)
-          smxSuperSHIRT_ClearResult();
-          return;
-        }
+// --- SuperSHIRT Safety: Ergebnis nur im passenden Artikel-Tab anwenden ---
+const expectedId =
+  String(res?.articleId ?? res?.meta?.articleId ?? res?.data?.articleId ?? '').trim();
+
+const currentId = String(cueReadArticleIdSafe() ?? '').trim();
+
+if (expectedId && currentId && expectedId !== currentId) {
+  smxToast(
+    `SuperSHIRT: Sicherheitsstopp – Ergebnis gehört zu Artikel-ID ${expectedId}, ` +
+    `dieser Tab ist ${currentId}. Bitte zum passenden CUE-Tab wechseln.`,
+    false
+  );
+  // Wichtig: Result NICHT löschen, damit es im richtigen Tab noch angewendet werden kann.
+  return;
+}
+
+// Falls wir (warum auch immer) keine ID haben, nicht hart blocken – nur warnen.
+if (!expectedId) {
+  smxToast('SuperSHIRT: Hinweis – Ergebnis ohne Artikel-ID (Sicherheitscheck eingeschränkt).', false);
+}
+
+const ok = await smxSuperSHIRT_ApplyResultToCUE(res.data);
+if (ok) {
+  smxToast('SuperSHIRT: Ergebnis aus ARTICLE RESIZER in CUE übernommen.');
+
+  // 3) Clipboard leeren – verhindert alte Session-Texte in der nächsten Runde
+  try { await smxClipboardClear(); } catch {}
+
+  // optional: Result nach Anwendung leeren (damit nächster Run wieder "senden" ist)
+  smxSuperSHIRT_ClearResult();
+  return;
+      }
       }
 
 
     // sonst: CUE -> Resizer senden
-    smxToast('SuperSHIRT: Öffne ARTICLE RESIZER… (Sammle Daten im Hintergrund)');
+smxToast('SuperSHIRT: Sammle CUE-Daten & sichere Artikel…');
 
-    // Resizer sofort öffnen (gefühlt schneller)
-    try { window.open(CFG_SUPERSHIRT.URL, '_blank', 'noopener'); } catch { /* ignore */ }
+// 1) ZUERST: speichern + sammeln + payload ablegen (CUE bleibt aktiv)
+const payload = await smxSuperSHIRT_CollectFromCUE();
+if (!payload) {
+  smxToast('SuperSHIRT: Konnte CUE-Daten nicht sammeln.', false);
+  return;
+}
+smxSuperSHIRT_SavePayload(payload);
 
-    // Danach erst: speichern + sammeln + payload ablegen
-    const payload = await smxSuperSHIRT_CollectFromCUE();
-    if (!payload) {
-    smxToast('SuperSHIRT: Konnte CUE-Daten nicht sammeln.', false);
-    return;
-    }
-    smxSuperSHIRT_SavePayload(payload);
-    smxToast('SuperSHIRT: Daten an ARTICLE RESIZER übergeben.');
-    return;
+// Hinweis, falls immer noch keine ID da ist (nicht hart abbrechen)
+if (!String(payload.articleId ?? '').trim()) {
+  smxToast('SuperSHIRT: Warnung – keine Artikel-ID erzeugt. (Bitte einmal manuell speichern, falls nötig.)', false);
+}
+
+// 2) DANACH: Resizer öffnen (Payload liegt jetzt sicher bereit)
+smxToast('SuperSHIRT: Öffne ARTICLE RESIZER…');
+try { window.open(CFG_SUPERSHIRT.URL, '_blank', 'noopener'); } catch { /* ignore */ }
+
+smxToast('SuperSHIRT: Daten an ARTICLE RESIZER übergeben.');
+return;
     }
 
     if (isResizer) {
@@ -3919,13 +3951,48 @@ function smxSuperSHIRT_LoadPayload() {
   const k = smxSuperSHIRT_Keys().payload;
   try { return GM_getValue(k, null); } catch { return null; }
 }
-function smxSuperSHIRT_SaveResult(result) {
-  const k = smxSuperSHIRT_Keys().result;
-  try { GM_setValue(k, result); } catch {}
+function smxSuperSHIRT_SaveResult(resultObj) {
+  try {
+    const keys = smxSuperSHIRT_Keys();
+    const payload = smxSuperSHIRT_LoadPayload?.() ?? null;
+
+    const merged = { ...(resultObj ?? {}) };
+
+    // normalisieren
+    merged.from ??= 'resizer';
+    merged.at   ??= Date.now();
+
+    // Artikel-ID aus Payload übernehmen, falls im Result nicht vorhanden
+    const aid = String(merged.articleId ?? payload?.articleId ?? '').trim();
+    if (aid) merged.articleId = aid;
+
+    // cueUrl übernehmen
+    const cueUrl = String(merged.cueUrl ?? payload?.cueUrl ?? '').trim();
+    if (cueUrl) merged.cueUrl = cueUrl;
+
+    // 1) bevorzugt: Objekt direkt speichern (TM kann das)
+    try { GM_setValue(keys.result, merged); return; } catch {}
+
+    // 2) Fallback: JSON-String
+    try { GM_setValue(keys.result, JSON.stringify(merged)); } catch {}
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] SaveResult error:', e);
+  }
 }
 function smxSuperSHIRT_LoadResult() {
   const k = smxSuperSHIRT_Keys().result;
-  try { return GM_getValue(k, null); } catch { return null; }
+  try {
+    const v = GM_getValue(k, null);
+    if (!v) return null;
+
+    // Abwärtskompatibel: wenn als JSON-String gespeichert -> parsen
+    if (typeof v === 'string') {
+      try { return JSON.parse(v); } catch { return null; }
+    }
+    return v; // Objekt direkt
+  } catch {
+    return null;
+  }
 }
 function smxSuperSHIRT_ClearResult() {
   const k = smxSuperSHIRT_Keys().result;
@@ -4058,22 +4125,70 @@ async function smxSuperSHIRT_CollectFromCUE() {
     // Storyline Tab aktivieren (robust)
     await smxCueActivateStorylineTab();
 
-    // Safety: vor dem Export einmal speichern (verhindert "Verwerfen/Wiederherstellen" Rennen)
-    // (quiet=true => keine Toast-Spam; falls du Feedback willst: quiet:false)
-    await cueClickSaveButtonSafe({ timeout: 7000, quiet: true });
-
     const f = CUE.getFields?.() ?? {};
+    const headlineEl = f.headline;
+
+    // 1) Headline erzwingen, damit "Speichern" wirklich eine Artikel-ID erzeugen kann
+    const headlineNow = normalizeSpace(readGeneric(headlineEl));
+    if (headlineEl && !headlineNow) {
+      writeWithQuillAware(headlineEl, 'NEUER ARTIKEL', { role: 'headline' });
+      await sleep(160);
+    }
+
+// 2) Speichern + ID robust erzwingen (Retry)
+// Erst versuchen, vorhandene ID zu lesen (falls Artikel schon existiert)
+let articleId = String(cueReadArticleIdSafe() ?? '').trim();
+
+const isDisabled = (el) =>
+  !!(el?.disabled ||
+     el?.getAttribute?.('aria-disabled') === 'true' ||
+     el?.hasAttribute?.('disabled'));
+
+if (!articleId) {
+  for (let attempt = 1; attempt <= 3 && !articleId; attempt++) {
+    // Save-Button ggf. erst „wachrütteln“
+    const btn = cueFindSaveButtonStrict(document);
+    try { document.activeElement?.blur?.(); } catch {}
+    try { document.body.click(); } catch {}
+    await sleep(120);
+
+    // Warten, ob Button von disabled -> enabled wechselt
+    const tEnable = Date.now();
+    while (btn && isDisabled(btn) && (Date.now() - tEnable) < 1800) {
+      await sleep(90);
+    }
+
+    // Speichern klicken (beim 1. Versuch gern mit quiet=false zum Debuggen)
+    await cueClickSaveButtonSafe({ timeout: 9000, quiet: (attempt !== 1) });
+
+    // kurz warten + ID abfragen
+    const t0 = Date.now();
+    while (!articleId && (Date.now() - t0) < 3000) {
+      articleId = String(cueReadArticleIdSafe() ?? '').trim();
+      if (articleId) break;
+      await sleep(120);
+    }
+  }
+}
+
+// Fallback (falls ID-Panel langsam ist oder Layout abweicht)
+if (!articleId) {
+  const m = String(location.href).match(/\b(\d{5,12})\b/);
+  if (m) articleId = m[1];
+}
     const headline = String(readGeneric(f.headline) ?? '').trim();
     const subline  = String(readGeneric(f.subline) ?? '').trim();
     const body     = String(cueReadAllBodyParagraphsText(document) ?? '').trim(); // sammelt alle Absätze
 
-    // Payload (inkl. Rücksprung-URL nach CUE)
+    // Payload (inkl. Rücksprung-URL + Artikel-ID für Safety)
     return {
       from: 'cue',
       at: Date.now(),
       cueUrl: String(location.href),
+      articleId,
       data: { headline, subline, body }
     };
+
   } catch (e) {
     console.warn('[SMX][SuperSHIRT] CollectFromCUE error:', e);
     return null;
@@ -4180,8 +4295,10 @@ async function smxSuperSHIRT_ApplyResultToCUE(data) {
       await cueClickSaveButtonSafe({ timeout: 8000, quiet: true });
       smxToast('SuperSHIRT: Übernommen & gespeichert.');
     }
-
-    return true;
+    if (!didWrite) {
+      console.warn('[SMX][SuperSHIRT] ApplyResultToCUE: didWrite=false, vermutlich DOM/Tab noch nicht bereit.');
+    }
+    return !!didWrite;
   } catch (e) {
     console.warn('[SMX][SuperSHIRT] ApplyResultToCUE error:', e);
     return false;
