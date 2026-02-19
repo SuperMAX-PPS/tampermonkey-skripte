@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.7 Multi-Site Struktur
+// @name SuperMAX 5.4.8 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.7
+// @version 5.4.8
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -369,7 +369,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\*\\*", flags: "g", replacement: "" }, // Pseudofettung in Article Resizing
 
         // An- und Abführungszeichen sowie Auslassungszeichen vereinheitlichen
-        // Apostroph
+        // Apostroph (Auslassungszeichen)
         { pattern: "(?<=\\p{L})'(?!\\s)", flags: "gu", replacement: "’" },
         // Öffnende doppelte
         { pattern: "(^|[\\s([{<–—])\"(?=\\S)", flags: "gu", replacement: "$(1)„" },
@@ -378,20 +378,22 @@ const CFG_DEFAULTS = {
         { pattern: "\"(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "“" },
         { pattern: "\\u201F(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "“" },
         { pattern: "\"", flags: "gu", replacement: "“" },
+        { pattern: "\”", flags: "gu", replacement: "“" },
         // Öffnende einfache
         { pattern: "(^|[\\s([{<–—])'(?=\\S)", flags: "gu", replacement: "$(1)‚" },
         // Schließende einfache
         { pattern: "'(?=$|[\\s)\\]}>,.;:!?])", flags: "gu", replacement: "‘" },
-        { pattern: "'", flags: "gu", replacement: "‘" },
         // Optional Guillemets
-        { pattern: "»\\s*", flags: "g", replacement: "„" },
-        { pattern: "\\s*«", flags: "g", replacement: "“" },
-        // Auslassungszeichen
-        // 1) Apostroph innerhalb des Wortes
-        { pattern: "(?<=\\p{L})’(?!\\s)(?=\\p{L})", flags: "gu", replacement: "'" },
-        // 2) Apostroph am Wortende (z. B. mach')
-        { pattern: "(?<=\\p{L})’(?!\\p{L})", flags: "gu", replacement: "'" },
-
+        { pattern: "\\s*«", flags: "g", replacement: "„" },
+        { pattern: "»\\s*", flags: "g", replacement: "“" },
+        { pattern: "\\s*‹", flags: "g", replacement: "‚" },
+        { pattern: "›\\s*", flags: "g", replacement: "‘" },
+        // Typografische Korrekturen
+        { pattern: "„([^“]+?),“", flags: "gu", replacement: "„$1“,", },
+        { pattern: "(“[^“]*?[!?\\.])\\.", flags: "gu", replacement: "$1" },
+        { pattern: "„\\s+", flags: "gu", replacement: "„" },
+        { pattern: "\\s+“", flags: "gu", replacement: "“" },
+        { pattern: "„([^“]+?)“", flags: "gu", replacement: "‚$1‘" },
 
         // Richtig Gendern (setzt automatisch weibliche Form voran)
         { pattern: "\\bAnwohner und Anwohnerinnen", flags: "gu", replacement: "Anwohnerinnen und Anwohner" },
