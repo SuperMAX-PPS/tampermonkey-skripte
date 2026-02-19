@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.8 Multi-Site Struktur
+// @name SuperMAX 5.4.9 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.8
+// @version 5.4.9
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -633,17 +633,40 @@ const CFG_DEFAULTS = {
         { pattern: "\\bzzgl\\.", flags: "gu", replacement: "zuzüglich" },
 
         // Bildunterschriften
-        { pattern: "\\(v\\.l\\.n\\.r\\.\\)", flags: "gu", replacement: "(von links)" },
-        { pattern: "\\(v\\.l\\.\\)", flags: "gu", replacement: "(von links)" },
-        { pattern: "\\(v\\.r\\.\\)", flags: "gu", replacement: "(von rechts)" },
-        { pattern: "\\(m\\.\\)", flags: "gu", replacement: "(mittig)" },
-        { pattern: "\\(l\\.\\)", flags: "gu", replacement: "(links)" },
-        { pattern: "\\(r\\.\\)", flags: "gu", replacement: "(rechts)" },
-        { pattern: "\\bFFS\\b", flags: "giu", replacement: "FUNKE Foto Services" },
+        { pattern: "\\(v\\.l\\.n\\.r\\.\\)", flags: "gui", replacement: "(von links)" },
+        { pattern: "\\(v\\.l\\.\\)", flags: "gui", replacement: "(von links)" },
+        { pattern: "\\(v\\.r\\.\\)", flags: "gui", replacement: "(von rechts)" },
+        { pattern: "\\(m\\.\\)", flags: "gui", replacement: "(Mitte)" },
+        { pattern: "\\(l\\.\\)", flags: "gui", replacement: "(links)" },
+        { pattern: "\\(r\\.\\)", flags: "gui", replacement: "(rechts)" },
         { pattern: "Foto:\\s*", flags: "giu", replacement: "" }, // Fotonachweis bereinigen
         { pattern: "Grafik:\\s*", flags: "giu", replacement: "" }, // Grafiknachweis bereinigen
         { pattern: "Copyright:\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
         { pattern: "©\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
+
+        // Auto-Branding-Normalisierung
+        { pattern: "\\b(123)\\s*(rf)\\b", flags: "gui", replacement: "123RF" },
+        { pattern: "\\b(adobe)\\s*(stock)\\b(?:\\.com)?", flags: "gui", replacement: "AdobeStock" },
+        { pattern: "\\b(afp)\\b", flags: "gui", replacement: "AFP" },
+        { pattern: "\\b(alamy)\\b", flags: "gui", replacement: "Alamy" },
+        { pattern: "\\b(ap)\\b", flags: "gui", replacement: "AP" },
+        { pattern: "\\b(associated)\\s*(press)\\b", flags: "gui", replacement: "Associated Press" },
+        { pattern: "\\b(deposit)\\s*(photos?)\\b", flags: "gui", replacement: "Depositphotos" },
+        { pattern: "\\b(dpa)[\\s-]*(infografik|video|audio|grafik)\\b", flags: "gui", replacement: "dpa-$(2)" },
+        { pattern: "\\b(dpa)\\b", flags: "gui", replacement: "dpa" },
+        { pattern: "\\b(epa)[\\s\\/\\-]*(efe)\\b", flags: "gui", replacement: "EPA-EFE" },
+        { pattern: "\\b(epa)\\b", flags: "gui", replacement: "EPA" },
+        { pattern: "\\b(funke)\\s*(foto)\\s*(service)\\b", flags: "giu", replacement: "FUNKE Foto Services" },
+        { pattern: "\\bFFS\\b", flags: "giu", replacement: "FUNKE Foto Services" },
+        { pattern: "\\b(getty)\\s*(images?)\\b", flags: "gui", replacement: "Getty Images" },
+        { pattern: "\\b(imago)\\b", flags: "gui", replacement: "IMAGO" },
+        { pattern: "\\b(panther)\\s*(media)\\b", flags: "gui", replacement: "PantherMedia" },
+        { pattern: "\\b(pexels)\\b(?:\\.com)?", flags: "gui", replacement: "Pexels" },
+        { pattern: "\\b(picture)\\s*(alliance)\\b", flags: "gui", replacement: "picture alliance" },
+        { pattern: "\\b(pixabay)\\b(?:\\.com)?", flags: "gui", replacement: "Pixabay" },
+        { pattern: "\\b(reuters?)\\b", flags: "gui", replacement: "Reuters" },
+        { pattern: "\\b(shutter)\\s*(stock)\\b", flags: "gui", replacement: "Shutterstock" },
+        { pattern: "\\b(unsplash)\\b(?:\\.com)?", flags: "gui", replacement: "Unsplash" },
 
         // Lokales
         { pattern: "\\bBerlin-Adlershof", flags: "gu", replacement: "Adlershof" },
