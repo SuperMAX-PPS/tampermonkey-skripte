@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.11 Multi-Site Struktur
+// @name SuperMAX 5.4.12 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.11
+// @version 5.4.12
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -963,6 +963,7 @@ const CFG_DEFAULTS = {
         { pattern: "#EU", flags: "gu", replacement: "Europäische Union (EU)" },
         { pattern: "#EVZ", flags: "gu", replacement: "Europäisches Verbraucherzentrum Deutschland (EVZ)" },
         { pattern: "#EWG", flags: "gu", replacement: "Europäischen Wirtschaftsgemeinschaft (EWG)" },
+        { pattern: "#FEIN", flags: "gu", replacement: "FEIN-Programm (Freiwillges Engagement in Nachbarschaften)" },
         { pattern: "#EZB", flags: "gu", replacement: "EZB (Europäische Zentralbank)" },
         { pattern: "#FEZ", flags: "gu", replacement: "Freizeit- und Erholungszentrum (FEZ-Berlin)" },
         { pattern: "#FFS", flags: "gu", replacement: "FUNKE Foto Service" },
