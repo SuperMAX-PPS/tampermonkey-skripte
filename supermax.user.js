@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.12 Multi-Site Struktur
+// @name SuperMAX 5.4.13 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.12
+// @version 5.4.13
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -389,11 +389,11 @@ const CFG_DEFAULTS = {
         { pattern: "\\s*‹", flags: "g", replacement: "‚" },
         { pattern: "›\\s*", flags: "g", replacement: "‘" },
         // Typografische Korrekturen
-        { pattern: "„([^“]+?),“", flags: "gu", replacement: "„$1“,", },
-        { pattern: "(“[^“]*?[!?\\.])\\.", flags: "gu", replacement: "$1" },
+        { pattern: "„([^“]+?),“", flags: "gu", replacement: "„$(1)“,", },
+        { pattern: "(“[^“]*?[!?\\.])\\.", flags: "gu", replacement: "$(1)" },
         { pattern: "„\\s+", flags: "gu", replacement: "„" },
         { pattern: "\\s+“", flags: "gu", replacement: "“" },
-        { pattern: "„([^“]+?)“", flags: "gu", replacement: "‚$1‘" },
+        { pattern: "„([^“]+?)“", flags: "gu", replacement: "‚$(1)‘" },
 
         // Richtig Gendern (setzt automatisch weibliche Form voran)
         { pattern: "\\bAnwohner und Anwohnerinnen", flags: "gu", replacement: "Anwohnerinnen und Anwohner" },
