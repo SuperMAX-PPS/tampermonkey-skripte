@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.13 Multi-Site Struktur
+// @name SuperMAX 5.4.15 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.13
+// @version 5.4.15
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -393,7 +393,6 @@ const CFG_DEFAULTS = {
         { pattern: "(“[^“]*?[!?\\.])\\.", flags: "gu", replacement: "$(1)" },
         { pattern: "„\\s+", flags: "gu", replacement: "„" },
         { pattern: "\\s+“", flags: "gu", replacement: "“" },
-        { pattern: "„([^“]+?)“", flags: "gu", replacement: "‚$(1)‘" },
 
         // Richtig Gendern (setzt automatisch weibliche Form voran)
         { pattern: "\\bAnwohner und Anwohnerinnen", flags: "gu", replacement: "Anwohnerinnen und Anwohner" },
@@ -3438,20 +3437,6 @@ const prof = ROLE_PROFILES[ACTIVE_PROFILE]; if(!prof) return targets;
 const allowed = new Set((prof[mode]??[]).map(r=>String(r).toLowerCase()));
 return targets.filter(t=>allowed.has(String(t.role).toLowerCase()));
 }
-try {
-GM_registerMenuCommand('SuperPORT+ – Rundgang starten', () => {
-try { fillAllEverywhere(); } catch (e) { console.warn('SuperPORT+ Fehler:', e); smxToast('SuperPORT+: Fehler (Konsole).', false); }
-});
-GM_registerMenuCommand('SuperBRIDGE – jetzt ausführen', () => {
-try { superBridgeAction(); } catch (e) { console.warn('SuperBRIDGE Fehler:', e); smxToast('SuperBRIDGE: Fehler (Konsole).', false); }
-});
-GM_registerMenuCommand('SuperRED – jetzt ausführen', () => {
-try { superREDRun(); } catch (e) { console.warn('SuperRED Fehler:', e); smxToast('SuperRED: Fehler (Konsole).', false); }
-});
-GM_registerMenuCommand('SuperNOTES – jetzt ausführen', () => {
-  try { superNOTESRun(); } catch (e) { console.warn('SuperNOTES Fehler:', e); smxToast('SuperNOTES: Fehler (Konsole).', false); }
-});
-} catch {}
 
 //// KAPITEL 4.3 // RegEx-Engine /////////////////////////////////////////////////////////////////////////
 // Regeln kompilieren (aus CFG_DEFAULTS.REGEX.{base,hashtag})
