@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.15 Multi-Site Struktur
+// @name SuperMAX 5.5.1 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.15
+// @version 5.5.1
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -987,6 +987,7 @@ const CFG_DEFAULTS = {
         { pattern: "#ISTAF", flags: "gu", replacement: "Internationales Stadionfest Berlin (ISTAF)" },
         { pattern: "#ITB", flags: "gu", replacement: "Internationale Tourismus-Börse (ITB)" },
         { pattern: "#JDZB", flags: "gu", replacement: "Japanisch-Deutsches Zentrum Berlin (JDZB)" },
+        { pattern: "#JVA", flags: "gu", replacement: "Justizvollzugsanstalt (JVA)" },
         { pattern: "#KaDeWe", flags: "gu", replacement: "Kaufhaus des Westens (KaDeWe)" },
         { pattern: "#KI", flags: "gu", replacement: "Künstliche Intelligenz (KI)" },
         { pattern: "#KV", flags: "gu", replacement: "Kassenärztliche Vereinigung (KV)" },
@@ -5367,7 +5368,357 @@ async function superMAX_OneClick() {
 // });
 // } catch {}
 
-//// KAPITEL 6.2 // Menü - Tastaturkürzel ////////////////////////////////////////////////////////////////
+//// KAPITEL 6.3 // Menü - Hashtag-Regeln ////////////////////////////////////////////////////////////////
+GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Abkürzungen', () => {
+  try {
+    const box = document.createElement('div');
+
+    box.style.cssText = [
+      'position:fixed',
+      'right:18px',
+      'top:18px',
+      'z-index:2147483647',
+      'background:#0b1e2d',
+      'color:#fff',
+      'border:1px solid #0d3a5c',
+      'border-radius:10px',
+      'padding:14px',
+
+      // wichtig: an Bildschirm anpassen
+      'width:min(560px, calc(100vw - 36px))',
+      'max-height:calc(100vh - 36px)',
+
+      // wichtig: Layout für Header/List/Footer
+      'display:flex',
+      'flex-direction:column',
+
+      'font:13px/1.35 system-ui,Segoe UI,Arial',
+      'box-shadow:0 12px 30px rgba(0,0,0,.35)'
+    ].join(';');
+
+    box.innerHTML = `
+      <div style="font-weight:700;margin-bottom:8px;flex:0 0 auto">
+        SuperMAX – Hashtag-Regeln Abkürzungen
+      </div>
+
+      <!-- Scroll-Container -->
+      <div id="smx_hash_scroll"
+           style="
+             flex:1 1 auto;
+             overflow:auto;
+             padding-right:8px;
+             border-top:1px solid rgba(255,255,255,.08);
+             border-bottom:1px solid rgba(255,255,255,.08);
+           ">
+    <ul style="margin-top:10px;padding-left:18px">
+         <b>#ABDA</b> = Bundesvereinigung Deutscher Apothekenverbände (ABDA)<br>
+         <b>#ADAC</b> = Allgemeiner Deutscher Automobil-Club (ADAC)<br>
+         <b>#ADFC</b> = Allgemeiner Deutscher Fahrrad-Club (ADFC)<br>
+         <b>#AGB</b> = Amerika-Gedenkbibliothek (AGB)<br>
+         <b>#ASB</b> = Arbeiter-Samariter-Bund (ASB)<br>
+         <b>#AvD</b> = Automobilclub von Deutschland (AvD)<br>
+         <b>#AVUS</b> = Automobil-Verkehrs- und Übungsstraße (AVUS)<br>
+         <br>
+         <b>#BA</b> = Bundesagentur für Arbeit (BA)<br>
+         <b>#BAB</b> = Berliner Beauftragte zur Aufarbeitung der SED-Diktatur (BAB)<br>
+         <b>#BBAW</b> = Berlin-Brandenburgische Akademie der Wissenschaften (BBAW)<br>
+         <b>#BBB</b> = Berliner Bäder-Betriebe (BBB)<br>
+         <b>#BDI</b> = Bundesverband der deutschen Industrie (BDI)<br>
+         <b>#Behala</b> = Behala (Berliner Hafen- und Lagerhaus-Betriebe)<br>
+         <b>#BER</b> = Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)<br>
+         <b>#BerlAVG</b> = Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)<br>
+         <b>#BEW</b> = Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)<br>
+         <b>#BFD</b> = Bundesfreiwilligendienst (BFD)<br>
+         <b>#BfV</b> = Bundesamt für Verfassungsschutz (BfV)<br>
+         <b>#BGB</b> = Bürgerliches Gesetzbuch (BGB)<br>
+         <b>#BGBl\\.</b> = Bundesgesetzblatt (BGBl.)<br>
+         <b>#BHT</b> = Berliner Hochschule für Technik (BHT)<br>
+         <b>#BIS</b> = Berliner Institut für Sozialforschung (BIS)<br>
+         <b>#BMI</b> = Body-Mass-Index (BMI)<br>
+         <b>#BMV</b> = Berliner Mieterverein (BMV)<br>
+         <b>#BSW</b> = Bündnis Sahra Wagenknecht (BSW)<br>
+         <b>#BSR</b> = Berliner Stadtreinigung (BSR)<br>
+         <b>#BUND</b> = Bund für Umwelt und Naturschutz Deutschland (BUND)<br>
+         <b>#BuBS</b> = Berliner unabhängige Beschwerdestelle (BuBS)<br>
+         <b>#BVG</b> = Berliner Verkehrsbetriebe (BVG)<br>
+         <b>#BVV</b> = Bezirksverordnetenversammlung (BVV)<br>
+         <b>#BWB</b> = Berliner Wasserbetriebe (BWB)<br>
+         <br>
+         <b>#CO2</b> = Kohlendioxid (CO₂)<br>
+         <b>#CO₂</b> = Kohlendioxid (CO₂)<br>
+         <b>#CSD</b> = Christopher Street Day (CSD)<br>
+         <br>
+         <b>#DAB</b> = Digital Audio Broadcasting (DAB)<br>
+         <b>#DB</b> = Deutsche Bahn (DB)<br>
+         <b>#DFB</b> = Deutsche Fußball-Bund (DFB)<br>
+         <b>#DFFB</b> = Deutsche Film- und Fernsehakademie Berlin (DFFB)<br>
+         <b>#DGB</b> = Deutscher Gewerkschaftsbund (DGB)<br>
+         <b>#DHZB</b> = Deutsches Herzzentrum Berlin (DHZB)<br>
+         <b>#DIHK</b> = Deutscher Industrie- und Handelskammertag (DIHK)<br>
+         <b>#DLF</b> = Deutschlandfunk (DLF)<br>
+         <b>#DLRG</b> = Deutsche Lebens-Rettungs-Gesellschaft (DLRG)<br>
+         <b>#DNR</b> = Deutsche Naturschutzring (DNR)<br>
+         <b>#DOSB</b> = Deutscher Olympischer Sportbund (DOSB)<br>
+         <b>#DRK</b> = Deutsches Rotes Kreuz (DRK)<br>
+         <b>#DSB</b> = Deutscher Sportbund (DSB)<br>
+         <b>#DSD</b> = Deutsche Stiftung Denkmalschutz (DSD)<br>
+         <b>#DVB</b> = Digital Video Broadcasting (DVB)<br>
+         <b>#DWD</b> = Deutscher Wetterdienst (DWD)<br>
+         <br>
+         <b>#EDEKA</b> = Edeka<br>
+         <b>#EHB</b> = Evangelische Hochschulen Berlin (EHB)<br>
+         <b>#EnEG</b> = Energieeinsparungsgesetz (EnEG)<br>
+         <b>#EnEV</b> = Energieeinsparverordnung (EnEV)<br>
+         <b>#EU</b> = Europäische Union (EU)<br>
+         <b>#EVZ</b> = Europäisches Verbraucherzentrum Deutschland (EVZ)<br>
+         <b>#EWG</b> = Europäischen Wirtschaftsgemeinschaft (EWG)<br>
+         <br>
+         <b>#FEIN</b> = FEIN-Programm (Freiwillges Engagement in Nachbarschaften)<br>
+         <b>#EZB</b> = EZB (Europäische Zentralbank)<br>
+         <b>#FEZ</b> = Freizeit- und Erholungszentrum (FEZ-Berlin)<br>
+         <b>#FFS</b> = FUNKE Foto Service<br>
+         <b>#FÖJ</b> = Freiwilliges Ökologisches Jahr (FÖJ)<br>
+         <b>#FSJ</b> = Freiwilliges Soziales Jahr (FSJ)<br>
+         <b>#FU</b> = Freie Universität Berlin (FU Berlin)<br>
+         <br>
+         <b>#GKV</b> = Gesetzliche Krankenversicherung (GKV)<br>
+         <br>
+         <b>#HTW</b> = Hochschule für Technik und Wirtschaft Berlin (HTW)<br>
+         <b>#HU</b> = Humboldt-Universität zu Berlin (HU Berlin)<br>
+         <b>#HWK</b> = Handwerkskammer Berlin (HWK Berlin)<br>
+         <b>#HWR</b> = Hochschule für Wirtschaft und Recht Berlin (HWR)<br>
+         <b>#HZB</b> = Helmholtz-Zentrum Berlin (HZB)<br>
+         <br>
+         <b>#IBAN</b> = International Bank Account Number (IBAN)<br>
+         <b>#IFAF</b> = IFAF Berlin – Institut für angewandte Forschung Berlin<br>
+         <b>#IFSS</b> = Institut für Soziale Stadtentwicklung (IFSS)<br>
+         <b>#IGeL</b> = Individuelle Gesundheitsleistungen (IGeL)<br>
+         <b>#IHK</b> = Industrie- und Handelskammer zu Berlin (IHK Berlin)<br>
+         <b>#IKEA</b> = Ikea<br>
+         <b>#ILA</b> = Internationale Luft- und Raumfahrtausstellung Berlin (ILA)<br>
+         <b>#IPF</b> = Infozentrum für Prävention und Früherkennung (IPF)<br>
+         <b>#IRT</b> = Institut für Rundfunktechnik (IRT)<br>
+         <b>#ISTAF</b> = Internationales Stadionfest Berlin (ISTAF)<br>
+         <b>#ITB</b> = Internationale Tourismus-Börse (ITB)<br>
+         <br>
+         <b>#JDZB</b> = Japanisch-Deutsches Zentrum Berlin (JDZB)<br>
+         <b>#JVA</b> = Justizvollzugsanstalt (JVA)<br>
+         <br>
+         <b>#KaDeWe</b> = Kaufhaus des Westens (KaDeWe)<br>
+         <b>#KI</b> = Künstliche Intelligenz (KI)<br>
+         <b>#KV</b> = Kassenärztliche Vereinigung (KV)<br>
+         <b>#KMV</b> = Krankenhaus des Maßregelvollzugs Berlin (KMV)<br>
+         <br>
+         <b>#LABO</b> = Landesamt für Bürger- und Ordnungsangelegenheiten (LABO)<br>
+         <b>#LAF</b> = Landesamt für Flüchtlingsangelegenheiten (LAF)<br>
+         <b>#Lageso</b> = Landesamt für Gesundheit und Soziales Berlin (Lageso)<br>
+         <b>#LEA</b> = Landesamt für Einwanderung (LEA)<br>
+         <br>
+         <b>#MABB</b> = Medienanstalt Berlin-Brandenburg (MABB)<br>
+         <b>#MDK</b> = Medizinischer Dienst der Krankenversicherung (MDK)<br>
+         <b>#MEK</b> = Museum Europäischer Kulturen (MEK)<br>
+         <b>#MRT</b> = Magnetresonanztomografie (MRT)<br>
+         <br>
+         <b>#NABU</b> = Naturschutzbund Deutschland (NABU)<br>
+         <b>#NBB</b> = Netzgesellschaft Berlin-Brandenburg (NBB)<br>
+         <br>
+         <b>#ÖPNV</b> = Öffentlicher Personennahverkehr (ÖPNV)<br>
+         <br>
+         <b>#QM</b> = Quartiersmanagement (QM)<br>
+         <br>
+         <b>#RAW</b> = Reichsbahnausbesserungswerk (RAW)<br>
+         <b>#RBB</b> = Rundfunk Berlin-Brandenburg (RBB)<br>
+         <b>#RDE</b> = Luftschadstoff-Emissionen im realen Betrieb (RDE)<br>
+         <b>#RKI</b> = Robert Koch-Institut (RKI)<br>
+         <b>#RV</b> = Rentenversicherung (RV)<br>
+         <br>
+         <b>#SGB</b> = Sozialgesetzbuch (SGB)<br>
+         <b>#SLZB</b> = Schul- und Leistungssportzentrum Berlin (SLZB)<br>
+         <b>#SPK</b> = Stiftung Preußischer Kulturbesitz (SPK)<br>
+         <b>#SPSG</b> = Stiftung Preußische Schlösser und Gärten Berlin-Brandenburg (SPSG)<br>
+         <b>#Stasi</b> = Ministerium für Staatssicherheit der DDR (MfS)<br>
+         <b>#StGB</b> = Strafgesetzbuch (StGB)<br>
+         <b>#STIKO</b> = Ständige Impfkommisson (STIKO)<br>
+         <b>#StVO</b> = Straßenverkehrs-Ordnung (StVO)<br>
+         <b>#StVZO</b> = Straßenverkehrs-Zulassungs-Ordnung (StVZO)<br>
+         <b>#SWP</b> = Stiftung Wissenschaft und Politik (SWP)<br>
+         <br>
+         <b>#THW</b> = Technisches Hilfswerk (THW)<br>
+         <b>#TU</b> = Technische Universität Berlin (TU Berlin)<br>
+         <br>
+         <b>#UdK</b> = Universität der Künste Berlin (UdK Berlin)<br>
+         <b>#UKB</b> = Unfallkrankenhaus Berlin (ukb)<br>
+         <br>
+         <b>#VBB</b> = Verkehrsverbund Berlin-Brandenburg (VBB)<br>
+         <b>#VgV</b> = Vergabeverfahren nach der Vergabeverordnung (VgV)<br>
+         <b>#VHS</b> = Volkshochschule (VHS)<br>
+         <b>#VIZ</b> = Verkehrsinformationszentrale (VIZ)<br>
+         <b>#VÖBB</b> = Verbund der Öffentlichen Bibliotheken Berlins (VÖBB)<br>
+         <br>
+         <b>#ZEV</b> = Zentrum für Europäischen Verbraucherschutz (ZEV)<br>
+         <b>#ZIB</b> = Konrad-Zuse-Zentrum für Informationstechnik Berlin (ZIB)<br>
+         <b>#ZLB</b> = Zentral- und Landesbibliothek Berlin (ZLB)<br>
+         <b>#ZOB</b> = Zentraler Omnibusbahnhof (ZOB)<br>
+         </ul>
+    </div>
+      <!-- Footer bleibt sichtbar -->
+      <div style="margin-top:12px;flex:0 0 auto;display:flex;justify-content:flex-end">
+        <button id="smx_cfg_cancel"
+          style="background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">
+          Schließen
+        </button>
+      </div>`;
+
+    document.body.appendChild(box);
+
+    const close = () => {
+      try { box.remove(); } catch {}
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+
+    // ESC zum Schließen (optional, aber praktisch)
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+
+    box.querySelector('#smx_cfg_cancel').addEventListener('click', close);
+
+  } catch (err) {
+    console.error('Shortcut-Menü Fehler:', err);
+  }
+});
+
+GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Textbausteine', () => {
+  try {
+    const box = document.createElement('div');
+
+    box.style.cssText = [
+      'position:fixed',
+      'right:18px',
+      'top:18px',
+      'z-index:2147483647',
+      'background:#0b1e2d',
+      'color:#fff',
+      'border:1px solid #0d3a5c',
+      'border-radius:10px',
+      'padding:14px',
+
+      // wichtig: an Bildschirm anpassen
+      'width:min(560px, calc(100vw - 36px))',
+      'max-height:calc(100vh - 36px)',
+
+      // wichtig: Layout für Header/List/Footer
+      'display:flex',
+      'flex-direction:column',
+
+      'font:13px/1.35 system-ui,Segoe UI,Arial',
+      'box-shadow:0 12px 30px rgba(0,0,0,.35)'
+    ].join(';');
+
+    box.innerHTML = `
+      <div style="font-weight:700;margin-bottom:8px;flex:0 0 auto">
+        SuperMAX – Hashtag-Regeln Textbausteine
+      </div>
+
+      <!-- Scroll-Container -->
+      <div id="smx_hash_scroll"
+           style="
+             flex:1 1 auto;
+             overflow:auto;
+             padding-right:8px;
+             border-top:1px solid rgba(255,255,255,.08);
+             border-bottom:1px solid rgba(255,255,255,.08);
+           ">
+    <ul style="margin-top:10px;padding-left:18px">
+	<li><b>ALLGEMEIN</b></li>
+        <b>#LLL</b> = Liebe Leserinnen und Leser,<br>
+        <b>#MOPO</b> = wie die Berliner Morgenpost berichtet<br>
+	<br>
+	<li><b>GEWINNSPIEL</b></li>
+        <b>#GKK</b> = Gewinnen Sie Karten für das Konzert mit<br>
+        <b>#GWI</b> = Die Gewinner werden per E-Mail benachrichtigt.<br>
+	<br>
+	<li><b>LOKALES</b></li>
+        <b>#BAU</b> = Neben der öffentlichen Auslegung der Bebauungspläne sind<br>die Unterlagen auch im Internet einsehbar unter<br>
+	<br>
+	<li><b>RECHT</b></li>
+        <b>#AEV</b> = Änderungen vorbehalten.<br>
+        <b>#AOG</b> = Alle Angaben ohne Gewähr.<br>
+        <b>#GWR</b> = Der Rechtsweg ist ausgeschlossen.<br>
+	<br>
+	<li><b>SERVICEHINWEIS</b></li>
+        <b>#HIT</b> = Hintergrundinformationen dazu finden Sie unter<br>
+        <b>#LMU</b> = Lesen Sie mehr zu diesem Thema unter<br>
+        <b>#WIU</b> = Weitere Informationen im Internet unter<br>
+	<br>
+	<li><b>STADTSPAZIERGANG</b></li>
+        <b>#STF</b> = Leserinnen und Leser entdecken mit dem Stadtgänger Bernd S. Meyer<br>
+	<br>
+	<li><b>VERANSTALTUNGEN</b></li>
+        <b>#ANB</b> = Anmeldung bis spätestens<br>
+        <b>#ANM</b> = Eine Anmeldung ist erforderlich.<br>
+        <b>#ANU</b> = Eine Anmeldung ist nicht erforderlich.<br>
+        <b>#AUS</b> = Die Ausstellung ist kostenfrei zu besichtigen bis<br>
+        <b>#BAR</b> = Der Veranstaltungsort ist barrierefrei zugänglich.<br>
+        <b>#BAN</b> = Der Veranstaltungsort ist nicht barrierefrei.<br>
+        <b>#BEG</b> = Die Teilnahmezahl ist begrenzt.<br>
+        <b>#ERM</b> = Ermäßigungen gelten für<br>
+        <b>#ENG</b> = Die Veranstaltung findet in englischer Sprache statt.<br>
+        <b>#EUP</b> = Eintrittskarten und das vollständige Programm gibt es unter<br>
+        <b>#FAM</b> = Familienkarten sind erhältlich unter<br>
+        <b>#FRA</b> = Der Eintritt ist kostenfrei. Eine Anmeldung ist erforderlich unter<br>
+        <b>#FRE</b> = Der Eintritt ist kostenfrei. Eine Anmeldung ist nicht erforderlich.<br>
+        <b>#KID</b> = Für Kinder geeignet ab<br>
+        <b>#JUG</b> = Empfohlen für Kinder und Jugendliche ab<br>
+        <b>#MIT</b> = Bitte festes Schuhwerk und Regenschutz mitbringen.<br>
+        <b>#TIP</b> = Der Eintritt ist kostenfrei, Spenden werden erbeten.<br>
+        <b>#TIX</b> = Tickets und weitere Informationen unter<br>
+        <b>#TKA</b> = Die Teilnahme ist kostenfrei möglich bei Anmeldung unter<br>
+        <b>#TKO</b> = Die Teilnahme ist kostenfrei und ohne Anmeldung möglich.<br>
+        <b>#VVK</b> = Tickets im Vorverkauf unter<br>
+        <b>#WAR</b> = Es gibt eine Warteliste.<br>
+        <b>#WET</b> = Witterungsbedingte Änderungen sind möglich.<br>
+        <b>#WIA</b> = Weitere Informationen und Anmeldung unter<br>
+        <b>#WIV</b> = Weitere Informationen beim Veranstalter unter<br>
+	<br>
+	<li><b>VERKEHR</b></li>
+        <b>#ANF</b> = Eine Anfahrt mit öffentlichen Verkehrsmitteln mangels<br>ausreichender Parkmöglichkeiten wird empfohlen.<br>
+        <b>#SEV</b> = Ein Schienenersatzverkehr (SEV) mit Bussen ist verfügbar.<br>
+        <b>#UMF</b> = Eine ausgeschilderte Umfahrung der Straßensperrung ist eingerichtet.<br>
+    </ul>
+    </div>
+      <!-- Footer bleibt sichtbar -->
+      <div style="margin-top:12px;flex:0 0 auto;display:flex;justify-content:flex-end">
+        <button id="smx_cfg_cancel"
+          style="background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">
+          Schließen
+        </button>
+      </div>`;
+
+    document.body.appendChild(box);
+
+    const close = () => {
+      try { box.remove(); } catch {}
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+
+    // ESC zum Schließen (optional, aber praktisch)
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+
+    box.querySelector('#smx_cfg_cancel').addEventListener('click', close);
+
+  } catch (err) {
+    console.error('Shortcut-Menü Fehler:', err);
+  }
+});
+
+
+
+//// KAPITEL 6.3 // Menü - Tastaturkürzel ////////////////////////////////////////////////////////////////
 GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
   try{ const box=document.createElement('div'); box.style.cssText='position:fixed;right:18px;top:18px;z-index:2147483647;background:#0b1e2d;color:#fff;border:1px solid #0d3a5c;border-radius:10px;padding:14px;max-width:560px;font:13px/1.35 system-ui,Segoe UI,Arial'; box.innerHTML=`
     <div style="font-weight:700;margin-bottom:8px">SuperMAX – Tastaturkürzel</div>
@@ -5413,10 +5764,7 @@ GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
    document.body.appendChild(box); const close=()=>{ try{ box.remove(); }catch{} }; box.querySelector('#smx_cfg_cancel').addEventListener('click', close); }catch(err){ console.error('Shortcut-Menü Fehler:', err); }
 });
 
-//// KAPITEL 6.3 // Menü - Clippings /////////////////////////////////////////////////////////////////////
-// (Platzhalter)
-
-//// KAPITEL 6.4 // Menü - Rollen ////////////////////////////////////////////////////////////////////////
+//// KAPITEL 6.4 // Menü - Clippings /////////////////////////////////////////////////////////////////////
 // (Platzhalter)
 
 //// KAPITEL 6.5 // Menü - Token-Setting /////////////////////////////////////////////////////////////////
