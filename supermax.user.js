@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.4.9 Multi-Site Struktur
+// @name SuperMAX 5.4.10 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.4.9
+// @version 5.4.10
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -990,12 +990,46 @@ const CFG_DEFAULTS = {
         { pattern: "#ZOB", flags: "gu", replacement: "Zentraler Omnibusbahnhof (ZOB)" },
 
         // Shortcuts für Textphrasen
+        { pattern: "#AEV", flags: "gu", replacement: "Änderungen vorbehalten." },
+        { pattern: "#ANB", flags: "gu", replacement: "Anmeldung bis spätestens" },
+        { pattern: "#ANF", flags: "gu", replacement: "Eine Anfahrt mit öffentlichen Verkehrsmitteln mangels ausreichender Parkmöglichkeiten wird empfohlen." },
+        { pattern: "#ANM", flags: "gu", replacement: "Eine Anmeldung ist erforderlich." },
+        { pattern: "#ANU", flags: "gu", replacement: "Eine Anmeldung ist nicht erforderlich." },
+        { pattern: "#AOG", flags: "gu", replacement: "Alle Angaben ohne Gewähr." },
+        { pattern: "#AUS", flags: "gu", replacement: "Die Ausstellung ist kostenfrei zu besichtigen bis" },
+        { pattern: "#BAR", flags: "gu", replacement: "Der Veranstaltungsort ist barrierefrei zugänglich." },
+        { pattern: "#BAN", flags: "gu", replacement: "Der Veranstaltungsort ist nicht barrierefrei." },
+        { pattern: "#BAU", flags: "gu", replacement: "Neben der öffentlichen Auslegung der Bebauungspläne sind die Unterlagen auch im Internet einsehbar unter" },
+        { pattern: "#BEG", flags: "gu", replacement: "Die Teilnahmezahl ist begrenzt." },
+        { pattern: "#ERM", flags: "gu", replacement: "Ermäßigungen gelten für" },
+        { pattern: "#ENG", flags: "gu", replacement: "Die Veranstaltung findet in englischer Sprache statt." },
+        { pattern: "#EUP", flags: "gu", replacement: "Eintrittskarten und das vollständige Programm gibt es unter" },
+        { pattern: "#FAM", flags: "gu", replacement: "Familienkarten sind erhältlich unter" },
+        { pattern: "#FRA", flags: "gu", replacement: "Der Eintritt ist kostenfrei. Eine Anmeldung ist erforderlich unter" },
         { pattern: "#FRE", flags: "gu", replacement: "Der Eintritt ist kostenfrei. Eine Anmeldung ist nicht erforderlich." },
-        { pattern: "#FRA", flags: "gu", replacement: "Der Eintritt ist kostenfrei, um Anmeldung wird gebeten unter " },
+        { pattern: "#GKK", flags: "gu", replacement: "Gewinnen Sie Karten für das Konzert mit" },
+        { pattern: "#GWI", flags: "gu", replacement: "Die Gewinner werden per E-Mail benachrichtigt." },
+        { pattern: "#GWR", flags: "gu", replacement: "Der Rechtsweg ist ausgeschlossen." },
+        { pattern: "#HIT", flags: "gu", replacement: "Hintergrundinformationen dazu finden Sie unter" },
+        { pattern: "#KID", flags: "gu", replacement: "Für Kinder geeignet ab" },
+        { pattern: "#JUG", flags: "gu", replacement: "Empfohlen für Kinder und Jugendliche ab" },
+        { pattern: "#LLL", flags: "gu", replacement: "Liebe Leserinnen und Leser," },
+        { pattern: "#LMU", flags: "gu", replacement: "Lesen Sie mehr zu diesem Thema unter" },
+        { pattern: "#MIT", flags: "gu", replacement: "Bitte festes Schuhwerk und Regenschutz mitbringen." },
+        { pattern: "#MOPO", flags: "gu", replacement: "wie die Berliner Morgenpost berichtet" },
+        { pattern: "#SEV", flags: "gu", replacement: "Ein Schienenersatzverkehr mit Bussen ist verfügbar." },
+        { pattern: "#STF", flags: "gu", replacement: "Leserinnen und Leser entdecken mit dem Stadtgänger Bernd S. Meyer" },
         { pattern: "#TIP", flags: "gu", replacement: "Der Eintritt ist kostenfrei, Spenden werden erbeten." },
-        { pattern: "#WIA", flags: "gu", replacement: "Weitere Informationen und Anmeldung unter " },
-        { pattern: "#WIU", flags: "gu", replacement: "Weitere Informationen im Internet unter " },
-        { pattern: "#WIV", flags: "gu", replacement: "Weitere Informationen beim Veranstalter unter " },
+        { pattern: "#TIX", flags: "gu", replacement: "Tickets und weitere Informationen unter" },
+        { pattern: "#TKA", flags: "gu", replacement: "Die Teilnahme ist kostenfrei möglich bei Anmeldung unter" },
+        { pattern: "#TKO", flags: "gu", replacement: "Die Teilnahme ist kostenfrei und ohne Anmeldung möglich." },
+        { pattern: "#UMF", flags: "gu", replacement: "Eine ausgeschilderte Umfahrung der Straßensperrung ist eingerichtet." },
+        { pattern: "#VVK", flags: "gu", replacement: "Tickets im Vorverkauf unter" },
+        { pattern: "#WAR", flags: "gu", replacement: "Es gibt eine Warteliste." },
+        { pattern: "#WET", flags: "gu", replacement: "Witterungsbedingte Änderungen sind möglich." },
+        { pattern: "#WIA", flags: "gu", replacement: "Weitere Informationen und Anmeldung unter" },
+        { pattern: "#WIU", flags: "gu", replacement: "Weitere Informationen im Internet unter" },
+        { pattern: "#WIV", flags: "gu", replacement: "Weitere Informationen beim Veranstalter unter" },
 
         // Spitzenkandidaten
         { pattern: "##(?:Steffen Krach|Krach)\\b", flags: "gu", replacement: "Steffen Krach (SPD), im Gespräch als Spitzenkandidat für die Berliner Abgeordnetenhauswahl 2026" },
