@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.5.1 Multi-Site Struktur
+// @name SuperMAX 5.5.2 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.5.1
+// @version 5.5.2
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -5724,41 +5724,42 @@ GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
     <div style="font-weight:700;margin-bottom:8px">SuperMAX – Tastaturkürzel</div>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperMAX Tastaturkürzel:</b></li>
-      <li>CTRL+S > RegEx- und Hashtag-Regeln</li>
+      CTRL+S > RegEx- und Hashtag-Regeln
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperSHIRT Tastaturkürzel:</b></li>
-      <li>CTRL+ALT+S > Artikel aus CUE an AR übergeben</li>
-      <li>CTRL+ALT+S > Ergebnis aus AR an CUE übergeben</li>
+      CTRL+ALT+S > Artikel aus CUE an AR übergeben<br>
+      CTRL+ALT+S > Ergebnis aus AR an CUE übergeben<br>
+      CTRL+ALT+S > Ergebnis aus AR in CUE einfügen
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperERASER Tastaturkürzel:</b></li>
-      <li>CTRL+E > Umbrüche, Makros und Links entfernen</li>
+      CTRL+E > Umbrüche, Makros und Links entfernen
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperLINK Tastaturkürzel:</b></li>
-      <li>CTRL+ALT+L > URL kürzen mit YOURLS</li>
-      <li>Menü > YOURLS-Token setzen/anzeigen/löschen</li>
+      CTRL+ALT+L > URL kürzen mit YOURLS<br>
+      Menü > YOURLS-Token setzen/anzeigen/löschen
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperBRIDGE Tastaturkürzel:</b></li>
-      <li>CTRL+ALT+B > Artikel aus PPS an Zwischenablage</li>
-      <li>CTRL+V > Artikel aus Zwischenablage</li>
-      <li>CTRL+ALT+B > Artikel aus Zwischenablage in CUE</li>
+      CTRL+ALT+B > Artikel aus PPS an Zwischenablage<br>
+      CTRL+V > Artikel aus Zwischenablage<br>
+      CTRL+ALT+B > Artikel aus Zwischenablage in CUE
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>SuperRED Tastaturkürzel:</b></li>
-      <li>CTRL+ALT+R > Artikelbeschreibung erzeugen</li>
-      <li>CTRL+ALT+R > Notizen mit Textanalyse erzeugen</li>
+      CTRL+ALT+R > Artikelbeschreibung erzeugen<br>
+      CTRL+ALT+R > Notizen mit Textanalyse erzeugen
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
       <li><b>Auch hilfreich im PPS Texteditor:</b></li>
-      <li>CTRL+A > Alles markieren</li>
-      <li>CTRL+C > Auswahl kopieren</li>
-      <li>CTRL+X > Auswahl ausschneiden</li>
-      <li>CTRL+V > Auswahl einfügen</li>
-      <li>CTRL+Z > Aktion rückgängig machen</li>
-      <li>CTRL+Y > Aktion wieder herstellen</li>
+      CTRL+A > Absatz markieren<br>
+      CTRL+C > Auswahl kopieren<br>
+      CTRL+X > Auswahl ausschneiden<br>
+      CTRL+V > Auswahl einfügen<br>
+      CTRL+Z > Aktion rückgängig machen<br>
+      CTRL+SHIFT+Z > Aktion wieder herstellen (in CUE)
     </ul>
     <div style="margin-top:12px"><button id="smx_cfg_cancel" style="margin-left:6px;background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">Schließen</button></div>`;
    document.body.appendChild(box); const close=()=>{ try{ box.remove(); }catch{} }; box.querySelector('#smx_cfg_cancel').addEventListener('click', close); }catch(err){ console.error('Shortcut-Menü Fehler:', err); }
