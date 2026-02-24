@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.5.2 Multi-Site Struktur
+// @name SuperMAX 5.5.3 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.5.2
+// @version 5.5.3
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -1387,7 +1387,7 @@ window.SMX_CFG.profiles.EDITION.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profi
         { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
         { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
         { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*BM(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
-        { pattern: "^\\s*([^/]+?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
+        { pattern: "^\\s*(\\S[^/]*?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
         ];
 window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE || [
         // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
@@ -1399,7 +1399,7 @@ window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profi
         { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
         { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
         { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*BM(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
-        { pattern: "^\\s*([^/]+?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
+        { pattern: "^\\s*(\\S[^/]*?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
         ];
 
 // Optional: Hashtag-Regeln in APTOMA mitlaufen lassen?
@@ -6223,6 +6223,124 @@ function smxAdd_applyRules(text, compiled){
   return out;
 }
 
+
+function smxCreditNormalize(raw) {
+  let s = String(raw ?? '');
+
+  // Layoutpreview bringt gern Zeilenumbrüche / <br> rein → Einzeiler machen
+  s = s.replace(/\r\n|\r|\n/g, ' ');
+
+  // NBSP/NNBSP/ThinSpace → normales Space
+  s = s.replace(/[\u00A0\u202F\u2009]/g, ' ');
+
+  // Slash-Spaces vereinheitlichen: "a/ b" "a /b" "a\u202F/\u202Fb" → "a / b"
+  s = s.replace(/\s*\/\s*/g, ' / ');
+
+  // Mehrfachspaces → 1
+  s = s.replace(/\s{2,}/g, ' ').trim();
+  return s;
+}
+
+function smxCreditSplit(s) {
+  s = smxCreditNormalize(s);
+  if (!s) return [];
+  return s.split(' / ').map(x => x.trim()).filter(Boolean);
+}
+
+function smxCreditRemoveTailSources(parts) {
+  const isSource = (x) => /^(Berliner Woche|Berliner Morgenpost|Morgenpost|BM)$/i.test(x);
+  while (parts.length && isSource(parts[parts.length - 1])) parts.pop();
+  return parts;
+}
+
+function smxCreditDedupeParts(parts) {
+  // Entferne direkt aufeinanderfolgende Duplikate: A/A → A
+  for (let i = 1; i < parts.length; ) {
+    if (parts[i] === parts[i - 1]) parts.splice(i, 1);
+    else i++;
+  }
+  return parts;
+}
+
+function smxCreditCleanText(raw) {
+  let parts = smxCreditSplit(raw);
+  parts = smxCreditRemoveTailSources(parts);
+  parts = smxCreditDedupeParts(parts);
+  // Nach Dedupe nochmal Tail prüfen (falls Quelle nachrutscht)
+  parts = smxCreditRemoveTailSources(parts);
+  return parts.join(' / ');
+}
+
+// Schreibt bereinigten Credit zurück, bevorzugt in vorhandene photographer/agency-Struktur.
+// Fallback: creditEl.textContent = cleaned (wenn Struktur unklar)
+function smxCreditApplyToElement(creditEl, cleaned) {
+  cleaned = String(cleaned ?? '').trim();
+
+  // Wenn nichts übrig bleibt → Feld leeren
+  if (!cleaned) {
+    creditEl.textContent = '';
+    return true;
+  }
+
+  const parts = smxCreditSplit(cleaned);
+
+  const pLine = creditEl.querySelector('.photographer .line');
+  const aLine = creditEl.querySelector('.agency .line');
+
+  // Wenn Struktur vorhanden: photographer = parts[0], agency = Rest
+  if (pLine) pLine.textContent = parts[0] ?? '';
+
+  if (aLine) {
+    const rest = parts.slice(1).join(' / ');
+    if (rest) {
+      aLine.textContent = rest;
+      // Slash-Textnodes sicherstellen (lassen wir stehen; Layoutpreview rendert meist selbst)
+    } else {
+      // agency entfernen, wenn leer
+      const agencySpan = aLine.closest('.agency');
+      if (agencySpan) agencySpan.remove();
+    }
+
+    // Separator-Textnodes " / " bereinigen:
+    // Wenn es keine agency mehr gibt, Slash-Node(s) entfernen.
+    const hasAgencyNow = !!creditEl.querySelector('.agency');
+    if (!hasAgencyNow) {
+      for (const n of Array.from(creditEl.childNodes)) {
+        if (n.nodeType === Node.TEXT_NODE && /^[\s\u00A0\u202F]*\/[\s\u00A0\u202F]*$/.test(n.nodeValue || '')) {
+          n.nodeValue = '';
+        }
+      }
+    }
+
+    return true;
+  }
+
+  // Fallback: Struktur fehlt/anders → alles als Text setzen
+  creditEl.textContent = cleaned;
+  return true;
+}
+
+// Liefert true, wenn der Credit geändert wurde
+function smxCreditCleanIfCreditField(rootEditable) {
+  try {
+    const creditEl = rootEditable?.closest?.('.credit') || rootEditable?.querySelector?.('.credit');
+    if (!creditEl) return false;
+
+    // Layoutpreview: innerText enthält auch getrennte Textnodes/Spans → perfekt fürs "flat cleaning"
+    const before = smxCreditNormalize(creditEl.innerText ?? creditEl.textContent ?? '');
+    const after  = smxCreditCleanText(before);
+
+    if (after !== before) {
+      smxCreditApplyToElement(creditEl, after);
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+
 function smxAdd_replaceTextNodes(rootEl, compiled){
   if (!rootEl) return false;
   const w = document.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT, null, false);
@@ -6311,7 +6429,11 @@ async function smxAdd_oneClick(){
   let changed = smxAdd_replaceTextNodes(root, baseCompiled);
   changed = smxAdd_replaceTextNodes(root, extraCompiled) || changed;
   if (runHash) changed = smxAdd_replaceTextNodes(root, hashCompiled) || changed;
-
+  // --- NEU: Layoutpreview-fester Fotocredit-Cleaner ---
+  // Nach den Regex-Läufen noch einmal den gesamten Credit als Einzeiler bereinigen
+  // (robust gegen DOM-Splitting / DB A/B/C/D)
+  const creditChanged = smxCreditCleanIfCreditField(root);
+  changed = creditChanged || changed;
   if (changed) {
     try { root.dispatchEvent(new InputEvent('input', { bubbles:true })); } catch {}
     try { root.dispatchEvent(new Event('change', { bubbles:true })); } catch {}
