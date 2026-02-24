@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.5.3 Multi-Site Struktur
+// @name SuperMAX 5.5.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.5.3
+// @version 5.5.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -3874,8 +3874,9 @@ const currentId = String(cueReadArticleIdSafe() ?? '').trim();
 
 if (expectedId && currentId && expectedId !== currentId) {
   smxToast(
-    `SuperSHIRT: Sicherheitsstopp – Ergebnis gehört zu Artikel-ID ${expectedId}, ` +
-    `dieser Tab ist ${currentId}. Bitte zum passenden CUE-Tab wechseln.`,
+  `SuperSHIRT: Sicherheitsstopp – Ergebnis gehört zu Artikel-ID ${expectedId}, ` +
+  `dieser Tab ist ${currentId}. Bitte zum passenden CUE-Tab wechseln. ` +
+  `(Tipp: Tampermonkey-Menü → „SuperSHIRT – Reset“, um neu zu starten.)`,
     false
   );
   // Wichtig: Result NICHT löschen, damit es im richtigen Tab noch angewendet werden kann.
@@ -4044,6 +4045,53 @@ function smxSuperSHIRT_LoadResult() {
 function smxSuperSHIRT_ClearResult() {
   const k = smxSuperSHIRT_Keys().result;
   try { GM_setValue(k, null); } catch {}
+}
+
+// ---- SuperSHIRT: Reset / Cleanup -------------------------------------------------
+
+/** Payload (CUE -> Resizer) löschen */
+function smxSuperSHIRT_ClearPayload() {
+  const k = smxSuperSHIRT_Keys().payload;
+  try { GM_setValue(k, null); } catch {}
+}
+
+/**
+ * SuperSHIRT Workflow hart zurücksetzen:
+ * - löscht Payload + Result (auch evtl. _dev-Variante)
+ * - löst Locks, falls etwas „hängen geblieben“ ist
+ * - optional: Clipboard leeren (hilft gegen „Altlasten“)
+ */
+async function smxSuperSHIRT_ResetWorkflow({ clearClipboard = true } = {}) {
+  try {
+    // 1) Keys robust löschen: sowohl normal als auch _dev
+    const basePayload = String(CFG_SUPERSHIRT?.store?.payloadKey ?? 'supershirt_payload_v1');
+    const baseResult  = String(CFG_SUPERSHIRT?.store?.resultKey  ?? 'supershirt_result_v1');
+
+    for (const suf of ['', '_dev']) {
+      try { GM_setValue(basePayload + suf, null); } catch {}
+      try { GM_setValue(baseResult  + suf, null); } catch {}
+    }
+
+    // 2) Zusätzlich: aktuelle Key-Variante über Helper (falls ihr das irgendwann ändert)
+    try { smxSuperSHIRT_ClearPayload(); } catch {}
+    try { smxSuperSHIRT_ClearResult(); } catch {}
+
+    // 3) Locks lösen (wichtig, falls ein Async-Run irgendwo abbrach)
+    try { smxSuperSHIRT_TryAutoApplyInCUE.__lock = false; } catch {}
+    // Hinweis: __armed NICHT zurücksetzen, sonst könnt ihr Listener doppelt registrieren.
+
+    // 4) Optional: Clipboard leeren (wie nach erfolgreichem Apply)
+    if (clearClipboard) {
+      try { await smxClipboardClear(); } catch {}
+    }
+
+    smxToast('SuperSHIRT: Reset erledigt – Workflow beendet & Zwischenspeicher geleert.');
+    return true;
+  } catch (e) {
+    console.warn('[SMX][SuperSHIRT] ResetWorkflow error:', e);
+    smxToast('SuperSHIRT: Reset fehlgeschlagen (Konsole prüfen).', false);
+    return false;
+  }
 }
 
 // ---- SuperSHIRT: Auto-Apply im bestehenden CUE-Tab --------------------------
@@ -5765,8 +5813,19 @@ GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
    document.body.appendChild(box); const close=()=>{ try{ box.remove(); }catch{} }; box.querySelector('#smx_cfg_cancel').addEventListener('click', close); }catch(err){ console.error('Shortcut-Menü Fehler:', err); }
 });
 
-//// KAPITEL 6.4 // Menü - Clippings /////////////////////////////////////////////////////////////////////
-// (Platzhalter)
+//// KAPITEL 6.4 // Menü - SuperSHIRT Reset //////////////////////////////////////////////////////////////
+GM_registerMenuCommand('SuperSHIRT – Reset (Workflow abbrechen)', async () => {
+  try {
+    if (typeof smxSuperSHIRT_ResetWorkflow !== 'function') {
+      smxToast('SuperSHIRT: Reset-Funktion nicht gefunden.', false);
+      return;
+    }
+    await smxSuperSHIRT_ResetWorkflow({ clearClipboard: true });
+  } catch (e) {
+    console.warn('[SMX][Menu] SuperSHIRT Reset error:', e);
+    smxToast('SuperSHIRT: Reset-Fehler (Konsole prüfen).', false);
+  }
+});
 
 //// KAPITEL 6.5 // Menü - Token-Setting /////////////////////////////////////////////////////////////////
 try {
