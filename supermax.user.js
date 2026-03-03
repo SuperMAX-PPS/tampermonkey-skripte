@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.5.4 Multi-Site Struktur
+// @name SuperMAX 5.5.5 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.5.4
+// @version 5.5.5
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -5417,7 +5417,7 @@ async function superMAX_OneClick() {
 // } catch {}
 
 //// KAPITEL 6.3 // Menü - Hashtag-Regeln ////////////////////////////////////////////////////////////////
-GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Abkürzungen', () => {
+GM_registerMenuCommand('SuperMAX – Abkürzungen (Hashtag-Regeln)', () => {
   try {
     const box = document.createElement('div');
 
@@ -5446,7 +5446,7 @@ GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Abkürzungen', () => {
 
     box.innerHTML = `
       <div style="font-weight:700;margin-bottom:8px;flex:0 0 auto">
-        SuperMAX – Hashtag-Regeln Abkürzungen
+        SuperMAX – Abkürzungen (Hashtag-Regeln)
       </div>
 
       <!-- Scroll-Container -->
@@ -5479,7 +5479,7 @@ GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Abkürzungen', () => {
          <b>#BFD</b> = Bundesfreiwilligendienst (BFD)<br>
          <b>#BfV</b> = Bundesamt für Verfassungsschutz (BfV)<br>
          <b>#BGB</b> = Bürgerliches Gesetzbuch (BGB)<br>
-         <b>#BGBl\\.</b> = Bundesgesetzblatt (BGBl.)<br>
+         <b>#BGBl.</b> = Bundesgesetzblatt (BGBl.)<br>
          <b>#BHT</b> = Berliner Hochschule für Technik (BHT)<br>
          <b>#BIS</b> = Berliner Institut für Sozialforschung (BIS)<br>
          <b>#BMI</b> = Body-Mass-Index (BMI)<br>
@@ -5637,7 +5637,7 @@ GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Abkürzungen', () => {
   }
 });
 
-GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Textbausteine', () => {
+GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
   try {
     const box = document.createElement('div');
 
@@ -5666,7 +5666,191 @@ GM_registerMenuCommand('SuperMAX – Hashtag-Regeln Textbausteine', () => {
 
     box.innerHTML = `
       <div style="font-weight:700;margin-bottom:8px;flex:0 0 auto">
-        SuperMAX – Hashtag-Regeln Textbausteine
+        SuperMAX – Gendern (Hashtag-Regeln)
+      </div>
+
+      <!-- Scroll-Container -->
+      <div id="smx_hash_scroll"
+           style="
+             flex:1 1 auto;
+             overflow:auto;
+             padding-right:8px;
+             border-top:1px solid rgba(255,255,255,.08);
+             border-bottom:1px solid rgba(255,255,255,.08);
+           ">
+    <ul style="margin-top:10px;padding-left:18px">
+        #Anwohnerinnen und Anwohner = Anwohner<br>
+        #Anwohner(*:|)innen = Anwohner<br>
+        #Anwohnende = Anwohner<br>
+        #Arbeitnehmerinnen und Arbeitnehmer = Arbeitnehmer<br>
+        #Arbeitnehmer(*:|)innen = Arbeitnehmer<br>
+        #Arbeitnehmende = Arbeitnehmer<br>
+        #Ärztinnen und Ärzte = Ärzte<br>
+        #Ärzt(*:|)innen = Ärzte<br>
+        #Ausstellerinnen und Aussteller = Aussteller<br>
+        #Aussteller(*:|)innen = Aussteller<br>
+        #Ausstellende = Aussteller<br>
+        #Autofahrerinnen und Autofahrer = Autofahrer<br>
+        #Autofahrer(*:|)innen = Autofahrer<br>
+        #Autodahrende = Autofahrer<br>
+        #Autorinnen und Autoren = Autoren<br>
+        #Autor(*:|)innen = Autoren<br>
+        <br>
+        #Berlinerinnen und Berliner = Berliner<br>
+        #Berliner(*:|)innen = Berliner<br>
+        #Besucherinnen und Besucher = Besucher<br>
+        #Besucher(*:|)innen = Besucher<br>
+        #Bewerberinnen und Bewerber = Bewerber<br>
+        #Bewerber(*:|)innen = Bewerber<br>
+        #Bewerbende = Bewerber<br>
+        #Bürgerinnen und Bürger = Bürger<br>
+        #Bürger(*:|)innen = Bürger<br>
+        <br>
+        #Erzieherinnen und Erzieher = Erzieher<br>
+        #Erzieher(*:|)innen = Erzieher<br>
+        #Expertinnen und Experten = Experten<br>
+        #Expert(*:|)innen = Experten<br>
+        <br>
+        #Gärtnerinnen und Gärtner = Gärtner<br>
+        #Gärtner(*:|)innen = Gärtner<br>
+        #Gästinnen und Gäste = Gäste<br>
+        #Gäst(*:|)innen = Gäste<br>
+        <br>
+        #Händlerinnen und Händler = Händler<br>
+        #Händler(*:|)innen = Händler<br>
+        #Handwerkerinnen und Handwerker = Handwerker<br>
+        #Handwerker(*:|)innen = Handwerker<br>
+        <br>
+        #Kolleginnen und Kollegen = Kollegen<br>
+        #Kolleg(*:|)innen = Kollegen<br>
+        #Künstlerinnen und Künstler = Künstler<br>
+        #Künstler(*:|)innen = Künstler<br>
+        #Kundinnen und Kunden = Kunden<br>
+        #Kund(*:|)innen = Kunden<br>
+        <br>
+        #Lehrerinnen und Lehrer = Lehrer<br>
+        #Lehrer(*:|)innen = Lehrer<br>
+        #Lehrende = Lehrer<br>
+        #Leserinnen und Leser = Leser<br>
+        #Leser(*:|)innen = Leser<br>
+        #Lesende = Leser<br>
+        <br>
+        #Medizinerinnen und Mediziner = Mediziner<br>
+        #Mediziner(*:|)innen = Mediziner<br>
+        #Mieterinnen und Mieter = Mieter<br>
+        #Mieter(*:|)innen = Mieter<br>
+        #Mietende = Mieter<br>
+        #Mitarbeiterinnen und Mitarbeiter = Mitarbeiter<br>
+        #Mitarbeiter(*:|)innen = Mitarbeiter<br>
+        #Mitarbeitende = Mitarbeiter<br>
+        <br>
+        #Patientinnen und Patienten = Patienten<br>
+        #Patient(*:|)innen = Patienten<br>
+        #Pflegerinnen und Pfleger = Pfleger<br>
+        #Pfleger(*:|)innen = Pfleger<br>
+        #Pflegende = Pfleger<br>
+        #Politikerinnen und Politiker = Politiker<br>
+        #Politiker(*:|)innen = Politiker<br>
+        <br>
+        #Radfahrerinnen und Radfahrer = Radfahrer<br>
+        #Radfahrer(*:|)innen = Radfahrer<br>
+        #Radfahrende = Radfahrer<br>
+        #Rentnerinnen und Rentner = Rentner<br>
+        #Rentner(*:|)innen = Rentner<br>
+        <br>
+        #Schülerinnen und Schüler = Schüler<br>
+        #Schüler(*:|)innen = Schüler<br>
+        #Seniorinnen und Senioren = Senioren<br>
+        #Senior(*:|)innen = Senioren<br>
+        #Soldatinnen und Soldaten = Soldaten<br>
+        #Soldat(*:|)innen = Soldaten<br>
+        #Spenderinnen und Spender = Spender<br>
+        #Spender(*:|)innen = Spender<br>
+        #Spendende = Spender<br>
+        #Studentinnen und Studenten = Studenten<br>
+        #Student(*:|)innen = Studenten<br>
+        #Studierende(n) = Studenten<br>
+        <br>
+        #Teilnehmerinnen und Teilnehmer = Teilnehmer<br>
+        #Teilnehmer(*:|)innen = Teilnehmer<br>
+        #Teilnehmende = Teilnehmer<br>
+        <br>
+        #Urlauberinnen und Urlauber = Urlauber<br>
+        #Urlauber(*:|)innen = Urlauber<br>
+        <br>
+        #Verbraucherinnen und Verbraucher = Verbraucher<br>
+        #Verbraucher(*:|)innen = Verbraucher<br>
+        #Vermieterinnen und Vermieter = Vermieter<br>
+        #Vermieter(*:|)innen = Vermieter<br>
+        #Vermietende = Vermieter<br>
+        <br>
+        #Wählerinnen und Wähler = Wähler<br>
+        #Wähler(*:|)innen = Wähler<br>
+        #Wählende = Wähler<br>
+        <br>
+        #Zuhörerinnen und Zuhörer = Zuhörer<br>
+        #Zuhörer(*:|)innen = Zuhörer<br>
+        #Zuhörende = Zuhörer<br>         </ul>
+    </div>
+      <!-- Footer bleibt sichtbar -->
+      <div style="margin-top:12px;flex:0 0 auto;display:flex;justify-content:flex-end">
+        <button id="smx_cfg_cancel"
+          style="background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">
+          Schließen
+        </button>
+      </div>`;
+
+    document.body.appendChild(box);
+
+    const close = () => {
+      try { box.remove(); } catch {}
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+
+    // ESC zum Schließen (optional, aber praktisch)
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+
+    box.querySelector('#smx_cfg_cancel').addEventListener('click', close);
+
+  } catch (err) {
+    console.error('Shortcut-Menü Fehler:', err);
+  }
+});
+
+
+GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
+  try {
+    const box = document.createElement('div');
+
+    box.style.cssText = [
+      'position:fixed',
+      'right:18px',
+      'top:18px',
+      'z-index:2147483647',
+      'background:#0b1e2d',
+      'color:#fff',
+      'border:1px solid #0d3a5c',
+      'border-radius:10px',
+      'padding:14px',
+
+      // wichtig: an Bildschirm anpassen
+      'width:min(560px, calc(100vw - 36px))',
+      'max-height:calc(100vh - 36px)',
+
+      // wichtig: Layout für Header/List/Footer
+      'display:flex',
+      'flex-direction:column',
+
+      'font:13px/1.35 system-ui,Segoe UI,Arial',
+      'box-shadow:0 12px 30px rgba(0,0,0,.35)'
+    ].join(';');
+
+    box.innerHTML = `
+      <div style="font-weight:700;margin-bottom:8px;flex:0 0 auto">
+        SuperMAX – Textbausteine (Hashtag-Regeln)
       </div>
 
       <!-- Scroll-Container -->
