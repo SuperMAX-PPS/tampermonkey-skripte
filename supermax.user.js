@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.5.5 Multi-Site Struktur
+// @name SuperMAX 5.5.6 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.5.5
+// @version 5.5.6
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -917,7 +917,8 @@ const CFG_DEFAULTS = {
         { pattern: "#BBAW", flags: "gu", replacement: "Berlin-Brandenburgische Akademie der Wissenschaften (BBAW)" },
         { pattern: "#BBB", flags: "gu", replacement: "Berliner Bäder-Betriebe (BBB)" },
         { pattern: "#BDI", flags: "gu", replacement: "Bundesverband der deutschen Industrie (BDI)" },
-        { pattern: "#Behala", flags: "gu", replacement: "Behala (Berliner Hafen- und Lagerhaus-Betriebe)" },
+        { pattern: "#Behala", flags: "gu", replacement: "Berlin Entwickelt Neue Nachbarschaften (BENN)" },
+        { pattern: "#BENN", flags: "gu", replacement: "Behala (Berliner Hafen- und Lagerhaus-Betriebe)" },
         { pattern: "#BER", flags: "gu", replacement: "Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)" },
         { pattern: "#BerlAVG", flags: "gu", replacement: "Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)" },
         { pattern: "#BEW", flags: "gu", replacement: "Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)" },
@@ -5473,6 +5474,7 @@ GM_registerMenuCommand('SuperMAX – Abkürzungen (Hashtag-Regeln)', () => {
          <b>#BBB</b> = Berliner Bäder-Betriebe (BBB)<br>
          <b>#BDI</b> = Bundesverband der deutschen Industrie (BDI)<br>
          <b>#Behala</b> = Behala (Berliner Hafen- und Lagerhaus-Betriebe)<br>
+         <b>#BENN</b> = Berlin Entwickelt Neue Nachbarschaften (BENN)<br>
          <b>#BER</b> = Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)<br>
          <b>#BerlAVG</b> = Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)<br>
          <b>#BEW</b> = Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)<br>
