@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.6.2 Multi-Site Struktur
+// @name SuperMAX 5.6.2.1 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.6.2
+// @version 5.6.2.1
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -933,8 +933,8 @@ const CFG_DEFAULTS = {
         { pattern: "#BBAW", flags: "gu", replacement: "Berlin-Brandenburgische Akademie der Wissenschaften (BBAW)" },
         { pattern: "#BBB", flags: "gu", replacement: "Berliner Bäder-Betriebe (BBB)" },
         { pattern: "#BDI", flags: "gu", replacement: "Bundesverband der deutschen Industrie (BDI)" },
-        { pattern: "#Behala", flags: "gu", replacement: "Berlin Entwickelt Neue Nachbarschaften (BENN)" },
-        { pattern: "#BENN", flags: "gu", replacement: "Behala (Berliner Hafen- und Lagerhaus-Betriebe)" },
+        { pattern: "#Behala", flags: "gu", replacement: "Behala (Berliner Hafen- und Lagerhaus-Betriebe)" },
+        { pattern: "#BENN", flags: "gu", replacement: "Berlin Entwickelt Neue Nachbarschaften (BENN)" },
         { pattern: "#BER", flags: "gu", replacement: "Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)" },
         { pattern: "#BerlAVG", flags: "gu", replacement: "Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)" },
         { pattern: "#BEW", flags: "gu", replacement: "Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)" },
