@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.6.2.3 Multi-Site Struktur
+// @name SuperMAX 5.6.3 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.6.2.3
+// @version 5.6.3
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -534,77 +534,85 @@ const CFG_DEFAULTS = {
         { pattern: "\\bvon\\s+(\\d{1,2}(?:[.:]\\d{2})?)\\s*[-–]\\s*(\\d{1,2}(?:[.:]\\d{2})?)\\b", flags: "gu", replacement: "von $(1) bis $(2)" },
         { pattern: "\\bzwischen\\s+(\\d{1,2}(?:[.:]\\d{2})?)\\s*(?:[-–]|bis)\\s*(\\d{1,2}(?:[.:]\\d{2})?)\\b", flags: "gu", replacement: "zwischen $(1) und $(2)" },
 
+        // Technische Größen
+        // Prozentangaben in Worte fassen
+        { pattern: "(\\d+)\\s*%", flags: "gu", replacement: "$(1) Prozent" },
+
+        // Kohlendioxid mit tief gestellter Ziffer
+        { pattern: "\\bCO2\\b", flags: "gu", replacement: "CO₂" },
+        { pattern: "#CO₂", flags: "gu", replacement: "Kohlendioxid (CO₂)" }, // Ausgeschriebene Fassung per Hashtag
+
         // Temperaturen
-        { pattern: "([+\\-−])?\\s*(\\d+(?:[.,]\\d+)?)\\s*°\\s*C(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1)$(2) Grad Celsius" },
+        { pattern: "(\\d+)\\s*°C", flags: "gu", replacement: "$(1) Grad Celsius" },
 
         // Winkel
-        { pattern: "360\\s*°\\s*\\-", flags: "gu", replacement: "360-Grad-" },
+        { pattern: "360°\\-", flags: "g", replacement: "360-Grad-" },
 
         // Geschwindigkeiten
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:kmh|km/h|Stundenkilometer)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Kilometer pro Stunde" },
-        { pattern: "\\bTempo\\s*(\\d{1,3})\\s*km/h(?![\\p{L}\\p{M}])", flags: "gu", replacement: "Tempo $(1)" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*m/s(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Meter je Sekunde" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(kmh|km/h|Stundenkilometer)\\b", flags: "gu", replacement: "$(1) Kilometer pro Stunde" },
+        { pattern: "\\bTempo\\s(\\d{1,3})(\\s*km/h)", flags: "gu", replacement: "Tempo $(1)" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(m/s)\\b", flags: "gu", replacement: "$(1) Meter je Sekunde" },
 
         // Energie und Leistung
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*kWh(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Kilowattstunden" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*MWh(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Megawattstunden" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*GWh(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Gigawattstunden" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*TWh(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Terawattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(kWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Kilowattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(MWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Megawattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(GWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Gigawattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(TWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Terrawattstunden" },
 
         // Flächenmaße
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:qkm|km2|km²)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Quadratkilometer" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:qm|m2|m²)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Quadratmeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:qcm|cm2|cm²)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Quadratzentimeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:qmm|mm2|mm²)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Quadratmillimeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*ha(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Hektar" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(qkm|km2|km²)", flags: "gu", replacement: "$(1) Quadratkilometer" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(qm|m2|m²)", flags: "gu", replacement: "$(1) Quadratmeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(qcm|cm2|cm²)", flags: "gu", replacement: "$(1) Quadratzentimeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(qmm|mm2|mm²)", flags: "gu", replacement: "$(1) Quadratmillimeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*ha\\b", flags: "gu", replacement: "$(1) Hektar" },
 
         // Volumenmaße
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:km3|km³)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Kubikkilometer" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:m3|m³)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Kubikmeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:ccm|cm3|cm³)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Kubikzentimeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:mm3|mm³)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Kubikmillimeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(km3|km³)", flags: "gu", replacement: "$(1) Kubikkilometer" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(m3|m³)", flags: "gu", replacement: "$(1) Kubikmeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(ccm|cm³)", flags: "gu", replacement: "$(1) Kubikzentimeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(mm3|mm³)", flags: "gu", replacement: "$(1) Kubikmillimeter" },
 
         // Flüssigkeitsmaße
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*l(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Liter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*ltr\\.?(?![\\p{L}\\p{M}])", flags: "giu", replacement: "$(1) Liter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*cl(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Zentiliter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*ml(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Milliliter" },
+        { pattern: "\\b(\\d+(?:[.,]\\d+)?)\\s*(l)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Liter" },
+        { pattern: "\\b(\\d+(?:[.,]\\d+)?)\\s*(ltr\.)", flags: "giu", replacement: "$(1) Liter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(cl)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Zentiliter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(ml)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Milliliter" },
 
-        // Längenmaße
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*km(?![/²³\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Kilometer" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*m(?![/²³\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Meter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*cm(?![/²³\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Zentimeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*mm(?![/²³\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Millimeter" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*[µμ]m(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Mikrometer" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*nm(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Nanometer" },
+        // Längenmaße (mit Lookaheads zur Absicherung)
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(km)(?![/²³a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Kilometer" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(m)(?![²³/a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Meter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(cm)(?![²³a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Zentimeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(mm)(?![²³a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Millimeter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(µm)\\b", flags: "gu", replacement: "$(1) Mikrometer" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(nm)\\b", flags: "gu", replacement: "$(1) Nanometer" },
 
         // Gewichte
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:t|To\\.)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Tonnen" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*kg(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Kilogramm" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*g(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Gramm" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*mg(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Milligramm" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*[µμ]g(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Mikrogramm" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*ng(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Nanogramm" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(t|To\\.)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Tonnen" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(kg)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Kilogramm" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(g)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Gramm" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(mg)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Milligramm" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(µg)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Mikrogramm" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(ng)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Nanogramm" },
 
         // Speicherkapazitäten
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:kB|KB|kByte)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Kilobyte" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:MB|MByte)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Megabyte" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:GB|GByte)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Gigabyte" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:TB|TByte)(?![\\p{L}\\p{M}\\p{N}_])", flags: "gu", replacement: "$(1) Terabyte" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(kB|KB|kByte)", flags: "gu", replacement: "$(1) Kilobyte" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(MB|MByte)", flags: "gu", replacement: "$(1) Megabyte" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(GB|GByte)", flags: "gu", replacement: "$(1) Gigabyte" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(TB|TByte)", flags: "gu", replacement: "$(1) Terabyte" },
 
         // Datenübertragungsraten
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:kbit/s|Kbit/s)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Kilobit je Sekunde" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*Mbit/s(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Megabit je Sekunde" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*Gbit/s(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Gigabit je Sekunde" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*Tbit/s(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Terabit je Sekunde" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:kb|Kbit|kbit)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Kilobit" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:Mb|Mbit)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Megabit" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:Gb|Gbit)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Gigabit" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:Tb|Tbit)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Terabit" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Kbit/s)", flags: "gu", replacement: "$(1) Kilobit je Sekunde" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Mbit/s)", flags: "gu", replacement: "$(1) Megabit je Sekunde" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Gbit/s)", flags: "gu", replacement: "$(1) Gigabit je Sekunde" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Tbit/s)", flags: "gu", replacement: "$(1) Terabit je Sekunde" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(kb|Kbit)", flags: "gu", replacement: "$(1) Kilobit" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Mb|Mbit)", flags: "gu", replacement: "$(1) Megabit" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Gb|Gbit)", flags: "gu", replacement: "$(1) Gigabit" },
+        { pattern: "(\\d+(?:,\\d+)?)\\s*(Tb|Tbit)", flags: "gu", replacement: "$(1) Terabit" },
 
         // Währungen
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:€|EUR)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Euro" },
-        { pattern: "(\\d+(?:[.,]\\d+)?)\\s*(?:ct|Ct)(?![\\p{L}\\p{M}])", flags: "gu", replacement: "$(1) Cent" },
+        { pattern: "(\\d+)\\s*(€|EUR)(?![a-zA-ZäöüÄÖÜß])", flags: "gu", replacement: "$(1) Euro" },
+        { pattern: "(\\d+)\\s*(ct|Ct)(?![a-zA-ZäöüÄÖÜß])", flags: "gu", replacement: "$(1) Cent" },
 
         // Abkürzungen
         { pattern: "\\bd\\.\\s?h\\.", flags: "giu", replacement: "das heißt" },
@@ -914,7 +922,6 @@ const CFG_DEFAULTS = {
 
         // Shortcuts für Abkürzungen
         { pattern: "#ABDA", flags: "gu", replacement: "Bundesvereinigung Deutscher Apothekenverbände (ABDA)" },
-        { pattern: "#ABE", flags: "gu", replacement: "Allgemeine Betriebserlaubnis (ABE)" },
         { pattern: "#ADAC", flags: "gu", replacement: "Allgemeiner Deutscher Automobil-Club (ADAC)" },
         { pattern: "#ADFC", flags: "gu", replacement: "Allgemeiner Deutscher Fahrrad-Club (ADFC)" },
         { pattern: "#AGB", flags: "gu", replacement: "Amerika-Gedenkbibliothek (AGB)" },
@@ -1048,11 +1055,6 @@ const CFG_DEFAULTS = {
         { pattern: "#(?:Steffen Krach|Krach)\\b", flags: "gu", replacement: "Steffen Krach (SPD)" },
         { pattern: "##(?:Werner Graf|Graf)\\b", flags: "gu", replacement: "Werner Graf (Bündnis 90/Die Grüne), im Gespräch als Spitzenkandidat für die Berliner Abgeordnetenhauswahl 2026" },
         { pattern: "#(?:Werner Graf|Graf)\\b", flags: "gu", replacement: "Werner Graf (Bündnis 90/Die Grüne)" },
-        { pattern: "##(?:Klaus Lederer|Lederer)\\b", flags: "gu", replacement: "Klaus Lederer, Parteiloses Mitglied der Fraktion Die Linke seit Oktober 2024" },
-        { pattern: "#(?:Klaus Lederer|Lederer)\\b", flags: "gu", replacement: "Klaus Lederer (parteilos)" },
-
-        // Angeordnetenhaus Berlin - https://www.parlament-berlin.de/das-parlament/abgeordnete/alphabetische-suche
-
 
         // Senatsmitglieder – www.berlin.de/rbmskzl/politik/senat/senatsmitglieder/
         { pattern: "##(?:Cansel Kiziltepe|Kiziltepe)\\b", flags: "gu", replacement: "Cansel Kiziltepe (SPD), Senatorin für Arbeit, Soziales, Gleichstellung, Integration, Vielfalt und Antidiskriminierung" },
@@ -1217,8 +1219,6 @@ const CFG_DEFAULTS = {
         { pattern: "#(?:Sevda Boyraci|Boyraci)\\b", flags: "gu", replacement: "Sevda Boyraci (SPD)" },
         { pattern: "##(?:Uwe Brockhausen|Brockhausen)\\b", flags: "gu", replacement: "Uwe Brockhausen (SPD), Stellvertretender Bürgermeister und Stadtrat für Soziales und Gesundheit" },
         { pattern: "#(?:Uwe Brockhausen|Brockhausen)\\b", flags: "gu", replacement: "Uwe Brockhausen (SPD)" },
-        { pattern: "##(?:Sylvia Schmidt|Schmidt)\\b", flags: "gu", replacement: "Sylvia Schmidt (FDP), Mitglied der FDP-Fraktion in der BVV Reinickendorf" },
-        { pattern: "#(?:Sylvia Schmidt|Schmidt)\\b", flags: "gu", replacement: "Sylvia Schmidt (FDP)" },
 
         // Steglitz-Zehlendorf – www.berlin.de/ba-steglitz-zehlendorf/politik-und-verwaltung/bezirksamt/
         { pattern: "##(?:René Rögner-Francke|Rögner-Francke)\\b", flags: "gu", replacement: "BV-Vorsteher René Rögner-Francke (CDU)" },
@@ -5513,7 +5513,6 @@ GM_registerMenuCommand('SuperMAX – Abkürzungen (Hashtag-Regeln)', () => {
            ">
     <ul style="margin-top:10px;padding-left:18px">
          <b>#ABDA</b> = Bundesvereinigung Deutscher Apothekenverbände (ABDA)<br>
-         <b>#ABE</b> = Allgemeine Betriebserlaubnis (ABE)<br>
          <b>#ADAC</b> = Allgemeiner Deutscher Automobil-Club (ADAC)<br>
          <b>#ADFC</b> = Allgemeiner Deutscher Fahrrad-Club (ADFC)<br>
          <b>#AGB</b> = Amerika-Gedenkbibliothek (AGB)<br>
