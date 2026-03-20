@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.6.3 Multi-Site Struktur
+// @name SuperMAX 5.6.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.6.3
+// @version 5.6.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -339,7 +339,7 @@ inlineSep: ' || ',
 tagJoiner: ' | ',
 
 phrasesDefault:
-'29. Februar, alles für deutschland, durch den rost, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
+'29. Februar, alles für deutschland, durch den rost, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
 
 phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
@@ -883,6 +883,7 @@ const CFG_DEFAULTS = {
         { pattern: "#ANB", flags: "gu", replacement: "Anmeldung bis spätestens" },
         { pattern: "#ANF", flags: "gu", replacement: "Eine Anfahrt mit öffentlichen Verkehrsmitteln mangels ausreichender Parkmöglichkeiten wird empfohlen." },
         { pattern: "#ANM", flags: "gu", replacement: "Eine Anmeldung ist erforderlich." },
+        { pattern: "#ANP", flags: "gu", replacement: "Aufgrund begrenzter Platzzahl wird eine Anmeldung unter Tel. oder E-Mail empfohlen." },
         { pattern: "#ANU", flags: "gu", replacement: "Eine Anmeldung ist nicht erforderlich." },
         { pattern: "#AOG", flags: "gu", replacement: "Alle Angaben ohne Gewähr." },
         { pattern: "#AUS", flags: "gu", replacement: "Die Ausstellung ist kostenfrei zu besichtigen bis" },
@@ -5944,6 +5945,7 @@ GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
 	<li><b>VERANSTALTUNGEN</b></li>
         <b>#ANB</b> = Anmeldung bis spätestens<br>
         <b>#ANM</b> = Eine Anmeldung ist erforderlich.<br>
+        <b>#ANP</b> = Aufgrund begrenzter Platzzahl wird eine Anmeldung<br>unter Tel. oder E-Mail empfohlen.<br>
         <b>#ANU</b> = Eine Anmeldung ist nicht erforderlich.<br>
         <b>#AUS</b> = Die Ausstellung ist kostenfrei zu besichtigen bis<br>
         <b>#BAR</b> = Der Veranstaltungsort ist barrierefrei zugänglich.<br>
