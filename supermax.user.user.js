@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.5.5 Multi-Site Struktur
+// @name SuperMAX 5.6.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.5.5
+// @version 5.6.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -9,6 +9,7 @@
 // @connect bwurl.de
 // @match https://pps.berliner-woche.de/*
 // @match https://cue.funke.cue.cloud/*
+// @match https://dam.funke.cue.cloud/dcx/*
 // @match https://funkemediende.layoutpreview.aptoma.no/*
 // @match https://funkemediende.drpublish.aptoma.no/*
 // @match https://contao.org/de/*
@@ -68,6 +69,7 @@ window.SMX_CFG.STELLWERK = window.SMX_CFG.STELLWERK || {
   ROUTES: [
     { id: 'PPS',        host: /^pps\.berliner-woche\.de$/i },
     { id: 'CUE',        host: /^cue\.funke\.cue\.cloud$/i },
+    { id: 'DAM',        host: /^dam\.funke\.cue\.cloud$/i },
     { id: 'PUBLISH',    host: /^funkemediende\.drpublish\.aptoma\.no$/i },
     { id: 'EDITION',    host: /^funkemediende\.layoutpreview\.aptoma\.no$/i },
     { id: 'APTOMA',     host: /aptoma/i },
@@ -93,11 +95,13 @@ function smxStellwerkGetAppId() {
 // --- Profiles vorbereiten ------------------------------------------------------------
 window.SMX_CFG.profiles.PPS     = window.SMX_CFG.profiles.PPS     || {};
 window.SMX_CFG.profiles.CUE     = window.SMX_CFG.profiles.CUE     || {};
+window.SMX_CFG.profiles.DAM     = window.SMX_CFG.profiles.DAM     || {};
 window.SMX_CFG.profiles.EDITION = window.SMX_CFG.profiles.EDITION || {};
 window.SMX_CFG.profiles.PUBLISH = window.SMX_CFG.profiles.PUBLISH || {};
 window.SMX_CFG.profiles.APTOMA  = window.SMX_CFG.profiles.APTOMA  || {};
 window.SMX_CFG.profiles.CONTAO  = window.SMX_CFG.profiles.CONTAO  || {};
-// --- SuperADD-spezifische Zusatzregeln (nur EDITION/PUBLISH) --------------------------
+// --- SuperADD-spezifische Zusatzregeln (nur DAM/EDITION/PUBLISH) --------------------------
+window.SMX_CFG.profiles.DAM.SUPERADD     = window.SMX_CFG.profiles.DAM.SUPERADD     || {};
 window.SMX_CFG.profiles.EDITION.SUPERADD = window.SMX_CFG.profiles.EDITION.SUPERADD || {};
 window.SMX_CFG.profiles.PUBLISH.SUPERADD = window.SMX_CFG.profiles.PUBLISH.SUPERADD || {};
 
@@ -129,6 +133,11 @@ window.SMX_CFG.profiles.CUE.HOTKEYS = window.SMX_CFG.profiles.CUE.HOTKEYS || {
   'Ctrl+Alt+R': 'SuperRED.run'
 };
 
+// DAM: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
+window.SMX_CFG.profiles.DAM.HOTKEYS = window.SMX_CFG.profiles.DAM.HOTKEYS || {
+  'Ctrl+S': 'SuperADD.oneClick',
+};
+
 // EDITION: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
 window.SMX_CFG.profiles.EDITION.HOTKEYS = window.SMX_CFG.profiles.EDITION.HOTKEYS || {
   'Ctrl+S': 'SuperADD.oneClick',
@@ -149,6 +158,10 @@ window.SMX_CFG.profiles.PPS.ALLOW_MODULES = window.SMX_CFG.profiles.PPS.ALLOW_MO
 
 window.SMX_CFG.profiles.CUE.ALLOW_MODULES = window.SMX_CFG.profiles.CUE.ALLOW_MODULES || [
   'SuperMAX', 'SuperSHIRT', 'SuperBRIDGE', 'SuperPORT', 'SuperLINK', 'SuperERASER', 'SuperRED', 'SuperNOTES'
+];
+
+window.SMX_CFG.profiles.DAM.ALLOW_MODULES = window.SMX_CFG.profiles.DAM.ALLOW_MODULES || [
+  'SuperADD' // später erweitern
 ];
 
 window.SMX_CFG.profiles.EDITION.ALLOW_MODULES = window.SMX_CFG.profiles.EDITION.ALLOW_MODULES || [
@@ -253,7 +266,7 @@ selectors: {
 autoApplyToCUE: true,        // wenn im AR ein Ergebnis gespeichert wird, automatisch in CUE anwenden
 autoOpenCUEOnHarvest: false, // IMPORTANT: verhindert neuen CUE-Tab => keine Versionskonflikte
 autoCloseResizerOnHarvest: true, // optional: Resizer-Tab nach Ernten schließen (wenn per Script geöffnet)
-autoCloseDelayMs: 650, // Schließen mit kurzem Delay (ms)
+autoCloseDelayMs: 650,       // Schließen mit kurzem Delay (ms)
 autoApplyOnCUELoad: true,    // wenn CUE Tab frisch geöffnet wird und Result liegt vor: automatisch anwenden
 };
 
@@ -326,7 +339,7 @@ inlineSep: ' || ',
 tagJoiner: ' | ',
 
 phrasesDefault:
-'29. Februar, alles für deutschland, durch den rost, eskimo, getürkt, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, suizid, tatsächlich, unserer redaktion, vergasung, vermutlich, wahrscheinlich, zigeuner',
+'29. Februar, alles für deutschland, durch den rost, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
 
 phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
@@ -445,6 +458,7 @@ const CFG_DEFAULTS = {
 
         // Telefonnummern für CUE optimieren
         { pattern: "\\b(?:Telefon|t)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "giu", replacement: "Tel. " },
+        { pattern: "\\b(?:Tel.:)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "giu", replacement: "Tel. " },
         { pattern: "\\u00BF\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
         // { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" }, // schmales, geschütztes Leerzeichen
         { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (Testweise)
@@ -540,10 +554,10 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(m/s)\\b", flags: "gu", replacement: "$(1) Meter je Sekunde" },
 
         // Energie und Leistung
-        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(kWh)\\b", flags: "gu", replacement: "$(1) Kilowattstunden" },
-        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(MWh)\\b", flags: "gu", replacement: "$(1) Megawattstunden" },
-        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(GWh)\\b", flags: "gu", replacement: "$(1) Gigawattstunden" },
-        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(TWh)\\b", flags: "gu", replacement: "$(1) Terrawattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(kWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Kilowattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(MWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Megawattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(GWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Gigawattstunden" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(TWh)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Terrawattstunden" },
 
         // Flächenmaße
         { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(qkm|km2|km²)", flags: "gu", replacement: "$(1) Quadratkilometer" },
@@ -559,10 +573,10 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(mm3|mm³)", flags: "gu", replacement: "$(1) Kubikmillimeter" },
 
         // Flüssigkeitsmaße
-        { pattern: "\\b(\\d+(?:[.,]\\d+)?)\\s*(l)\\b", flags: "gu", replacement: "$(1) Liter" },
+        { pattern: "\\b(\\d+(?:[.,]\\d+)?)\\s*(l)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Liter" },
         { pattern: "\\b(\\d+(?:[.,]\\d+)?)\\s*(ltr\.)", flags: "giu", replacement: "$(1) Liter" },
-        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(cl)\\b", flags: "gu", replacement: "$(1) Zentiliter" },
-        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(ml)\\b", flags: "gu", replacement: "$(1) Milliliter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(cl)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Zentiliter" },
+        { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(ml)(?![a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Milliliter" },
 
         // Längenmaße (mit Lookaheads zur Absicherung)
         { pattern: "\\b(\\d+(?:,\\d+)?)\\s*(km)(?![/²³a-zA-ZäöüÄÖÜß])\\b", flags: "gu", replacement: "$(1) Kilometer" },
@@ -597,8 +611,8 @@ const CFG_DEFAULTS = {
         { pattern: "(\\d+(?:,\\d+)?)\\s*(Tb|Tbit)", flags: "gu", replacement: "$(1) Terabit" },
 
         // Währungen
-        { pattern: "(\\d+)\\s*(€|EUR)", flags: "gu", replacement: "$(1) Euro" },
-        { pattern: "(\\d+)\\s*(ct|Ct)", flags: "gu", replacement: "$(1) Cent" },
+        { pattern: "(\\d+)\\s*(€|EUR)(?![a-zA-ZäöüÄÖÜß])", flags: "gu", replacement: "$(1) Euro" },
+        { pattern: "(\\d+)\\s*(ct|Ct)(?![a-zA-ZäöüÄÖÜß])", flags: "gu", replacement: "$(1) Cent" },
 
         // Abkürzungen
         { pattern: "\\bd\\.\\s?h\\.", flags: "giu", replacement: "das heißt" },
@@ -630,6 +644,8 @@ const CFG_DEFAULTS = {
         { pattern: "\\bvgl\\.", flags: "gu", replacement: "vergleiche" },
         { pattern: "\\bz\\.\\s?b\\.", flags: "giu", replacement: "zum Beispiel" },
         { pattern: "\\bzzgl\\.", flags: "gu", replacement: "zuzüglich" },
+        { pattern: "\\bEL\\b", flags: "gu", replacement: "Esslöffel" },
+        { pattern: "\\bTL\\b", flags: "gu", replacement: "Teelöffel" },
 
         // Bildunterschriften
         { pattern: "\\(v\\.l\\.n\\.r\\.\\)", flags: "gui", replacement: "(von links)" },
@@ -858,7 +874,7 @@ const CFG_DEFAULTS = {
         { pattern: "(?<=\\w|\\d)\\u0020+(?=[;,:.?!])", flags: "gu", replacement: "" }, // Leerzeichen vor Satzzeichen entfernen
         { pattern: "([…!?.,:;])\\1+", flags: "gu", replacement: "$(1)" }, // Doppelte Satzzeichen entfernen
         { pattern: "DREI_FRAGE", flags: "gu", replacement: "Die drei ???" }, // Debugging
-        { pattern: "DREI_AUSRUFE", flags: "gu", replacement: "Die drei !!!" }, // Debugging],
+        { pattern: "DREI_AUSRUFE", flags: "gu", replacement: "Die drei !!!" }, // Debugging
     ],
     // FIX: Hashtag-Patterns ohne unnötige Escapes (u-Flag kompatibel)
     hashtag:[
@@ -867,6 +883,7 @@ const CFG_DEFAULTS = {
         { pattern: "#ANB", flags: "gu", replacement: "Anmeldung bis spätestens" },
         { pattern: "#ANF", flags: "gu", replacement: "Eine Anfahrt mit öffentlichen Verkehrsmitteln mangels ausreichender Parkmöglichkeiten wird empfohlen." },
         { pattern: "#ANM", flags: "gu", replacement: "Eine Anmeldung ist erforderlich." },
+        { pattern: "#ANP", flags: "gu", replacement: "Aufgrund begrenzter Platzzahl wird eine Anmeldung unter Tel. oder E-Mail empfohlen." },
         { pattern: "#ANU", flags: "gu", replacement: "Eine Anmeldung ist nicht erforderlich." },
         { pattern: "#AOG", flags: "gu", replacement: "Alle Angaben ohne Gewähr." },
         { pattern: "#AUS", flags: "gu", replacement: "Die Ausstellung ist kostenfrei zu besichtigen bis" },
@@ -918,6 +935,7 @@ const CFG_DEFAULTS = {
         { pattern: "#BBB", flags: "gu", replacement: "Berliner Bäder-Betriebe (BBB)" },
         { pattern: "#BDI", flags: "gu", replacement: "Bundesverband der deutschen Industrie (BDI)" },
         { pattern: "#Behala", flags: "gu", replacement: "Behala (Berliner Hafen- und Lagerhaus-Betriebe)" },
+        { pattern: "#BENN", flags: "gu", replacement: "Berlin Entwickelt Neue Nachbarschaften (BENN)" },
         { pattern: "#BER", flags: "gu", replacement: "Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)" },
         { pattern: "#BerlAVG", flags: "gu", replacement: "Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)" },
         { pattern: "#BEW", flags: "gu", replacement: "Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)" },
@@ -1376,7 +1394,19 @@ const CFG_DEFAULTS = {
         ]
   }
   };
-// Beispiel: hier kommen eure wenigen APTOMA-Sonderregeln rein:
+// Beispiel: hier kommen eure wenigen Sonderregeln für APTOMA und CUE DAM rein:
+window.SMX_CFG.profiles.DAM.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profiles.DAM.SUPERADD.EXTRA_REGEX_BASE || [
+        // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
+        // Fotocredit bereinigen
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Woche(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Berliner\\s+Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*Morgenpost(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "[\\s\\u00A0\\u202F]*\\/[\\s\\u00A0\\u202F]*BM(?=\\s*[\\.!\\?,;:]?\\s*$)", flags: "gu", replacement: "" },
+        { pattern: "^\\s*(\\S[^/]*?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
+        ];
 window.SMX_CFG.profiles.EDITION.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profiles.EDITION.SUPERADD.EXTRA_REGEX_BASE || [
         // Gedankenstrich umgeben von geschützten Leerzeichen wird Gedankenstrich umgeben von normalen Leerzeichen
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\u202F–\\u202F([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1) – $(2)" },
@@ -1402,7 +1432,8 @@ window.SMX_CFG.profiles.PUBLISH.SUPERADD.EXTRA_REGEX_BASE = window.SMX_CFG.profi
         { pattern: "^\\s*(\\S[^/]*?)\\s*\\/\\s*\\1(\\s*\\/\\s*.+)?\\s*$", flags: "gu", replacement: "$(1)$(2)" }
         ];
 
-// Optional: Hashtag-Regeln in APTOMA mitlaufen lassen?
+// Optional: Hashtag-Regeln in APTOMA und CUE DAM mitlaufen lassen?
+window.SMX_CFG.profiles.DAM.SUPERADD.RUN_HASHTAGS     ??= true;
 window.SMX_CFG.profiles.EDITION.SUPERADD.RUN_HASHTAGS ??= true;
 window.SMX_CFG.profiles.PUBLISH.SUPERADD.RUN_HASHTAGS ??= true;
 
@@ -2757,7 +2788,10 @@ body: ['se_paragraph_field','story-element-se_paragraph'],
 print_et: ['print_et','date'],
 print_filename: ['print_Filename','print_filename'],
 notes: ['notes','se_notes_field','story-element-se_notes'],
-id: ['id']
+id: ['id'],
+// ergänzend für CUE DAM:
+caption: ['se_caption_field', 'story-element-se_caption'],
+credit: ['se_credit_field', 'story-element-se_credit']
 };
 const TESTIDS = smxGetCfgProfile('CUE')?.SITE?.TESTIDS || DEFAULT_TESTIDS;
 
@@ -2805,6 +2839,9 @@ map.print_et = byTestIds(TESTIDS.print_et,scope);
 map.print_filename= byTestIds(TESTIDS.print_filename,scope);
 map.id = byTestIds(TESTIDS.id,scope);
 map.notes = byTestIds(TESTIDS.notes,scope);
+// ergänzend für CUE DAM:
+map.caption = byTestIds(TESTIDS.caption, scope);
+map.credit  = byTestIds(TESTIDS.credit, scope);
 return map;
 }
 function roleFromDataTestId(el){
@@ -2821,6 +2858,9 @@ if (t.includes('print_et')) return 'print_et';
 if (t.includes('print_filename')) return 'print_filename';
 if (t.includes('notes')) return 'notes';
 if (t.includes('id')) return 'id';
+// ergänzend für CUE DAM:
+if (t.includes('se_caption')) return 'caption';
+if (t.includes('se_credit')) return 'credit';
 return null;
 }
 function inferActiveRole(activeEl){
@@ -3326,6 +3366,20 @@ window.addEventListener('keydown', (e) => {
     }
   }
 }, true);
+
+// TinyMCE-Hotkeys in iframes zusätzlich abfangen
+try {
+  smxAdd_installTinyMceHotkeyBridge();
+
+  // Bei Fokuswechseln / später geladenen Editoren erneut prüfen
+  document.addEventListener('focusin', () => {
+    smxAdd_installTinyMceHotkeyBridge();
+  }, true);
+
+  window.addEventListener('load', () => {
+    smxAdd_installTinyMceHotkeyBridge();
+  }, { once: true });
+} catch {}
 
 //// KAPITEL 4.1 // STELLWERK-GATEKEEPER (Hotkeys pro Domain/App erlauben/verbieten) /////////////////////
 (function smxInstallStellwerkGatekeeper(){
@@ -5473,6 +5527,7 @@ GM_registerMenuCommand('SuperMAX – Abkürzungen (Hashtag-Regeln)', () => {
          <b>#BBB</b> = Berliner Bäder-Betriebe (BBB)<br>
          <b>#BDI</b> = Bundesverband der deutschen Industrie (BDI)<br>
          <b>#Behala</b> = Behala (Berliner Hafen- und Lagerhaus-Betriebe)<br>
+         <b>#BENN</b> = Berlin Entwickelt Neue Nachbarschaften (BENN)<br>
          <b>#BER</b> = Flughafen Berlin-Brandenburg „Willy Brandt“ (BER)<br>
          <b>#BerlAVG</b> = Berliner Ausschreibungs- und Vergabegesetz (BerlAVG)<br>
          <b>#BEW</b> = Berliner Fernwärmeanbieter Berliner Energie und Wärme (BEW)<br>
@@ -5890,6 +5945,7 @@ GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
 	<li><b>VERANSTALTUNGEN</b></li>
         <b>#ANB</b> = Anmeldung bis spätestens<br>
         <b>#ANM</b> = Eine Anmeldung ist erforderlich.<br>
+        <b>#ANP</b> = Aufgrund begrenzter Platzzahl wird eine Anmeldung<br>unter Tel. oder E-Mail empfohlen.<br>
         <b>#ANU</b> = Eine Anmeldung ist nicht erforderlich.<br>
         <b>#AUS</b> = Die Ausstellung ist kostenfrei zu besichtigen bis<br>
         <b>#BAR</b> = Der Veranstaltungsort ist barrierefrei zugänglich.<br>
@@ -6435,6 +6491,7 @@ return out;
 
 //// KAPITEL 8 //// SUPERADD (APTOMA) ////////////////////////////////////////////////////////////////
 // Ziel: APTOMA EDITION/PUBLISH nutzen SuperADD-OneClick (RegEx/Hashtag) + SuperLINK + SuperERASER,
+//       CUE DAM nutzt SuperADD-OneClick (RegEx/Hashtag)
 //       ohne Rule-Duplikate und ohne Namenskollisionen.
 
 // --- kleine, lokale Helper (namespaced) ---
@@ -6596,17 +6653,159 @@ function smxAdd_replaceTextNodes(rootEl, compiled){
   return changed;
 }
 
-function smxAdd_getActiveEditable(){
-  // nutzt eure bereits vorhandene Heuristik, falls vorhanden
-  try { if (typeof getActiveEditable === 'function') return getActiveEditable(); } catch {}
+function smxAdd_getActiveEditable() {
   try {
-    const sel = window.getSelection?.();
-    const n = sel?.anchorNode;
-    const el = (n && n.nodeType === 1) ? n : n?.parentElement;
-    return el?.closest?.('.ql-editor[contenteditable="true"], .ProseMirror[contenteditable="true"], [contenteditable="true"], textarea, input[type="text"], [role="textbox"]')
-      || document.activeElement;
+    let el = document.activeElement;
+
+    // 1) TinyMCE in iframe: aktives Element aus dem iframe-Dokument holen
+    if (el?.tagName === 'IFRAME') {
+      try {
+        const innerDoc = el.contentDocument || el.contentWindow?.document;
+        const innerActive = innerDoc?.activeElement;
+        const innerBody = innerDoc?.querySelector?.('body.mce-content-body[contenteditable="true"]');
+        el = innerActive || innerBody || el;
+      } catch {}
+    }
+
+    // 2) Normale Editoren + TinyMCE-Body erkennen
+    const editable = el?.closest?.(
+      [
+        '.ql-editor[contenteditable="true"]',
+        '.ProseMirror[contenteditable="true"]',
+        'body.mce-content-body[contenteditable="true"]',
+        '.mce-content-body[contenteditable="true"]',
+        '[contenteditable="true"]',
+        'textarea',
+        'input[type="text"]',
+        'input[type="search"]',
+        '[role="textbox"]'
+      ].join(', ')
+    );
+
+    if (editable) return editable;
+
+    // 3) Fallback: falls der Fokus zwar im TinyMCE steckt,
+    //    document.activeElement oben aber nicht sauber aufgelöst wird
+    try {
+      const iframes = Array.from(document.querySelectorAll('iframe'));
+      for (const frame of iframes) {
+        try {
+          const innerDoc = frame.contentDocument || frame.contentWindow?.document;
+          const innerBody = innerDoc?.querySelector?.('body.mce-content-body[contenteditable="true"]');
+          const innerActive = innerDoc?.activeElement;
+
+          if (
+            innerBody &&
+            (innerActive === innerBody || innerBody.contains(innerActive))
+          ) {
+            return innerBody;
+          }
+        } catch {}
+      }
+    } catch {}
+
+    return document.activeElement;
   } catch {
     return document.activeElement;
+  }
+}
+
+// --- TinyMCE / iframe Hotkey-Bridge für DAM/EDITION/PUBLISH -------------------
+function smxAdd_installTinyMceHotkeyBridge() {
+  try {
+    const appId = smxStellwerkGetAppId();
+    if (!['DAM', 'EDITION', 'PUBLISH'].includes(appId)) return;
+
+    const IF_FLAG = '__smxTinyHotkeyBound';
+
+    const isSaveCombo = (e) =>
+      (e.ctrlKey || e.metaKey) &&
+      !e.altKey &&
+      !e.shiftKey &&
+      String(e.key || '').toLowerCase() === 's';
+
+    const bindInnerDoc = (innerDoc) => {
+      try {
+        if (!innerDoc || innerDoc[IF_FLAG]) return;
+
+        const body = innerDoc.querySelector(
+          'body#tinymce.mce-content-body[contenteditable="true"], ' +
+          'body.mce-content-body[contenteditable="true"]'
+        );
+        if (!body) return;
+
+        const onKeyDown = async (e) => {
+          if (!isSaveCombo(e)) return;
+
+          // TinyMCE soll den Shortcut NICHT selbst fressen
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
+          }
+
+          try { body.focus?.(); } catch {}
+
+          try {
+            // Primär: Modul-Router
+            if (typeof MODULES === 'object' && MODULES?.SuperADD?.oneClick) {
+              await MODULES.SuperADD.oneClick();
+              return;
+            }
+          } catch (err) {
+            try { console.warn('[SMX][TinyMCEBridge][MODULES.SuperADD.oneClick]', err); } catch {}
+          }
+
+          try {
+            // Fallback: direkte Funktion
+            if (typeof smxAdd_oneClick === 'function') {
+              await smxAdd_oneClick();
+              return;
+            }
+          } catch (err) {
+            try { console.warn('[SMX][TinyMCEBridge][smxAdd_oneClick]', err); } catch {}
+          }
+
+          try { smxToast('SuperADD: TinyMCE-Hotkey erkannt, aber keine Ziel-Funktion gefunden.', false); } catch {}
+        };
+
+        innerDoc.addEventListener('keydown', onKeyDown, true);
+        innerDoc[IF_FLAG] = true;
+      } catch {}
+    };
+
+    const scanIframes = () => {
+      const frames = Array.from(document.querySelectorAll('iframe'));
+      for (const frame of frames) {
+        try {
+          const innerDoc = frame.contentDocument || frame.contentWindow?.document;
+          if (!innerDoc) continue;
+
+          if (innerDoc.readyState === 'interactive' || innerDoc.readyState === 'complete') {
+            bindInnerDoc(innerDoc);
+          } else {
+            innerDoc.addEventListener('DOMContentLoaded', () => bindInnerDoc(innerDoc), { once: true });
+          }
+        } catch {}
+      }
+    };
+
+    // Initialer Scan
+    scanIframes();
+
+    // Nur einmal Observer setzen
+    if (!smxAdd_installTinyMceHotkeyBridge.__observer) {
+      const mo = new MutationObserver(() => {
+        scanIframes();
+      });
+      mo.observe(document.documentElement || document.body, {
+        childList: true,
+        subtree: true
+      });
+      smxAdd_installTinyMceHotkeyBridge.__observer = mo;
+    }
+  } catch (err) {
+    try { console.warn('[SMX][TinyMCEBridge] Install fehlgeschlagen', err); } catch {}
   }
 }
 
