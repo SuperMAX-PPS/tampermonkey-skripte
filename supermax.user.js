@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.6.5 Multi-Site Struktur
+// @name SuperMAX 5.7.1 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.6.5
+// @version 5.7.1
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -464,7 +464,7 @@ const CFG_DEFAULTS = {
         { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (Testweise)
 
         // Kalendermonate mit Regeln zu 2026
-        { pattern: "(\\d{1,2})\\.\\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\\s*)(2026|26)", flags: "gu", replacement: "$(1). $(2)" },
+        { pattern: "(\\d{1,2})\\.\\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\\s*)(2026|26)", flags: "gu", replacement: "$(1). $(2)" }, // Kalenderjahr manuell anpassen!
         { pattern: "\\.\\s*0?1\\.(2026|26)\\b", flags: "gu", replacement: ". Januar" },
         { pattern: "\\.\\s*0?2\\.(2026|26)\\b", flags: "gu", replacement: ". Februar" },
         { pattern: "\\.\\s*0?3\\.(2026|26)\\b", flags: "gu", replacement: ". März" },
@@ -492,6 +492,8 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(\\d{1,2})\\.\\s*12\\.", flags: "gu", replacement: "$(1). Dezember" },
         { pattern: "\\b0([1-9])\\. (?=Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)", flags: "gu", replacement: "$(1). " },
         { pattern: "\\b(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\\s*[-–]\\s*(\\d{1,2})", flags: "gu", replacement: "$(1) bis $(2)" },
+        { pattern: "\\.\\s*(Weitere Teilnahmebedingungen und Datenschutzhinweise)", flags: "gu", replacement: ` 2026. $(1)` }, // DEBUGGING FÜR VERLOSUNGEN - Kalenderjahr manuell anpassen!
+
 
         // Wochentage und Datumsangaben formatieren
         { pattern: "\\b(Mo|Di|Mi|Do|Fr|Sa|So)\\.", flags: "gu", replacement: "$(1)" }, // Punkt bei abgekürztem Wochentag entfernen
@@ -884,7 +886,7 @@ const CFG_DEFAULTS = {
         { pattern: "#ANB", flags: "gu", replacement: "Anmeldung bis spätestens" },
         { pattern: "#ANF", flags: "gu", replacement: "Eine Anfahrt mit öffentlichen Verkehrsmitteln mangels ausreichender Parkmöglichkeiten wird empfohlen." },
         { pattern: "#ANM", flags: "gu", replacement: "Eine Anmeldung ist erforderlich." },
-        { pattern: "#ANP", flags: "gu", replacement: "Aufgrund begrenzter Platzzahl wird eine Anmeldung unter Tel. oder E-Mail empfohlen." },
+        { pattern: "#ANP", flags: "gu", replacement: "Aufgrund begrenzter Platzzahl wird um eine Anmeldung unter Tel. oder E-Mail gebeten." },
         { pattern: "#ANU", flags: "gu", replacement: "Eine Anmeldung ist nicht erforderlich." },
         { pattern: "#AOG", flags: "gu", replacement: "Alle Angaben ohne Gewähr." },
         { pattern: "#AUS", flags: "gu", replacement: "Die Ausstellung ist kostenfrei zu besichtigen bis" },
@@ -5946,7 +5948,7 @@ GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
 	<li><b>VERANSTALTUNGEN</b></li>
         <b>#ANB</b> = Anmeldung bis spätestens<br>
         <b>#ANM</b> = Eine Anmeldung ist erforderlich.<br>
-        <b>#ANP</b> = Aufgrund begrenzter Platzzahl wird eine Anmeldung<br>unter Tel. oder E-Mail empfohlen.<br>
+        <b>#ANP</b> = Aufgrund begrenzter Platzzahl wird um eine Anmeldung unter Tel. oder E-Mail gebeten.<br>
         <b>#ANU</b> = Eine Anmeldung ist nicht erforderlich.<br>
         <b>#AUS</b> = Die Ausstellung ist kostenfrei zu besichtigen bis<br>
         <b>#BAR</b> = Der Veranstaltungsort ist barrierefrei zugänglich.<br>
