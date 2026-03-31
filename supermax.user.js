@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.6.4 Multi-Site Struktur
+// @name SuperMAX 5.6.5 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.6.4
+// @version 5.6.5
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -339,7 +339,7 @@ inlineSep: ' || ',
 tagJoiner: ' | ',
 
 phrasesDefault:
-'29. Februar, alles für deutschland, durch den rost, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
+'29. Februar, alles für deutschland, durch den rost, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
 
 phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
@@ -457,8 +457,8 @@ const CFG_DEFAULTS = {
         { pattern: "(?:^|\\b)(\\d{1})[\\.\\s\\u0020](\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)$(2)" }, // 4-stellig ohne Dezimal
 
         // Telefonnummern für CUE optimieren
-        { pattern: "\\b(?:Telefon|t)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "giu", replacement: "Tel. " },
-        { pattern: "\\b(?:Tel.:)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "giu", replacement: "Tel. " },
+        { pattern: "\\b(?:Telefon|t)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
+        { pattern: "\\b(?:Tel.:)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
         { pattern: "\\u00BF\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
         // { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" }, // schmales, geschütztes Leerzeichen
         { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (Testweise)
@@ -814,6 +814,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\bHighend", flags: "gu", replacement: "High-End" },
         { pattern: "\\bHighheels", flags: "gu", replacement: "High Heels" },
         { pattern: "\\bHiphop", flags: "gu", replacement: "Hip-Hop" },
+        { pattern: "\\bHome-Office", flags: "gu", replacement: "Homeoffice" },
         { pattern: "\\b(Hot-Dog|Hot Dog)", flags: "gu", replacement: "Hotdog" },
         { pattern: "\\bihre eigen(e|en?)", flags: "gu", replacement: "ihre" },
         { pattern: "\\bihr eigen(er|es?)", flags: "gu", replacement: "ihr" },
