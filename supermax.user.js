@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.7.2 Multi-Site Struktur
+// @name SuperMAX 5.7.3 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.7.2
+// @version 5.7.3
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -319,7 +319,7 @@ requireEightDigitId: false,
 missingIdPlaceholder: '',
 
 stichwortMatch: [
-'zentrum','markt','straße','platz','park','bahn','feld','brücke','tunnel','gasse',
+'gewinnspiel','zentrum','markt','straße','platz','park','bahn','feld','brücke','tunnel','gasse',
 'schaden','schäden','wahl','schule','ferien','fest','kirch','kreuz','turm','bad',
 'bibliothek','messe','bau','club','filiale','heim','stadion','halle','garten','hof',
 'kinder','plan','wache','feuer','wettbewerb','lauf','denkmal','stadtspaziergang',
@@ -345,7 +345,7 @@ phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
 
 tagTableDefault: `
-CHANCE DER WOCHE: chance, woche, karten, teilnahme, datenschutz, gewinn, konzert, lösung, anruf, online, morgenpost, karriere, song, fans, show
+CHANCE DER WOCHE: verlosung, karten, teilnahme, datenschutzhinweis, gewinnspiel, konzert, lösung, morgenpost
 BAUEN: abriss, archiologe, architekt, ausgrabung, bagger, bauabnahme, bauantrag, bauarbeit, baubeginn, bauen, baufällig, baugenehmigung, baugrube, bauherr, bauleitung, baumaßnahme, baupläne, baustelle, baustopp, bauverzögerung, bebauung, brückenbau, dachausbau, denkmalschutz, ersatzverkehr, fertigstellung, glasfassade, gleisbau, grundstück, hochbau, immobilie, innenausbau, lückenbau, mietwohnung, modularbau, planfeststellung, randbebauung, restaurierung, richtfest, rückbau, signalbau, spatenstich, sperrung, stahlbeton, straßenbau, streckenausbau, streckenbau, tiefbau, wohnungsbau, wolkenkratzer
 BERLIN: airport, arena, bellevue, berlin, botschaft, brandenburger tor, charité, eats music hall, fanmeile, fernsehturm, flughafen, forst, friedrichstadtpalast, funkturm, hauptbahnhof, hauptstadt, helios, humboldtforum, kanzleramt, karneval, lange nacht, leuchtturm, marathon, mauerfall, mauerweg, museumsinsel, olympia, philarmonie, regierender, reichstag, ringbahn, rotes rathaus, schirmherr, senat, siegessäule, silvester, stadtautobahn, stadtring, tempelhofer feld, tempodrom, tiergarten, tierheim, tierpark, tourismus, touristen, vivantes, vöbb, waldbühne, wiedervereinigung, zoo
 BILDUNG: abitur, abschluss, absolvent, akadem, ausbilder, azubi, bachelor, bildung, deutschkurs, diplom, elternabend, exmatrikulation, expolingua, fakultät, forscher, forscher, forschung, gymnasium, hochschule, hörsaal, jobmedi, jobwunder, klausur, lehramt, lehrstelle, lernen, master, numerus, oberstufe, praktika, praktikum, quereinsteiger, quereinstieg, rechenschwäche, schüler, semester, seminar, sprachkurs, studenten, studium, stuzubi, symposium, universität, unterricht, vhs, volontär, volontariat, wissenschaft, workshop, zeugniss
@@ -380,6 +380,7 @@ const CFG_DEFAULTS = {
         { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s*/\\s*(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u202F/\u202F" },    // Slash zwischen zwei Wörtern vorweg mit geschütztem Leerzeichen
         { pattern: "(\\(?\\d+)(\\s*)(/)(\\s*)(\\(?\\d+)", flags: "gu", replacement: "$(1)$(3)$(5)" }, // Slash zwischen zwei Zahlen ohne Leerzeichen
         { pattern: "#\\+", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
+        { pattern: "#\\%", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
         { pattern: "\\*\\*", flags: "g", replacement: "" }, // Pseudofettung in Article Resizing
 
         // An- und Abführungszeichen sowie Auslassungszeichen vereinheitlichen
@@ -528,6 +529,18 @@ const CFG_DEFAULTS = {
         { pattern: "Freitag(\\(?\\d+)", flags: "gu", replacement: "Freitag $(1)" }, // Leerzeichen nach Wochentag
         { pattern: "Sonnabend(\\(?\\d+)", flags: "gu", replacement: "Sonnabend $(1)" }, // Leerzeichen nach Wochentag
         { pattern: "Sonntag(\\(?\\d+)", flags: "gu", replacement: "Sonntag $(1)" }, // Leerzeichen nach Wochentag
+
+        // Wiederkehrende Termine mit Wochentag formatieren
+        { pattern: "1\\. und 2\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "ersten und zweiten " },
+        { pattern: "1\\. und 3\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "ersten und dritten " },
+        { pattern: "1\\. und 4\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "ersten und vierten " },
+        { pattern: "2\\. und 3\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "zweiten und dritten " },
+        { pattern: "2\\. und 4\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "zweiten und vierten " },
+        { pattern: "3\\. und 4\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "dritten und vierten " },
+        { pattern: "1\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "ersten " },
+        { pattern: "2\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "zweiten " },
+        { pattern: "3\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "dritten " },
+        { pattern: "4\\.\\s*(?=Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Sonnabend|Sonntag)", flags: "gu", replacement: "vierten " },
 
         // Uhrzeiten und Öffnungszeiten einheitlich formatieren
         { pattern: "(?<!Maßstab(?:\\s+von)?\\s+)(\\d{1,2}):(\\d{2})", flags: "gu", replacement: "$(1).$(2)" }, // Funktioniert nur in PPS von PEIQ!
@@ -684,6 +697,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(pixabay)\\b(?:\\.com)?", flags: "gui", replacement: "Pixabay" },
         { pattern: "\\b(reuters?)\\b", flags: "gui", replacement: "Reuters" },
         { pattern: "\\b(shutter)\\s*(stock)\\b", flags: "gui", replacement: "Shutterstock" },
+        { pattern: "\\b(TXN)\\b", flags: "gui", replacement: "txn" },
         { pattern: "\\b(unsplash)\\b(?:\\.com)?", flags: "gui", replacement: "Unsplash" },
 
         // Lokales
@@ -828,6 +842,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\bKarsonnabend", flags: "gu", replacement: "Karsamstag" },
         { pattern: "\\bKickoff", flags: "gu", replacement: "Kick-off" },
         { pattern: "\\bKräcker", flags: "gu", replacement: "Cracker" },
+        { pattern: "\\b[Ll][Ii][Nn][Kk][Ee][Dd][Ii][Nn]\\b", flags: "gu", replacement: "LinkedIn" },
         { pattern: "\\b(Long Drink|Long-Drink)", flags: "gu", replacement: "Longdrink" },
         { pattern: "\\bLoveparade", flags: "gu", replacement: "Love-Parade" },
         { pattern: "\\bmacht keinen Sinn\\b", flags: "gu", replacement: "ergibt keinen Sinn" },
@@ -853,6 +868,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(Voranmeldung|vorherige Anmeldung|vorheriger Anmeldung)", flags: "gu", replacement: "Anmeldung" },
         { pattern: "\\bvorprogrammiert", flags: "gu", replacement: "programmiert" },
         { pattern: "\\bWissens nach\\b", flags: "gu", replacement: "Wissens" },
+        { pattern: "\\b[Xx][Ii][Nn][Gg]\\b", flags: "gu", replacement: "Xing" },
 
         // Online und Multimedia
         { pattern: "\\b(PDF-Datei|PDF-Dokument|PDF–Datei|PDF–Dokument)", flags: "gu", replacement: "PDF" },
@@ -952,6 +968,7 @@ const CFG_DEFAULTS = {
         { pattern: "#BMI", flags: "gu", replacement: "Body-Mass-Index (BMI)" },
         { pattern: "#BMV", flags: "gu", replacement: "Berliner Mieterverein (BMV)" },
         { pattern: "#BSW", flags: "gu", replacement: "Bündnis Sahra Wagenknecht (BSW)" },
+        { pattern: "##BSW", flags: "gu", replacement: "Bündnis Sahra Wagenknecht – Vernunft und Gerechtigkeit (BSW)" },
         { pattern: "#BSR", flags: "gu", replacement: "Berliner Stadtreinigung (BSR)" },
         { pattern: "#BUND", flags: "gu", replacement: "Bund für Umwelt und Naturschutz Deutschland (BUND)" },
         { pattern: "#BuBS", flags: "gu", replacement: "Berliner unabhängige Beschwerdestelle (BuBS)" },
@@ -5544,6 +5561,7 @@ GM_registerMenuCommand('SuperMAX – Abkürzungen (Hashtag-Regeln)', () => {
          <b>#BMI</b> = Body-Mass-Index (BMI)<br>
          <b>#BMV</b> = Berliner Mieterverein (BMV)<br>
          <b>#BSW</b> = Bündnis Sahra Wagenknecht (BSW)<br>
+         <b>##BSW</b> = Bündnis Sahra Wagenknecht – Vernunft und Gerechtigkeit (BSW)<br>
          <b>#BSR</b> = Berliner Stadtreinigung (BSR)<br>
          <b>#BUND</b> = Bund für Umwelt und Naturschutz Deutschland (BUND)<br>
          <b>#BuBS</b> = Berliner unabhängige Beschwerdestelle (BuBS)<br>
