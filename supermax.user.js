@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.7.3 Multi-Site Struktur
+// @name SuperMAX 5.8.1 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.7.3
+// @version 5.8.1
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -309,7 +309,7 @@ localityAliases: [
    ['Ostbahnhof', 'Friedrichshain'],
    ['Ostkreuz', 'Friedrichshain'],
    ['Südkreuz', 'Schöneberg'],
-   ['Tierpark', 'Friedrichshain'],
+   ['Tierpark', 'Friedrichsfelde'],
    ['Zoologischer Garten', 'Charlottenburg']
 ],
 localityBlacklist: ['mitte'],
@@ -339,13 +339,13 @@ inlineSep: ' || ',
 tagJoiner: ' | ',
 
 phrasesDefault:
-'29. Februar, alles für deutschland, durch den rost, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
+'29. Februar, alles für deutschland, durch den rost, eigentlich, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
 
 phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
 
 tagTableDefault: `
-CHANCE DER WOCHE: verlosung, karten, teilnahme, datenschutzhinweis, gewinnspiel, konzert, lösung, morgenpost
+CHANCE DER WOCHE: teilnahmebedingungen, datenschutzhinweis, lösungswort, gewinnspiele
 BAUEN: abriss, archiologe, architekt, ausgrabung, bagger, bauabnahme, bauantrag, bauarbeit, baubeginn, bauen, baufällig, baugenehmigung, baugrube, bauherr, bauleitung, baumaßnahme, baupläne, baustelle, baustopp, bauverzögerung, bebauung, brückenbau, dachausbau, denkmalschutz, ersatzverkehr, fertigstellung, glasfassade, gleisbau, grundstück, hochbau, immobilie, innenausbau, lückenbau, mietwohnung, modularbau, planfeststellung, randbebauung, restaurierung, richtfest, rückbau, signalbau, spatenstich, sperrung, stahlbeton, straßenbau, streckenausbau, streckenbau, tiefbau, wohnungsbau, wolkenkratzer
 BERLIN: airport, arena, bellevue, berlin, botschaft, brandenburger tor, charité, eats music hall, fanmeile, fernsehturm, flughafen, forst, friedrichstadtpalast, funkturm, hauptbahnhof, hauptstadt, helios, humboldtforum, kanzleramt, karneval, lange nacht, leuchtturm, marathon, mauerfall, mauerweg, museumsinsel, olympia, philarmonie, regierender, reichstag, ringbahn, rotes rathaus, schirmherr, senat, siegessäule, silvester, stadtautobahn, stadtring, tempelhofer feld, tempodrom, tiergarten, tierheim, tierpark, tourismus, touristen, vivantes, vöbb, waldbühne, wiedervereinigung, zoo
 BILDUNG: abitur, abschluss, absolvent, akadem, ausbilder, azubi, bachelor, bildung, deutschkurs, diplom, elternabend, exmatrikulation, expolingua, fakultät, forscher, forscher, forschung, gymnasium, hochschule, hörsaal, jobmedi, jobwunder, klausur, lehramt, lehrstelle, lernen, master, numerus, oberstufe, praktika, praktikum, quereinsteiger, quereinstieg, rechenschwäche, schüler, semester, seminar, sprachkurs, studenten, studium, stuzubi, symposium, universität, unterricht, vhs, volontär, volontariat, wissenschaft, workshop, zeugniss
@@ -920,6 +920,7 @@ const CFG_DEFAULTS = {
         { pattern: "#GKK", flags: "gu", replacement: "Gewinnen Sie Karten für das Konzert mit" },
         { pattern: "#GWI", flags: "gu", replacement: "Die Gewinner werden per E-Mail benachrichtigt." },
         { pattern: "#GWR", flags: "gu", replacement: "Der Rechtsweg ist ausgeschlossen." },
+        { pattern: "#GWS", flags: "gu", replacement: "Möchten Sie Karten für das Konzert [EVENT] am [DATUM] um [ZEIT] Uhr in [ORT] gewinnen? Dann nehmen Sie jetzt am Gewinnspiel der Berliner Morgenpost teil. Rufen Sie an unter Tel. 01378/90 45 3X und nennen Sie das Lösungswort „XXX“ (50 Cent pro Anruf). Oder Sie nehmen online auf morgenpost.de/gewinnspiele teil. Unter allen Teilnehmern werden [XXX]mal zwei Karten verlost. Teilnahmeschluss ist am Mittwoch, [DD. MONAT] 2026. Weitere Teilnahmebedingungen und Datenschutzhinweise finden Sie in dieser Ausgabe oder online im Gewinnspiel." },
         { pattern: "#HIT", flags: "gu", replacement: "Hintergrundinformationen dazu finden Sie unter" },
         { pattern: "#KID", flags: "gu", replacement: "Für Kinder geeignet ab" },
         { pattern: "#JUG", flags: "gu", replacement: "Empfohlen für Kinder und Jugendliche ab" },
@@ -1211,7 +1212,7 @@ const CFG_DEFAULTS = {
         { pattern: "#(?:Oliver Jütting|Jütting)\\b", flags: "gu", replacement: "Oliver Jütting (Bündnis 90/Die Grünen)" },
         { pattern: "##(?:Cornelius Bechtler|Bechtler)\\b", flags: "gu", replacement: "Cornelius Bechtler (Bündnis 90/Die Grünen), Stadtrat für Stadtentwicklung und Bürgerdienste" },
         { pattern: "#(?:Cornelius Bechtler|Bechtler)\\b", flags: "gu", replacement: "Cornelius Bechtler (Bündnis 90/Die Grünen)" },
-        { pattern: "##(?:Dominique Krössin|Krössin)\\b", flags: "gu", replacement: "Dominique Krössin (Die Linke), Stadträtin für Geschäftsbereichs Soziales und Gesundheit" },
+        { pattern: "##(?:Dominique Krössin|Krössin)\\b", flags: "gu", replacement: "Dominique Krössin (Die Linke), Stadträtin für Geschäftsbereichs Soziales und Gesundheit" }, // zum 22. APRIL 2026 ändern!!
         { pattern: "#(?:Dominique Krössin|Krössin)\\b", flags: "gu", replacement: "Dominique Krössin (Die Linke)" },
         { pattern: "##(?:Cordelia Koch|Koch)\\b", flags: "gu", replacement: "Cordelia Koch (Bündnis 90/Die Grünen), Bürgermeisterin und Stadträtin für Finanzen, Personal, Weiterbildung und Kultur, Wirtschaftsförderung" },
         { pattern: "#(?:Cordelia Koch|Koch)\\b", flags: "gu", replacement: "Cordelia Koch (Bündnis 90/Die Grünen)" },
@@ -2126,30 +2127,125 @@ function smxFindLocalityViaAliases(text) {
    return best.locality || '';
   }
 
+/**
+ * Gewichtete Ortsmarkenanalyse
+ * Regeln:
+ * 1) localityAliases schlagen alles (harte Dominanz)
+ * 2) ansonsten Punktesystem über Titel, Subline, Body
+ * 3) editionMap nur zur Validierung
+ * 4) Fallback: Berlin
+ */
+function smxDeriveWeightedLocality({
+  headline = '',
+  subline = '',
+  body = '',
+  debug = false
+} = {}) {
+  const score = Object.create(null);
+
+  // --- Helper --------------------------------------------------
+  const addScore = (name, points, reason) => {
+    if (!name) return;
+    const canon = smxCanonLoc(name);
+    if (!smxIsValidLocalityName(name)) return;
+
+    score[canon] ??= { name, points: 0, reasons: [] };
+    score[canon].points += points;
+    score[canon].reasons.push(`${points > 0 ? '+' : ''}${points}: ${reason}`);
+  };
+
+  const scanText = (text, points, reason) => {
+    if (!text) return;
+    const found = smxFindFirstLocalityInText(text, { excludeBerlin: true });
+    if (found) addScore(found, points, reason);
+  };
+
+  // ============================================================
+  // 1) HARTE REGEL: Aliases zuerst (gewinnen sofort)
+  // ============================================================
+  for (const txt of [body, subline, headline]) {
+    const viaAlias = smxFindLocalityViaAliases(txt);
+    if (viaAlias && smxIsValidLocalityName(viaAlias)) {
+      if (debug) console.info('[SMX][locality] Alias-Treffer:', viaAlias);
+      return viaAlias;
+    }
+  }
+
+  // ============================================================
+  // 2) Gewichtete Auswertung
+  // ============================================================
+
+  // Headline
+  scanText(headline, 4, 'Überschrift');
+
+  // Unterzeile
+  scanText(subline, 3, 'Unterzeile');
+
+  // Body nach Absätzen
+  const paragraphs = String(body)
+    .split(/\n{2,}/)
+    .map(p => p.trim())
+    .filter(Boolean);
+
+  paragraphs.forEach((p, idx) => {
+    scanText(
+      p,
+      idx === 0 ? 3 : 1,
+      idx === 0 ? 'erster Absatz' : 'weiterer Absatz'
+    );
+  });
+
+  // Bonus: Ortsadjektiv / Projektname (z. B. "Marzahner Knoten")
+  const projectBonusRegex = /\b([A-ZÄÖÜ][a-zäöüß]+?)er\s+(Brücke|Tunnel|Knoten|Projekt|Bau)\b/g;
+  let m;
+  while ((m = projectBonusRegex.exec(`${headline} ${subline}`))) {
+    const maybeOrt = m[1];
+    if (smxIsValidLocalityName(maybeOrt)) {
+      addScore(maybeOrt, 2, 'Projektname');
+    }
+  }
+
+  // ============================================================
+  // 3) Sieger bestimmen
+  // ============================================================
+  const entries = Object.values(score).sort((a, b) => b.points - a.points);
+
+  if (entries.length && entries[0].points > 0) {
+    if (debug) {
+      console.group('[SMX][locality] Gewichtung');
+      entries.forEach(e =>
+        console.log(
+          e.name,
+          e.points,
+          e.reasons.join(' | ')
+        )
+      );
+      console.groupEnd();
+    }
+    return entries[0].name;
+  }
+
+  // ============================================================
+  // 4) Fallback
+  // ============================================================
+  return 'Berlin';
+}
+
 // CUE-Workflow für 'locality':
 // Behalte vorhandene gültige Ortsmarke (≠ Berlin) → dann Aliases (bevorzugt) → dann editionMap → Fallback Berlin
 function smxDeriveLocalityForSuperRED_CUE({ existing, body, subline, headline, headline_pro }) {
-  const ex = String(existing ?? '').trim();
 
-  // 1) bestehende Ortsmarke behalten, wenn gültig UND nicht Berlin
-  if (ex && smxIsValidLocalityName(ex) && smxCanonLoc(ex) !== 'berlin') return ex;
-
-  // 2) Aliases zuerst – Reihenfolge: body → subline → headline → headline_pro
-  const aliasSources = [body, subline, headline, headline_pro];
-  for (const txt of aliasSources) {
-    const viaAlias = smxFindLocalityViaAliases(txt);
-    if (viaAlias) return viaAlias;
+  // vorhandene gültige Ortsmarke behalten (≠ Berlin)
+  if (existing && smxIsValidLocalityName(existing) && smxCanonLoc(existing) !== 'berlin') {
+    return existing;
   }
 
-  // 3) editionMap (erste gültige Ortsmarke, Berlin ausgeschlossen)
-  const mapSources = [body, subline, headline, headline_pro];
-  for (const txt of mapSources) {
-    const viaMap = smxFindFirstLocalityInText(txt, { excludeBerlin: true });
-    if (viaMap) return viaMap;
-  }
-
-  // 4) Fallback
-  return 'Berlin';
+  return smxDeriveWeightedLocality({
+    headline,
+    subline,
+    body,
+    debug: false // bei Bedarf true setzen
+  });
 }
 
 // CUE: Body kann aus mehreren Paragraph-Story-Elementen bestehen.
@@ -5174,7 +5270,7 @@ function buildNotesLine({ subline, body, captions = [], kwHint }){
   const out = [];
   const now0 = sod(new Date());
 
-  // 1) "11., 13. und 15. November [2025]"
+  // 1) "11., 13. und 15. November [2026]"
   const listMonPat = new RegExp(String.raw`(\d{1,2}\.)\s*(?:,\s*\d{1,2}\.)*(?:\s*und\s*\d{1,2}\.)\s*(${MONTHS})\s*(\d{2,4})?`, 'gi');
   let lm; while((lm = listMonPat.exec(allText)) !== null){
     const monKey = lm[2].toLowerCase();
@@ -5191,7 +5287,7 @@ function buildNotesLine({ subline, body, captions = [], kwHint }){
     }
   }
 
-  // 2) "Monat ... am 11., 13. und 15. [2025]"
+  // 2) "Monat ... am 11., 13. und 15. [2026]"
   const monthThenListRe = new RegExp(String.raw`(${MONTHS})\s*(?:am\s*)?((?:\d{1,2}\.\s*(?:,\s*|und\s+|bis\s+))*)(\d{1,2})\.\s*(\d{2,4})?`, 'gi');
   let ml; while((ml = monthThenListRe.exec(allText)) !== null){
     const monKey = ml[1].toLowerCase();
@@ -5209,7 +5305,7 @@ function buildNotesLine({ subline, body, captions = [], kwHint }){
     }
   }
 
-  // 3) "von 11. bis 15. November [2025]" → Startdatum
+  // 3) "von 11. bis 15. November [2026]" → Startdatum
   const vonBisMonPat = new RegExp(String.raw`(?:\bvon\s*)?(\d{1,2})\.\s*(?:bis|[–-])\s*(\d{1,2})\.\s*(${MONTHS})\s*(\d{2,4})?`, 'gi');
   let vb; while((vb = vonBisMonPat.exec(allText)) !== null){
     const startDay = vb[1];
@@ -5222,7 +5318,7 @@ function buildNotesLine({ subline, body, captions = [], kwHint }){
     }
   }
 
-  // 4) Bereich "11.–15.11.[2025]" → Startdatum
+  // 4) Bereich "11.–15.11.[2026]" → Startdatum
   const wsp = `[\\s\\u00A0\\u202F\\u2009]*`;
   const rangeRe = new RegExp(String.raw`(?:^\D)(\d{1,2})\.${wsp}[–-]${wsp}(\d{1,2})\.(\d{1,2})\.?(?:\s*(\d{2,4}))?`, 'gi');
   let rr; while((rr = rangeRe.exec(allText)) !== null){
@@ -5335,6 +5431,15 @@ function buildNotesLine({ subline, body, captions = [], kwHint }){
       if(hits > 0) results.push({ tag: row.tag, hits });
     }
     results.sort((a,b)=> (b.hits - a.hits) || a.tag.localeCompare(b.tag,'de'));
+
+  // === AUSNAHMEREGEL: CHANCE DER WOCHE =========================
+  const DOMINANT_TAG = 'CHANCE DER WOCHE';
+  const chance = results.find(r => r.tag === DOMINANT_TAG && r.hits > 0);
+  if (chance) {
+    return [DOMINANT_TAG];
+  }
+  // ============================================================
+
     return results.map(x=>x.tag);
   }
 
@@ -5897,6 +6002,90 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
   }
 });
 
+    GM_registerMenuCommand('SuperMAX – Politiker (Hashtag-Regeln)', () => {
+  try {
+    const box = document.createElement('div');
+
+    box.style.cssText = [
+      'position:fixed',
+      'right:18px',
+      'top:18px',
+      'z-index:2147483647',
+      'background:#0b1e2d',
+      'color:#fff',
+      'border:1px solid #0d3a5c',
+      'border-radius:10px',
+      'padding:14px',
+
+      // wichtig: an Bildschirm anpassen
+      'width:min(560px, calc(100vw - 36px))',
+      'max-height:calc(100vh - 36px)',
+
+      // wichtig: Layout für Header/List/Footer
+      'display:flex',
+      'flex-direction:column',
+
+      'font:13px/1.35 system-ui,Segoe UI,Arial',
+      'box-shadow:0 12px 30px rgba(0,0,0,.35)'
+    ].join(';');
+
+    box.innerHTML = `
+      <div style="font-weight:700;margin-bottom:8px;flex:0 0 auto">
+        SuperMAX – Politiker (Hashtag-Regeln)
+      </div>
+
+      <!-- Scroll-Container -->
+      <div id="smx_hash_scroll"
+           style="
+             flex:1 1 auto;
+             overflow:auto;
+             padding-right:8px;
+             border-top:1px solid rgba(255,255,255,.08);
+             border-bottom:1px solid rgba(255,255,255,.08);
+           ">
+    <ul style="margin-top:10px;padding-left:18px">
+        <b>Senatsmitglieder</b><br>Cansel Kiziltepe (SPD) • Christian Gaebler (SPD) • Felor Badenberg (CDU) •  Ina Czyborra (SPD) • Franziska Giffey (SPD) • Iris Spranger (SPD) • Katharina Günther-Wünsch (CDU) • Kai Wegner (CDU) • Sarah Wedl-Wilson (parteilos) • Stefan Evers (CDU) • Ute Bonde (CDU)<br><br>
+        <b>Charlottenburg-Wilmersdorf</b><br>Astrid Duda (CDU) • Judith Stückler (CDU) • Christoph Brzezinski (CDU) • Heike Schmitt-Schmelz (SPD) • Kirstin Bauch (Bündnis 90/Die Grüne) • Oliver Schruoffeneger (Bündnis 90/Die Grüne) • Simon Hertel (CDU) • Dagmar Kempf (Bündnis 90/Die Grünen)<br><br>
+        <b>Friedrichshain-Kreuzberg</b><br>Andy Hehmke (SPD) • Annika Gerold (Bündnis 90/Die Grünen) • Werner Heck (Bündnis 90/Die Grünen) • Clara Herrmann (Bündnis 90/Die Grünen) • Florian Schmidt (Bündnis 90/Die Grünen) • Max Kindler (CDU) • Regine Sommer-Wetter (Die Linke) • Ulrike Juda (Die Linke)<br><br>
+        <b>Lichtenberg</b><br>Gregor Hoffmann (CDU) • Camilla Schuler (Die Linke) •  Catrin Gocksch (CDU) • Filiz Keküllüoğlu (Bündnis 90/Die Grünen) • Martin Schaefer (CDU) • Sandy Mattes (SPD) • Kerstin Zimmer (Die Linke)<br><br>
+        <b>Marzahn-Hellersdorf</b><br>Stefan Suck (CDU) • Gordon Lemm (SPD) • Heike Wessoly (CDU) • Juliane Witt (Die Linke) • Nadja Zivkovic (CDU) • Stefan Bley (CDU) •  Luise Lehmann (SPD)<br><br>
+        <b>Mitte</b><br>Benjamin Fritz (CDU) • Jelisaweta Kamm (Bündnis 90/Die Grünen) • Carsten Spallek (CDU) • Christoph Keller (Die Linke) • Christopher Schriner (Bündnis 90/Die Grünen) • Ephraim Gothe (SPD) • Stefanie Remlinger (Bündnis 90/Die Grünen) • Martin Leuschner (CDU)<br><br>
+        <b>Neukölln</b><br>Karsten Schulze (CDU) • Gerrit Kringel (CDU) • Hannes Rehfeldt (CDU) • Janine Wolter (SPD) • Jochen Biedermann (Bündnis 90/Die Grünen) • Martin Hikel (SPD) • Sarah Nagel (Die Linke) • Lars Oeverdieck (SPD)<br><br>
+        <b>Pankow</b><br>Oliver Jütting (Bündnis 90/Die Grünen) • Cornelius Bechtler (Bündnis 90/Die Grünen) • Dominique Krössin (Die Linke) •  Cordelia Koch (Bündnis 90/Die Grünen) • Jörn Pasternack (CDU) • Manuela Anders-Granitzki (CDU) • Rona Tietje (SPD) • David Paul (CDU)<br><br>
+        <b>Reinickendorf</b><br>Alexander Ewers (SPD) • Kerstin Köppen (CDU) • Emine Demirbüken-Wegner (CDU) • Harald Muschner (CDU) • Julia Schrod-Thiel (CDU) • Korinna Stephan (Bündnis 90/Die Grünen) • Sevda Boyraci (SPD) • Uwe Brockhausen (SPD)<br><br>
+        <b>Steglitz-Zehlendorf</b><br>René Rögner-Francke (CDU) • Carolina Böhm (SPD) • Maren Schellenberg (Bündnis 90/Die Grünen) • Patrick Steinhoff (CDU) • Sören Grawert (FDP) • Tim Richter (CDU) • Urban Aykal (Bündnis 90/Die Grünen)<br><br>
+        <b>Spandau#</b><br>Christian Heck (CDU) •  Carola Brückner (SPD) • Frank Bewig (CDU) • Gregor Kempert (SPD) • Uwe Ziesak (SPD) • Tanja Franzke (CDU) • Thorsten Schatz (CDU)<br><br>
+        <b>Tempelhof-Schöneberg</b><br>Stefan Böltes (SPD) •  Saskia Ellenbeck (Bündnis 90/Die Grünen) • Eva Majewski (CDU) • Jörn Oltmann (Bündnis 90/Die Grünen) • Matthias Steuckardt (CDU) • Oliver Schworck (SPD) • Martina Zander-Rade (Bündnis 90/Die Grünen) • Tobias Dollase (parteilos für die CDU)<br><br>
+        <b>Treptow-Köpenick</b><br>André Grammelsdorff (CDU) • Bernd Geschanowski (AfD) • Peter Groos (SPD) • Carolin Weingart (Die Linke) •  Claudia Leistner (Bündnis 90/Die Grünen) • Marco Brauchmann (CDU) • Oliver Igel (SPD) • André Schubert (Die Linke)<br></ul>
+    </div>
+      <!-- Footer bleibt sichtbar -->
+      <div style="margin-top:12px;flex:0 0 auto;display:flex;justify-content:flex-end">
+        <button id="smx_cfg_cancel"
+          style="background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">
+          Schließen
+        </button>
+      </div>`;
+
+    document.body.appendChild(box);
+
+    const close = () => {
+      try { box.remove(); } catch {}
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+
+    // ESC zum Schließen (optional, aber praktisch)
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+
+    box.querySelector('#smx_cfg_cancel').addEventListener('click', close);
+
+  } catch (err) {
+    console.error('Shortcut-Menü Fehler:', err);
+  }
+});
+
 
 GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
   try {
@@ -5947,6 +6136,7 @@ GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
 	<li><b>GEWINNSPIEL</b></li>
         <b>#GKK</b> = Gewinnen Sie Karten für das Konzert mit<br>
         <b>#GWI</b> = Die Gewinner werden per E-Mail benachrichtigt.<br>
+        <b>#GWS</b> = Möchten Sie Karten für das Konzert ... gewinnen? Dann ...<br>
 	<br>
 	<li><b>LOKALES</b></li>
         <b>#BAU</b> = Neben der öffentlichen Auslegung der Bebauungspläne sind<br>die Unterlagen auch im Internet einsehbar unter<br>
