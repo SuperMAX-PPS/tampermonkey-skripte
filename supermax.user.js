@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.8.1 Multi-Site Struktur
+// @name SuperMAX 5.8.2 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.8.1
+// @version 5.8.2
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -320,7 +320,7 @@ missingIdPlaceholder: '',
 
 stichwortMatch: [
 'gewinnspiel','zentrum','markt','straße','platz','park','bahn','feld','brücke','tunnel','gasse',
-'schaden','schäden','wahl','schule','ferien','fest','kirch','kreuz','turm','bad',
+'schaden','schäden','wahl','schule','ferien','fest','kirch','kreuz','turm','bad','broschüre',
 'bibliothek','messe','bau','club','filiale','heim','stadion','halle','garten','hof',
 'kinder','plan','wache','feuer','wettbewerb','lauf','denkmal','stadtspaziergang',
 'könig','krankheit','schloss','führung','biotop','kiez','treff','streik','betreuung',
@@ -676,7 +676,7 @@ const CFG_DEFAULTS = {
         { pattern: "©\\s*", flags: "giu", replacement: "" }, // Copyrightnachweis bereinigen
 
         // Auto-Branding-Normalisierung
-        { pattern: "\\b(123)\\s*(rf)\\b", flags: "gui", replacement: "123RF" },
+        { pattern: "\\b(123)\\s*(rf)\\b", flags: "gui", replacement: "123rf" },
         { pattern: "\\b(adobe)\\s*(stock)\\b(?:\\.com)?", flags: "gui", replacement: "AdobeStock" },
         { pattern: "\\b(afp)\\b", flags: "gui", replacement: "AFP" },
         { pattern: "\\b(alamy)\\b", flags: "gui", replacement: "Alamy" },
@@ -695,6 +695,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(pexels)\\b(?:\\.com)?", flags: "gui", replacement: "Pexels" },
         { pattern: "\\b(picture)\\s*(alliance)\\b", flags: "gui", replacement: "picture alliance" },
         { pattern: "\\b(pixabay)\\b(?:\\.com)?", flags: "gui", replacement: "Pixabay" },
+        { pattern: "\\b(randstad)\\b", flags: "gui", replacement: "Randstad" },
         { pattern: "\\b(reuters?)\\b", flags: "gui", replacement: "Reuters" },
         { pattern: "\\b(shutter)\\s*(stock)\\b", flags: "gui", replacement: "Shutterstock" },
         { pattern: "\\b(TXN)\\b", flags: "gui", replacement: "txn" },
@@ -873,7 +874,8 @@ const CFG_DEFAULTS = {
         // Online und Multimedia
         { pattern: "\\b(PDF-Datei|PDF-Dokument|PDF–Datei|PDF–Dokument)", flags: "gu", replacement: "PDF" },
         { pattern: "\\b(PIN-Code|PIN-Nummer)", flags: "gu", replacement: "PIN" },
-        { pattern: "\\b(Email|EMail|eMail|e-Mail|E–Mail)", flags: "gu", replacement: "E-Mail" },
+        { pattern: "\\b(Email|EMail|eMail)\\b", flags: "gu", replacement: "E-Mail" },
+        { pattern: "\\b(e-Mail|E–Mail)", flags: "gu", replacement: "E-Mail" },
         { pattern: "\\b(Spammail|Spam–Mail)", flags: "gu", replacement: "Spam-Mail" },
         { pattern: "\\b(auf|unter):(?=\\s*(¿|https?://|www\\.))", flags: "gu", replacement: "$(1)" }, // Doppelpunkt entfernen
         { pattern: "\\b(https:\\s*//\\s*|http:\\s*//\\s*)", flags: "gu", replacement: "" },
@@ -5082,10 +5084,10 @@ if(adapter.id === 'pps'){
     const scope = CUE._tabs.cueGetTabPanel(tab) ?? document;
 
     if (waitIds.length) {
-      await CUE._tabs.cueWaitForTestIds(waitIds, { timeout: 3000, scope });
-      await CUE._tabs.cueWaitForEditableInside(waitIds, { timeout: 2200, scope });
+      await CUE._tabs.cueWaitForTestIds(waitIds, { timeout: 2200, scope }); // 3000
+      await CUE._tabs.cueWaitForEditableInside(waitIds, { timeout: 1400, scope }); // 2200
     }
-    await sleep(120);
+    await sleep(60); // 120
     return scope;
   };
 
@@ -6054,7 +6056,7 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
         <b>Pankow</b><br>Oliver Jütting (Bündnis 90/Die Grünen) • Cornelius Bechtler (Bündnis 90/Die Grünen) • Dominique Krössin (Die Linke) •  Cordelia Koch (Bündnis 90/Die Grünen) • Jörn Pasternack (CDU) • Manuela Anders-Granitzki (CDU) • Rona Tietje (SPD) • David Paul (CDU)<br><br>
         <b>Reinickendorf</b><br>Alexander Ewers (SPD) • Kerstin Köppen (CDU) • Emine Demirbüken-Wegner (CDU) • Harald Muschner (CDU) • Julia Schrod-Thiel (CDU) • Korinna Stephan (Bündnis 90/Die Grünen) • Sevda Boyraci (SPD) • Uwe Brockhausen (SPD)<br><br>
         <b>Steglitz-Zehlendorf</b><br>René Rögner-Francke (CDU) • Carolina Böhm (SPD) • Maren Schellenberg (Bündnis 90/Die Grünen) • Patrick Steinhoff (CDU) • Sören Grawert (FDP) • Tim Richter (CDU) • Urban Aykal (Bündnis 90/Die Grünen)<br><br>
-        <b>Spandau#</b><br>Christian Heck (CDU) •  Carola Brückner (SPD) • Frank Bewig (CDU) • Gregor Kempert (SPD) • Uwe Ziesak (SPD) • Tanja Franzke (CDU) • Thorsten Schatz (CDU)<br><br>
+        <b>Spandau</b><br>Christian Heck (CDU) •  Carola Brückner (SPD) • Frank Bewig (CDU) • Gregor Kempert (SPD) • Uwe Ziesak (SPD) • Tanja Franzke (CDU) • Thorsten Schatz (CDU)<br><br>
         <b>Tempelhof-Schöneberg</b><br>Stefan Böltes (SPD) •  Saskia Ellenbeck (Bündnis 90/Die Grünen) • Eva Majewski (CDU) • Jörn Oltmann (Bündnis 90/Die Grünen) • Matthias Steuckardt (CDU) • Oliver Schworck (SPD) • Martina Zander-Rade (Bündnis 90/Die Grünen) • Tobias Dollase (parteilos für die CDU)<br><br>
         <b>Treptow-Köpenick</b><br>André Grammelsdorff (CDU) • Bernd Geschanowski (AfD) • Peter Groos (SPD) • Carolin Weingart (Die Linke) •  Claudia Leistner (Bündnis 90/Die Grünen) • Marco Brauchmann (CDU) • Oliver Igel (SPD) • André Schubert (Die Linke)<br></ul>
     </div>
@@ -6157,7 +6159,7 @@ GM_registerMenuCommand('SuperMAX – Textbausteine (Hashtag-Regeln)', () => {
 	<li><b>VERANSTALTUNGEN</b></li>
         <b>#ANB</b> = Anmeldung bis spätestens<br>
         <b>#ANM</b> = Eine Anmeldung ist erforderlich.<br>
-        <b>#ANP</b> = Aufgrund begrenzter Platzzahl wird um eine Anmeldung unter Tel. oder E-Mail gebeten.<br>
+        <b>#ANP</b> = Aufgrund begrenzter Platzzahl wird um eine Anmeldung unter ... gebeten.<br>
         <b>#ANU</b> = Eine Anmeldung ist nicht erforderlich.<br>
         <b>#AUS</b> = Die Ausstellung ist kostenfrei zu besichtigen bis<br>
         <b>#BAR</b> = Der Veranstaltungsort ist barrierefrei zugänglich.<br>
