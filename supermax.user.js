@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.8.2 Multi-Site Struktur
+// @name SuperMAX 5.8.3 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.8.2
+// @version 5.8.3
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -339,7 +339,7 @@ inlineSep: ' || ',
 tagJoiner: ' | ',
 
 phrasesDefault:
-'29. Februar, alles für deutschland, durch den rost, eigentlich, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
+'29. Februar, alles für deutschland, BZfE, durch den rost, eigentlich, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
 
 phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
@@ -379,8 +379,8 @@ const CFG_DEFAULTS = {
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
         { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s*/\\s*(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u202F/\u202F" },    // Slash zwischen zwei Wörtern vorweg mit geschütztem Leerzeichen
         { pattern: "(\\(?\\d+)(\\s*)(/)(\\s*)(\\(?\\d+)", flags: "gu", replacement: "$(1)$(3)$(5)" }, // Slash zwischen zwei Zahlen ohne Leerzeichen
-        { pattern: "#\\+", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
-        { pattern: "#\\%", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
+        { pattern: "\\s*#\\+\\s*", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
+        { pattern: "\\s*#\\%\\s*", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
         { pattern: "\\*\\*", flags: "g", replacement: "" }, // Pseudofettung in Article Resizing
 
         // An- und Abführungszeichen sowie Auslassungszeichen vereinheitlichen
@@ -445,6 +445,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\bUnternehmer und Unternehmerinnen", flags: "gu", replacement: "Unternehmerinnen und Unternehmer" },
         { pattern: "\\bUrlauber und Urlauberinnen", flags: "gu", replacement: "Urlauberinnen und Urlauber" },
         { pattern: "\\bVerbraucher und Verbraucherinnen", flags: "gu", replacement: "Verbraucherinnen und Verbraucher" },
+        { pattern: "\\bVereinssportler und Vereinssportlerinnen", flags: "gu", replacement: "Vereinssportlerinnen und Vereinssportler" },
         { pattern: "\\bWähler und Wählerinnen", flags: "gu", replacement: "Wählerinnen und Wähler" },
         { pattern: "\\bZuhörer und Zuhörerinnen", flags: "gu", replacement: "Zuhörerinnen und Zuhörer" },
 
@@ -459,8 +460,9 @@ const CFG_DEFAULTS = {
         { pattern: "(?:^|\\b)(\\d{1})[\\.\\s\\u0020](\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)$(2)" }, // 4-stellig ohne Dezimal
 
         // Telefonnummern für CUE optimieren
-        { pattern: "\\b(?:Telefon|t)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
-        { pattern: "\\b(?:Tel.:)\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
+        { pattern: "\\bTelefon\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
+        { pattern: "\\bTel.:\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
+        { pattern: "\\s+t\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: " Tel. " },
         { pattern: "\\u00BF\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
         // { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" }, // schmales, geschütztes Leerzeichen
         { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (Testweise)
@@ -1406,6 +1408,8 @@ const CFG_DEFAULTS = {
         { pattern: "#Urlauber(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Urlauber" },
         { pattern: "#(?:Verbraucherinnen\\s*und\\s*Verbraucher|Verbraucher\\s*und\\s*Verbraucherinnen)\\b", flags: "giu", replacement: "Verbraucher" },
         { pattern: "#Verbraucher(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Verbraucher" },
+        { pattern: "#(?:Vereinssportlerinnen\\s*und\\s*Vereinssportler|Vereinssportler\\s*und\\s*Vereinssportlerinnen)\\b", flags: "giu", replacement: "Vereinssportler" },
+        { pattern: "#Vereinssportler(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Vereinssportler" },
         { pattern: "#(?:Vermieterinnen\\s*und\\s*Vermieter|Vermieter\\s*und\\s*Vermieterinnen)\\b", flags: "giu", replacement: "Vermieter" },
         { pattern: "#Vermieter(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Vermieter" },
         { pattern: "#Vermietende\\b", flags: "giu", replacement: "Vermieter" },
@@ -5964,6 +5968,8 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
         <br>
         #Verbraucherinnen und Verbraucher = Verbraucher<br>
         #Verbraucher(*:|)innen = Verbraucher<br>
+        #Vereinssportlerinnen und Vereinssportler = Vereinssportler<br>
+        #Vereinssportler(*:|)innen = Vereinssportler<br>
         #Vermieterinnen und Vermieter = Vermieter<br>
         #Vermieter(*:|)innen = Vermieter<br>
         #Vermietende = Vermieter<br>
@@ -6255,13 +6261,14 @@ GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
       CTRL+ALT+R > Notizen mit Textanalyse erzeugen
     </ul>
     <ul style="margin-top:10px;padding-left:18px">
-      <li><b>Auch hilfreich im PPS Texteditor:</b></li>
+      <li><b>Auch hilfreich im CUE Texteditor:</b></li>
       CTRL+A > Absatz markieren<br>
       CTRL+C > Auswahl kopieren<br>
       CTRL+X > Auswahl ausschneiden<br>
       CTRL+V > Auswahl einfügen<br>
       CTRL+Z > Aktion rückgängig machen<br>
-      CTRL+SHIFT+Z > Aktion wieder herstellen (in CUE)
+      CTRL+SHIFT+Z > Aktion wieder herstellen<br>
+      CTRL CTRL Y > Sonderzeichentabelle (Auswahl)
     </ul>
     <div style="margin-top:12px"><button id="smx_cfg_cancel" style="margin-left:6px;background:#3a3a3a;color:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer">Schließen</button></div>`;
    document.body.appendChild(box); const close=()=>{ try{ box.remove(); }catch{} }; box.querySelector('#smx_cfg_cancel').addEventListener('click', close); }catch(err){ console.error('Shortcut-Menü Fehler:', err); }
