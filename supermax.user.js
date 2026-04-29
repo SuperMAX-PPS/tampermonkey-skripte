@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 5.8.3 Multi-Site Struktur
+// @name SuperMAX 5.8.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 5.8.3
+// @version 5.8.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperBRIDGE (PPS->CUE) | SuperSHIRT (oneCLICK) | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -339,7 +339,7 @@ inlineSep: ' || ',
 tagJoiner: ' | ',
 
 phrasesDefault:
-'29. Februar, alles für deutschland, BZfE, durch den rost, eigentlich, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
+'29. Februar, alles für deutschland, BZfE, durch den rost, eigentlich, eskimo, frühjahr, FRÜHLING, getürkt, HERBST, hitler, gestern, heute, ==morgen==, Sarah Wedl-Wilson, letzte, mohrenstraße, nächste, neger, selbstmord, SOMMER, suizid, tatsächlich, unserer redaktion, verbraucher initiative, verbraucher60, vergasung, vermutlich, wahrscheinlich, WINTER, zigeuner',
 
 phrasesExcludeDefault:
 'guten morgen, morgenpost, morgens',
@@ -1100,9 +1100,9 @@ const CFG_DEFAULTS = {
         { pattern: "#(?:Katharina Günther-Wünsch|Günther-Wünsch)\\b", flags: "gu", replacement: "Katharina Günther-Wünsch (CDU)" },
         { pattern: "##(?:Kai Wegner|Wegner)\\b", flags: "gu", replacement: "Regierender Bürgermeister Kai Wegner (CDU)" },
         { pattern: "#(?:Kai Wegner|Wegner)\\b", flags: "gu", replacement: "Kai Wegner (CDU)" },
-        { pattern: "##(?:Sarah Wedl-Wilson|Wedl-Wilson)\\b", flags: "gu", replacement: "Sarah Wedl-Wilson (parteilos), Senatorin für Kultur und Gesellschaftlichen Zusammenhalt" },
-        { pattern: "#(?:Sarah Wedl-Wilson|Wedl-Wilson)\\b", flags: "gu", replacement: "Sarah Wedl-Wilson (parteilos)" },
-        { pattern: "##(?:Stefan Evers|Evers)\\b", flags: "gu", replacement: "Stefan Evers (CDU), Bürgermeister und Senator für Finanzen" },
+        //{ pattern: "##(?:Sarah Wedl-Wilson|Wedl-Wilson)\\b", flags: "gu", replacement: "Sarah Wedl-Wilson (parteilos), Senatorin für Kultur und Gesellschaftlichen Zusammenhalt" },
+        //{ pattern: "#(?:Sarah Wedl-Wilson|Wedl-Wilson)\\b", flags: "gu", replacement: "Sarah Wedl-Wilson (parteilos)" },
+        { pattern: "##(?:Stefan Evers|Evers)\\b", flags: "gu", replacement: "Stefan Evers (CDU), Bürgermeister und Senator für Finanzen und Kultur" },
         { pattern: "#(?:Stefan Evers|Evers)\\b", flags: "gu", replacement: "Stefan Evers (CDU)" },
         { pattern: "##(?:Ute Bonde|Bonde)\\b", flags: "gu", replacement: "Ute Bonde (CDU), Senatorin für Mobilität, Verkehr, Klimaschutz und Umwelt" },
         { pattern: "#(?:Ute Bonde|Bonde)\\b", flags: "gu", replacement: "Ute Bonde (CDU)" },
@@ -1338,7 +1338,7 @@ const CFG_DEFAULTS = {
         { pattern: "#Ausstellende\\b", flags: "giu", replacement: "Aussteller" },
         { pattern: "#(?:Autofahrerinnen\\s*und\\s*Autofahrer|Autofahrer\\s*und\\s*Autofahrerinnen)\\b", flags: "giu", replacement: "Autofahrer" },
         { pattern: "#Autofahrer(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Autofahrer" },
-        { pattern: "#Autodahrende\\b", flags: "giu", replacement: "Autofahrer" },
+        { pattern: "#Autodahrende", flags: "giu", replacement: "Autofahrer" },
         { pattern: "#(?:Autorinnen\\s*und\\s*Autoren|Autoren\\s*und\\s*Autorinnen)\\b", flags: "giu", replacement: "Autoren" },
         { pattern: "#Autor(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Autoren" },
         { pattern: "#(?:Berlinerinnen\\s*und\\s*Berliner|Berliner\\s*und\\s*Berlinerinnen)\\b", flags: "giu", replacement: "Berliner" },
@@ -1360,6 +1360,8 @@ const CFG_DEFAULTS = {
         { pattern: "#Händler(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Händler" },
         { pattern: "#(?:Handwerkerinnen\\s*und\\s*Handwerker|Handwerker\\s*und\\s*Handwerkerinnen)\\b", flags: "giu", replacement: "Handwerker" },
         { pattern: "#Handwerker(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Handwerker" },
+        { pattern: "#Hausbesitzende", flags: "gu", replacement: "Hausbesitzer" },
+        { pattern: "#Hausbesetzende", flags: "gu", replacement: "Hausbesetzer" },
         { pattern: "#(?:Kolleginnen\\s*und\\s*Kollegen|Kollegen\\s*und\\s*Kolleginnen)\\b", flags: "giu", replacement: "Kollegen" },
         { pattern: "#Kolleg(?:\\*|:|\\|)?innen\\b", flags: "giu", replacement: "Kollegen" },
         { pattern: "#(?:Künstlerinnen\\s*und\\s*Künstler|Künstler\\s*und\\s*Künstlerinnen)\\b", flags: "giu", replacement: "Künstler" },
@@ -5878,9 +5880,9 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
         #Ausstellerinnen und Aussteller = Aussteller<br>
         #Aussteller(*:|)innen = Aussteller<br>
         #Ausstellende = Aussteller<br>
+        #Autodahrende = Autofahrer<br>
         #Autofahrerinnen und Autofahrer = Autofahrer<br>
         #Autofahrer(*:|)innen = Autofahrer<br>
-        #Autodahrende = Autofahrer<br>
         #Autorinnen und Autoren = Autoren<br>
         #Autor(*:|)innen = Autoren<br>
         <br>
@@ -5908,6 +5910,8 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
         #Händler(*:|)innen = Händler<br>
         #Handwerkerinnen und Handwerker = Handwerker<br>
         #Handwerker(*:|)innen = Handwerker<br>
+        #Hausbesitzende = Hausbesitzer<br>
+        #Hausbesetzende = Hausbesetzer<br>
         <br>
         #Kolleginnen und Kollegen = Kollegen<br>
         #Kolleg(*:|)innen = Kollegen<br>
@@ -6052,7 +6056,7 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
              border-bottom:1px solid rgba(255,255,255,.08);
            ">
     <ul style="margin-top:10px;padding-left:18px">
-        <b>Senatsmitglieder</b><br>Cansel Kiziltepe (SPD) • Christian Gaebler (SPD) • Felor Badenberg (CDU) •  Ina Czyborra (SPD) • Franziska Giffey (SPD) • Iris Spranger (SPD) • Katharina Günther-Wünsch (CDU) • Kai Wegner (CDU) • Sarah Wedl-Wilson (parteilos) • Stefan Evers (CDU) • Ute Bonde (CDU)<br><br>
+        <b>Senatsmitglieder</b><br>Cansel Kiziltepe (SPD) • Christian Gaebler (SPD) • Felor Badenberg (CDU) •  Ina Czyborra (SPD) • Franziska Giffey (SPD) • Iris Spranger (SPD) • Katharina Günther-Wünsch (CDU) • Kai Wegner (CDU) • Stefan Evers (CDU) • Ute Bonde (CDU)<br><br>
         <b>Charlottenburg-Wilmersdorf</b><br>Astrid Duda (CDU) • Judith Stückler (CDU) • Christoph Brzezinski (CDU) • Heike Schmitt-Schmelz (SPD) • Kirstin Bauch (Bündnis 90/Die Grüne) • Oliver Schruoffeneger (Bündnis 90/Die Grüne) • Simon Hertel (CDU) • Dagmar Kempf (Bündnis 90/Die Grünen)<br><br>
         <b>Friedrichshain-Kreuzberg</b><br>Andy Hehmke (SPD) • Annika Gerold (Bündnis 90/Die Grünen) • Werner Heck (Bündnis 90/Die Grünen) • Clara Herrmann (Bündnis 90/Die Grünen) • Florian Schmidt (Bündnis 90/Die Grünen) • Max Kindler (CDU) • Regine Sommer-Wetter (Die Linke) • Ulrike Juda (Die Linke)<br><br>
         <b>Lichtenberg</b><br>Gregor Hoffmann (CDU) • Camilla Schuler (Die Linke) •  Catrin Gocksch (CDU) • Filiz Keküllüoğlu (Bündnis 90/Die Grünen) • Martin Schaefer (CDU) • Sandy Mattes (SPD) • Kerstin Zimmer (Die Linke)<br><br>
