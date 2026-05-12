@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 6.1.3 Multi-Site Struktur
+// @name SuperMAX 6.1.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 6.1.3
+// @version 6.1.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -208,6 +208,7 @@ filenameDelimiter: ' II ',          // Einheitlich: Pipes ohne Leerzeichen
 filenameDelimiterFallback: ' II ',  // Fallback entspricht Standard
 wrapStichwortInParens: true,        // "(Stichwort)" hinter Headline
 headlineFirst: false,               // "Überschrift (Stichwort)" bleibt wie gewünscht
+debugLocality: true,                // DETEKTOR auf true schalten bei Bedarf
 
 editionMap: {
 CH:['Charlottenburg-Nord','Charlottenburg-Wilmersdorf','Charlottenburg','Westend'],
@@ -255,7 +256,6 @@ localityAliases: [
 ['Tierpark', 'Friedrichsfelde'],
 ['Trabrennbahn Mariehdorf', 'Mariendorf'],
 ['Trabrennbahn Karlshorst', 'Karlshorst'],
-['Uber', 'Friedrichshain'],
 ['Wilhelm-Foerster-Sternwarte', 'Schöneberg'],
 ['Zeiss-Großplanetarium', 'Prenzlauer Berg'],
 ['Zitadelle', 'Spandau'],
@@ -265,38 +265,44 @@ localityAliases: [
 // Berliner Straßenverzeichnis
 streetDirectory: {
 "Aachener Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
-"Aalemannsteg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
-"Aalemannufer":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
-"Aalesunder Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
-"Aalstieg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
+"Aalemannsteg":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Aalemannufer":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Aalesunder Straße":{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
+"Aalstieg":	        { districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
 "Aarauer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Aarberger Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
-"Abajstraße":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
-"Abbestraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
-"Abendrotweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
-"Abendruh":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },	// Kleingartenanlage
+"Abajstraße":	    { districts: ["Pankow"], localities: ["Rosenthal"] },
+"Abbestraße":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
+"Abendrotweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
+"Abendruh":	        { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },	 // Kleingartenanlage
 "Abendseglersteig":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
-"Abenteuerlicher Bauspielplatz":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },	// Spielplatz
-"Abenteuerspielplatz Waslala":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },	// Spielplatz
-"Abenteuerspielplatz Wildhüterweg":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },	// Spielplatz
-"Abguss-Sammlung":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Museum
-"Abram-Joffe-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
-"Abteibrücke":	{ districts: ["Treptow-Köpenick"], localities: ["Alt-Treptow"] },
-"Abtstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
+"Abenteuerlicher Bauspielplatz": { districts: ["Pankow"], localities: ["Prenzlauer Berg"] },  // Spielplatz
+"Abenteuerspielplatz Waslala":	 { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },  // Spielplatz
+"Abenteuerspielplatz Wildhüterweg":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },  // Spielplatz
+"Abguss-Sammlung":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },  // Museum
+"Abram-Joffe-Straße":	         { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
+"Abteibrücke":	    { districts: ["Treptow-Köpenick"], localities: ["Alt-Treptow"] },
+"Abtstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Abtweilerstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] },
-"Achardstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+"Achardstraße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
 "Achenbachstraße":	{ districts: ["Spandau"], localities: ["Spandau"] },
-"Achenseeweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Achenseeweg":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Achillesstraße":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Achtermannstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Achtrutenberg":	{ districts: ["Pankow"], localities: ["Karow"] },
-"Ackerplanweg":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
-"Ackerstraße":	{ districts: ["Mitte", "Spandau"], localities: ["Gesundbrunnen", "Mitte", "Spandau"] },
+"Ackerplanweg":	    { districts: ["Reinickendorf"], localities: ["Tegel"] },
+"Ackerstraße":      { variants:  [{ localities: ["Gesundbrunnen", "Mitte"],
+                      segments:  [
+                    { from: 1,   to: 43,  parity: "both", locality: "Mitte" },
+                    { from: 144, to: 174, parity: "both", locality: "Mitte" },
+                    { from: 45,  to: 137, parity: "both", locality: "Gesundbrunnen" }]},
+                    { localities:["Spandau"], black: ["gesundbrunnen", "mitte"] }
+                    ]},
 "Adalbertstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte"], localities: ["Kreuzberg", "Mitte"] },
 "Adam-Kuckhoff-Platz":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },
-"Adamstraße":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
+"Adamstraße":	    { districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Adam-von-Trott-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },
-"Adass-Jisroel-Friedhof":	{ districts: ["Pankow"], localities: ["Weißensee"] },	// Friedhof
+"Adass-Jisroel-Friedhof":	{ districts: ["Pankow"], localities: ["Weißensee"] },  // Friedhof
 "Adele-Sandrock-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Adele-Schreiber-Krieger-Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Adelheidallee":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
@@ -304,59 +310,79 @@ streetDirectory: {
 "Adenauerplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// U-Bahnhof
 "Adersleber Weg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Adickesstraße":	{ districts: ["Spandau"], localities: ["Haselhorst"] },
-"Adlerbrücke":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
-"Adlergestell":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof", "Grünau", "Niederschöneweide", "Schmöckwitz"] },
-"Adlerhorst":	{ districts: ["Treptow-Köpenick"], localities: ["Grünau"] },
-"Adlerplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
-"Adlershof":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },	// S-Bahnhof
-"Adlershofer Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
-"Adlerstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
+"Adlerbrücke":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
+"Adlergestell":     { variants:  [{ localities: ["Adlershof", "Grünau", "Niederschöneweide", "Schmöckwitz"],
+                      segments:  [
+                    { from: 73,  to: 145,  parity: "both", locality: "Niederschöneweide" },
+                    { from: 147, to: 363,  parity: "both", locality: "Adlershof" },
+                    { from: 365, to: 610,  parity: "both", locality: "Grünau" },
+                    { from: 615, to: 786,  parity: "both", locality: "Schmöckwitz" }]}
+                    ]},
+"Adlerhorst":	    { districts: ["Treptow-Köpenick"], localities: ["Grünau"] },
+"Adlerplatz":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
+"Adlershof":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },	 // S-Bahnhof
+"Adlershofer Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
+"Adlerstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Admiralbrücke":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Admiralstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
-"Adolf-Heyden-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
-"Adolf-Kiepert-Steg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
-"Adolf-Martens-Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
-"Adolf-Menzel-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
-"Adolf-Scheidt-Platz":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
-"Adolfstraße":	{ districts: ["Marzahn-Hellersdorf", "Mitte", "Steglitz-Zehlendorf"], localities: ["Kaulsdorf", "Steglitz", "Wedding", "Zehlendorf"] },	// Spielplatz
+"Adolf-Heyden-Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
+"Adolf-Kiepert-Steg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
+"Adolf-Martens-Straße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Adolf-Menzel-Straße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+"Adolf-Scheidt-Platz":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
+"Adolfstraße":      { variants:  [{ localities: ["Wedding"], white: ["spielplatz"] }, // Spielplatz
+                    { localities:["Kaulsdorf", "Steglitz", "Wedding", "Zehlendorf"] }
+                    ]},
 "Adorfer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Advokatensteig":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
-"AEG-Siedlung Heimat":	{ districts: ["Reinickendorf"], localities: ["Lübars"] },
-"AEG-Straße":	{ districts: ["Reinickendorf"], localities: ["Lübars"] },
+"AEG-Siedlung Heimat":	    { districts: ["Reinickendorf"], localities: ["Lübars"] },
+"AEG-Straße":	    { districts: ["Reinickendorf"], localities: ["Lübars"] },
 "Affensteinweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
-"Afrikanische Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },	// U-Bahnhof
-"Agathenweg":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
-"Agavensteig":	{ districts: ["Lichtenberg", "Treptow-Köpenick"], localities: ["Baumschulenweg", "Karlshorst"] },
-"Agnes-Hacker-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
+"Afrikanische Straße":	    { districts: ["Mitte"], localities: ["Wedding"] },	// U-Bahnhof
+"Agathenweg":	    { districts: ["Reinickendorf"], localities: ["Tegel"] },
+"Agavensteig":	    { districts: ["Lichtenberg", "Treptow-Köpenick"], localities: ["Baumschulenweg", "Karlshorst"] },
+"Agnes-Hacker-Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Agnes-Somma-Park":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Grünanlage
 "Agnes-Straub-Weg":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },
-"Agnes-Wabnitz-Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
-"Agnes-Zahn-Harnack-Straße":	{ districts: ["Mitte"], localities: ["Moabit"] },
-"Agnethaweg":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
+"Agnes-Wabnitz-Straße":	    { districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
+"Agnes-Zahn-Harnack-Straße":{ districts: ["Mitte"], localities: ["Moabit"] },
+"Agnethaweg":	    { districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Agricolastraße":	{ districts: ["Mitte"], localities: ["Moabit"] },
 "Ahlbecker Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Ahlbeerensteig":	{ districts: ["Spandau"], localities: ["Staaken"] },
-"Ahlener Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
-"Ahornallee":	{ districts: ["Charlottenburg-Wilmersdorf", "Marzahn-Hellersdorf", "Pankow", "Spandau", "Treptow-Köpenick"], localities: ["Blankenburg", "Friedrichshagen", "Kladow", "Köpenick", "Mahlsdorf", "Rosenthal", "Westend"] },
-"Ahornsteig":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
-"Ahornstraße":	{ districts: ["Marzahn-Hellersdorf", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg", "Treptow-Köpenick"], localities: ["Kaulsdorf", "Rahnsdorf", "Schöneberg", "Steglitz", "Zehlendorf"] },
-"Ahornweg":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
-"Ahrensdorfer Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
-"Ahrensfelde":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },	// S-Bahnhof
+"Ahlener Weg":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Ahornallee":       { variants: [{ localities: ["Köpenick"], white: ["wohnheim"] },  // Wohnheim
+                                 { localities: ["Westend"],  white: ["katholische schule", "liebfrauen", "liebfrauenschule"] },  // Schule
+                                 { localities: ["Westend"],  white: ["tanzakademie"] },  // Schule
+                    { localities:["Blankenburg", "Friedrichshagen", "Kladow", "Köpenick", "Mahlsdorf", "Rosenthal", "Westend"] }
+                    ]},
+"Ahornsteig":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
+"Arhornstraße":     { variants: [{ localities: ["Schöneberg"], white: ["courage"] },  // Soziales
+                                 { localities: ["Schöneberg"], white: ["schwule lehrer"] },  // Soziales
+                                 { localities: ["Steglitz"],   white: ["adventgemeinde"] },  // Kirche
+                                 { localities: ["Steglitz"],   white: ["berliner jugendclub"] },  // Freizeit
+                                 { localities: ["Steglitz"],   white: ["hundestunde"] },  // Schule
+                                 { localities: ["Steglitz"],   white: ["tanztangente"] },  // Freizeit
+                                 { localities: ["Steglitz"],   white: ["trias"] },  // Soziales
+                    { localities:["Kaulsdorf", "Rahnsdorf", "Schöneberg", "Steglitz", "Zehlendorf"] }
+                    ]},
+"Ahornweg":	        { districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
+"Ahrensdorfer Straße":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
+"Ahrensfelde":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },  // S-Bahnhof
 "Ahrensfelder Chaussee":	{ districts: ["Lichtenberg"], localities: ["Falkenberg"] },
-"Ahrenshooper Straße":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
-"Ahrenshooper Zeile":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
-"Ährenweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
+"Ahrenshooper Straße":	    { districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
+"Ahrenshooper Zeile":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+"Ährenweg":	        { districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Ahrweilerstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Aiblinger Weg":	{ districts: ["Spandau"], localities: ["Kladow"] },
-"Aidastraße":	{ districts: ["Pankow"], localities: ["Heinersdorf"] },
-"Akazienallee":	{ districts: ["Charlottenburg-Wilmersdorf", "Marzahn-Hellersdorf", "Pankow"], localities: ["Mahlsdorf", "Rosenthal", "Westend"] },
-"Akazienhof":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
+"Aidastraße":	    { districts: ["Pankow"], localities: ["Heinersdorf"] },
+"Akazienallee":	    { districts: ["Charlottenburg-Wilmersdorf", "Marzahn-Hellersdorf", "Pankow"], localities: ["Mahlsdorf", "Rosenthal", "Westend"] },
+"Akazienhof":	    { districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Akazienstraße":	{ districts: ["Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Lichterfelde", "Schöneberg"] },
 "Akazienwäldchen":	{ districts: ["Neukölln"], localities: ["Britz"] },
-"Akazienweg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
-"Akeleiweg":	{ districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
-"Akkordeonweg":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
+"Akazienweg":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Akeleiweg":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
+"Akkordeonweg":	    { districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Aktionsspielplatz":	{ districts: ["Mitte"], localities: ["Moabit"] },	// Spielplatz
 "Aktivspielplatz Franz B.":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },	// Spielplatz
 "Alarichplatz":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Spielplatz
@@ -373,6 +399,7 @@ streetDirectory: {
 "Albestraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },
 "Albiger Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Alboinplatz":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg", "Tempelhof"] },	// Spielplatz
+// PAUSE
 "Alboinstraße":    { localities:["Tempelhof", "Schöneberg"], segments: [
       { from: 1,   to: 143, parity: "odd",  locality: "Tempelhof"  },
       { from: 4,   to: 10,  parity: "even", locality: "Tempelhof"  },
@@ -543,7 +570,7 @@ streetDirectory: {
 "Alvenslebenstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Schöneberg"] },
 "Alwineweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Alzeyweg":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
-"Am Adlergestell":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
+"Am Adlergestell":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },     // Kolonie
 "Am Aegirbad":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },	// Kleingartenanlage
 "Am Ahornweg":	{ districts: ["Lichtenberg"], localities: ["Wartenberg"] },
 "Am Akazienweg":	{ districts: ["Lichtenberg"], localities: ["Wartenberg"] },
@@ -2053,7 +2080,16 @@ streetDirectory: {
 "Bundesratufer":	{ districts: ["Mitte"], localities: ["Moabit"] },
 "Bundesring":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Bundesstraße 2":	{ districts: ["Pankow"], localities: ["Stadtrandsiedlung Malchow"] },
-"Bundestag":	{ districts: ["Mitte"], localities: ["Tiergarten"] },	// U-Bahnhof
+
+"Bundestag": {
+  variants: [
+    {
+      localities: ["Tiergarten"],
+      white: ["u-bahnhof", "u-bahnstation", "u-bahn", "u bahnhof", "bahnhof"]
+    }
+  ]
+},
+
 "Bundschuhweg":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Bunsenstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Buntspechtstraße":	{ districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
@@ -3466,7 +3502,6 @@ streetDirectory: {
 "Friedhof Grünau":	{ districts: ["Treptow-Köpenick"], localities: ["Grünau"] },	// Friedhof
 "Friedhof Grunewald":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Halensee"] },	// Friedhof
 "Friedhof Grunewald-Forst":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },	// Friedhof
-"Friedhof Heerstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },	// Friedhof
 "Friedhof Heiligensee":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },	// Friedhof
 "Friedhof Heinersdorf":	{ districts: ["Pankow"], localities: ["Heinersdorf"] },	// Friedhof
 "Friedhof Hermsdorf II":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },	// Friedhof
@@ -3919,6 +3954,20 @@ streetDirectory: {
 "Geßlerstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Gesundbrunnen Center":	{ districts: ["Mitte"], localities: ["Gesundbrunnen"] },	// Handel
 "Gesundbrunnen":	{ districts: ["Mitte"], localities: ["Gesundbrunnen", "Wedding"] },	// S+U-Bahnhof
+
+"Gesundbrunnen": {
+  variants: [
+    {
+      localities: ["Gesundbrunnen"],
+      white: ["s-bahnhof", "s-bahn", "s bahnhof", "bahnhof", "s-bahnstation"]
+    },
+    {
+      localities: ["Wedding"],
+      white: ["u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"]
+    }
+  ]
+},
+
 "Gesundheitspflege":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },	// Kleingartenanlage
 "Gethsemanestraße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Getreideweg":	{ districts: ["Reinickendorf"], localities: ["Lübars"] },
@@ -4575,7 +4624,30 @@ streetDirectory: {
 "Hausvaterweg":	{ districts: ["Lichtenberg"], localities: ["Falkenberg"] },
 "Hausvogteiplatz":	{ districts: ["Mitte"], localities: ["Mitte"] },	// U-Bahnhof
 "Havelberger Straße":	{ districts: ["Mitte"], localities: ["Moabit"] },
-"Havelchaussee":	{ districts: ["Charlottenburg-Wilmersdorf", "Spandau", "Steglitz-Zehlendorf"], localities: ["Grunewald", "Nikolassee", "Westend", "Wilhelmstadt"] },
+
+"Havelchaussee":    { variants: [
+    { localities: ["Grunewald", "Nikolassee", "Westend", "Wilhelmstadt"],
+      segments: [
+        { from: 57,  to: 109,  parity: "both", locality: "Grunewald" },
+        { from: 111, to: 180,  parity: "both", locality: "Charlottenburg" },
+        { from: 193, to: 195,  parity: "both", locality: "Wilhelmstadt" }
+      ] }
+      ]  },
+
+
+"Havelchaussee": {
+  variants: [
+    {
+      localities: ["Charlottenburg", "Grunewald", "Nikolassee", "Westend", "Wilhelmstadt"],
+      segments: [
+        { from: 57,  to: 109, parity: "both", locality: "Grunewald" },
+        { from: 111, to: 180, parity: "both", locality: "Charlottenburg" },
+        { from: 193, to: 195, parity: "both", locality: "Wilhelmstadt" }
+      ]
+    }
+  ]
+},
+
 "Haveldüne":	{ districts: ["Spandau"], localities: ["Gatow"] },
 "Havelländer Ring":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Havelmatensteig":	{ districts: ["Spandau"], localities: ["Gatow"] },
@@ -4608,7 +4680,19 @@ streetDirectory: {
 "Hedwig-Wachenheim-Straße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Heegermühler Weg":	{ districts: ["Pankow"], localities: ["Niederschönhausen", "Wilhelmsruh"] },
 "Heerruferweg":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
-"Heerstraße":	{ districts: ["Charlottenburg-Wilmersdorf", "Marzahn-Hellersdorf", "Spandau"], localities: ["Biesdorf", "Kaulsdorf", "Staaken", "Westend", "Wilhelmstadt"] },	// S-Bahnhof
+"Heerstraße":   { variants: [{ localities: ["Biesdorf", "Charlottenburg", "Kaulsdorf", "Staaken", "Westend", "Wilhelmstadt"],
+      segments: [
+        { from: 1,   to: 166,  parity: "both", locality: "Westend" },
+        { from: 167, to: 382,  parity: "both", locality: "Wilhelmstadt" },
+        { from: 385, to: 695,  parity: "both", locality: "Staaken" }
+      ] },
+        { localities: ["Westend"], white: ["s-bahnhof", "s-bahn", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
+        { localities: ["Wilhelmstadt"], white: ["kolonie"] }, // Kolonie
+        { localities: ["Westend"], white: ["friedhof"] }, // Friedhof
+        { localities: ["Charlottenburg"], white: ["kolonie blw"] }, // Kolonie
+        { localities: ["Kaulsdorf"], black: ["biesdorf", "charlottenburg", "staaken", "westend", "wilhelmstadt"] },
+        { localities: ["Biesdorf"], black: ["kaulsdorf", "charlottenburg", "staaken", "westend", "wilhelmstadt"] }
+      ] },
 "Heesestraße":	{ districts: ["Marzahn-Hellersdorf", "Steglitz-Zehlendorf"], localities: ["Biesdorf", "Steglitz"] },
 "Hefnersteig":	{ districts: ["Spandau"], localities: ["Siemensstadt"] },
 "Hegauer Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
@@ -6277,15 +6361,22 @@ streetDirectory: {
 "Landoltwegbrücke":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Landreiterweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
 "Landréstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
-"Landsberger Allee Einkaufspassagen":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },	// Handel
-"Landsberger Allee":	{ districts: ["Friedrichshain-Kreuzberg", "Lichtenberg", "Marzahn-Hellersdorf", "Pankow"], localities: ["Alt-Hohenschönhausen", "Fennpfuhl", "Friedrichshain", "Lichtenberg", "Marzahn", "Prenzlauer Berg"] },	// S-Bahnhof
-"Landsberger Allee": {
-    localities: ["Friedrichshain", "Prenzlauer Berg", "Fennpfuhl", "Lichtenberg", "Marzahn"],
-    segments: [
-      { from: 79,  to: 127, parity: "odd",  locality: "Prenzlauer Berg" },
-      { from: 106, to: 193, parity: "even", locality: "Fennpfuhl" },
-      { from: 365, to: 576, parity: "both", locality: "Marzahn" }
-    ]},
+"Landsberger Allee":    { variants: [{ localities: ["Alt-Hohenschönhausen", "Fennpfuhl", "Friedrichshain", "Lichtenberg", "Marzahn", "Prenzlauer Berg"],
+      segments: [
+        { from: 2,   to: 102,  parity: "even", locality: "Friedrichshain" },
+        { from: 15,  to: 77,   parity: "odd",  locality: "Friedrichshain" },
+        { from: 79,  to: 127,  parity: "odd",  locality: "Prenzlauer Berg" },
+        { from: 104, to: 104,  parity: "even", locality: "Prenzlauer Berg" },
+        { from: 106, to: 228,  parity: "even", locality: "Fennpfuhl" },
+        { from: 131, to: 193,  parity: "odd",  locality: "Fennpfuhl" },
+        { from: 201, to: 367,  parity: "odd",  locality: "Alt-Hohenschönhausen" },
+        { from: 230, to: 364,  parity: "even", locality: "Lichtenberg" },
+        { from: 366, to: 576,  parity: "even", locality: "Marzahn" },
+        { from: 401, to: 565,  parity: "odd",  locality: "Marzahn" }
+      ] },
+        { localities: ["Prenzlauer Berg"], white: ["s-bahnhof", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
+        { localities: ["Lichtenberg"], white: ["einkaufspassage", "einkaufspassagen"] }  // Handel
+      ] },
 "Landsberger Chaussee":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },	// Spielplatz
 "Landsberger Straße":	{ districts: ["Marzahn-Hellersdorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Mahlsdorf"] },
 "Landschaftsfriedhof Gatow":	{ districts: ["Spandau"], localities: ["Gatow"] },	// Friedhof
@@ -13550,6 +13641,20 @@ function smxResolveStreetSegmentLocality(entry, houseNumber) {
  * - Straße mit segments + Hausnummer => segmentierter Treffer ("segment")
  * - mehrdeutige Straße ohne Segmenttreffer => kein Treffer
  */
+function smxPassesContextFilter(variant, context) {
+  const white = variant.white ?? [];
+  const black = variant.black ?? [];
+
+  for (const b of black) {
+    if (context.includes(b)) return false;
+  }
+
+  if (white.length) {
+    return white.some(w => context.includes(w));
+  }
+
+  return true;
+}
 function smxExtractStreetLocalityHits(text) {
   const canonText = smxCanonLoc(text);
   if (!canonText) return [];
@@ -13571,52 +13676,83 @@ function smxExtractStreetLocalityHits(text) {
 
       const after = canonText.slice(pos + item.canonStreet.length, pos + item.canonStreet.length + 24);
       const before = canonText.slice(Math.max(0, pos - 24), pos);
+      const context = (before + ' ' + after).toLowerCase();
 
       let houseNumber = null;
 
-      // typisch deutsch: "Landsberger Allee 81"
       let m = after.match(/^\s{0,4}(?:nr\.?\s*)?(\d{1,4})\b/i);
       if (m) {
         houseNumber = parseInt(m[1], 10);
       } else {
-        // auch tolerieren: "81 Landsberger Allee"
         m = before.match(/(\d{1,4})\s*$/i);
         if (m) houseNumber = parseInt(m[1], 10);
       }
 
-      const entry = item.entry ?? {};
-      const localities = Array.isArray(entry.localities) ? entry.localities : [];
+      const rawEntry = item.entry ?? {};
+      const variants = Array.isArray(rawEntry.variants)
+        ? rawEntry.variants
+        : [rawEntry];
 
-      let locality = '';
-      let mode = '';
+      for (const variant of variants) {
 
-      // 1) segmentierter Treffer über Hausnummer
-      if (houseNumber != null) {
-        const segLoc = smxResolveStreetSegmentLocality(entry, houseNumber);
-        if (segLoc && smxIsValidLocalityName(segLoc)) {
-          locality = segLoc;
-          mode = 'segment';
+        // optional: Kontextfilter (Whitelist / Blacklist)
+        if (typeof smxPassesContextFilter === 'function') {
+          if (!smxPassesContextFilter(variant, context)) {
+            continue;
+          }
         }
-      }
 
-      // 2) eindeutige Straße (nur ein Ortsteil)
-      if (!locality && localities.length === 1) {
-        const singleLoc = String(localities[0] ?? '').trim();
-        if (singleLoc && smxIsValidLocalityName(singleLoc)) {
-          locality = singleLoc;
-          mode = 'single';
+        const entryLocalities = Array.isArray(variant.localities)
+          ? variant.localities
+          : [];
+
+        let locality = '';
+        let mode = '';
+
+        // 1) segmentiert
+        if (houseNumber != null) {
+          const segLoc = smxResolveStreetSegmentLocality(variant, houseNumber);
+          if (segLoc && smxIsValidLocalityName(segLoc)) {
+            locality = segLoc;
+            mode = 'segment';
+          }
         }
-      }
 
-      // 3) Nur wenn wirklich auflösbar
-      if (locality) {
-        hits.push({
-          street: item.street,
-          locality,
-          houseNumber,
-          mode,
-          pos
-        });
+        // 2) eindeutig
+        if (!locality && entryLocalities.length === 1) {
+          const singleLoc = entryLocalities[0];
+          if (singleLoc && smxIsValidLocalityName(singleLoc)) {
+            locality = singleLoc;
+            mode = 'single';
+          }
+        }
+
+        // 3) Treffer
+        if (locality) {
+          hits.push({
+            street: item.street,
+            locality,
+            houseNumber,
+            mode,
+            pos
+          });
+          continue;
+        }
+
+        // 4) Soft-Hits
+        if (houseNumber == null && entryLocalities.length > 1) {
+          for (const loc of entryLocalities) {
+            if (smxIsValidLocalityName(loc)) {
+              hits.push({
+                street: item.street,
+                locality: loc,
+                houseNumber: null,
+                mode: 'ambiguous',
+                pos
+              });
+            }
+          }
+        }
       }
 
       start = pos + item.canonStreet.length;
@@ -13671,7 +13807,17 @@ const scanStreetText = (text, singlePoints, segmentPoints, reason) => {
       if (seen.has(key)) continue;
       seen.add(key);
 
-      const pts = hit.mode === 'segment' ? segmentPoints : singlePoints;
+// NEU >
+let pts = 1; // ← WICHTIG: Default setzen
+
+if (hit.mode === 'segment') {
+  pts = segmentPoints;
+} else if (hit.mode === 'single') {
+  pts = singlePoints;
+} else if (hit.mode === 'ambiguous') {
+  pts = 1; // explizit, aber redundant
+}
+// < NEU
       const detail = hit.houseNumber != null
         ? `${hit.street} ${hit.houseNumber}`
         : hit.street;
@@ -13689,7 +13835,8 @@ const scanStreetText = (text, singlePoints, segmentPoints, reason) => {
     const viaAlias = smxFindLocalityViaAliases(txt);
     if (viaAlias && smxIsValidLocalityName(viaAlias)) {
       if (debug) console.info('[SMX][locality] Alias-Treffer:', viaAlias);
-      return viaAlias;
+      // return viaAlias;
+      addScore(viaAlias, 5, 'Alias'); // Bugfix
     }
   }
 
@@ -14002,7 +14149,7 @@ function smxExtractStichwort(values){
 
 // Nummern-Erkennung und RED-Dateiname bauen
 function guessArticleNumber(list, min=5, max=12){
-  const re = new RegExp(`(?:^|\\D)(\\d{${min},${max}})(?!\\d)`, 'u');
+  const re = new RegExp(`\\b${smxEscapeRegex(canonNeedle)}\\b`, 'i');
   for(const s of list){ const m = String(s??'').match(re); if(m) return m[1]; }
   return '';
 }
@@ -14226,9 +14373,113 @@ const str = String(value ?? '');
   return writeGeneric(el, value);
 }
 
+//// KAPITEL 2.6 // DETEKTOR ///////////////////////////////////////////////////////////////////////
+function smxAnalyzeLocalityDebug({
+  headline = '',
+  subline = '',
+  body = ''
+} = {}) {
+
+  const score = Object.create(null);
+
+  const add = (name, pts, reason) => {
+    if (!name || !smxIsValidLocalityName(name)) return;
+    const canon = smxCanonLoc(name);
+
+    score[canon] ??= { name, points: 0, reasons: [] };
+    score[canon].points += pts;
+    score[canon].reasons.push(`${pts >= 0 ? '+' : ''}${pts} ${reason}`);
+  };
+
+  // 🔹 Ortsnamen
+  const scanText = (text, pts, label) => {
+    const found = smxFindFirstLocalityInText(text, { excludeBerlin: true });
+    if (found) add(found, pts, `Text (${label})`);
+  };
+
+  scanText(headline, 4, 'Überschrift');
+  scanText(subline, 3, 'Unterzeile');
+
+  const paragraphs = String(body)
+    .split(/\n{2,}/)
+    .map(p => p.trim())
+    .filter(Boolean);
+
+  paragraphs.forEach((p, i) => {
+    scanText(p, i === 0 ? 3 : 1, i === 0 ? 'Lead' : 'Text');
+  });
+
+  // 🔹 Straßen
+  const scanStreet = (text, label) => {
+    const hits = smxExtractStreetLocalityHits(text);
+
+    for (const h of hits) {
+      const pts =
+        h.mode === 'segment' ? 3 :
+        h.mode === 'single'  ? 2 :
+        1;
+
+      const detail = h.houseNumber
+        ? `${h.street} ${h.houseNumber}`
+        : h.street;
+
+      add(h.locality, pts, `Straße (${detail}, ${label}, ${h.mode})`);
+    }
+  };
+
+  scanStreet(headline, 'Überschrift');
+  scanStreet(subline, 'Unterzeile');
+  paragraphs.forEach((p, i) =>
+    scanStreet(p, i === 0 ? 'Lead' : 'Text')
+  );
+
+  // 🔹 Ergebnis sortieren
+  return Object.values(score)
+    .sort((a, b) => b.points - a.points);
+}
+
+// Ausgabe (Overlay optional zuschaltbar)
+function smxShowLocalityDebugOverlay(data) {
+
+  const html = `
+  <div style="font-weight:700;margin-bottom:8px">
+    Ortsanalyse (SuperMAX)
+  </div>
+
+  ${data.map(d => `
+    <div style="
+      margin-top:8px;
+      padding:8px;
+      border:1px solid #12456a;
+      border-radius:6px;
+      background:#06263d
+    ">
+      <div style="font-weight:600">
+        ${d.name} — ${d.points} Punkte
+      </div>
+      <div style="font-size:12px;margin-top:4px">
+        ${d.reasons.join('<br>')}
+      </div>
+    </div>
+  `).join('')}
+
+  <div style="margin-top:12px;text-align:right">
+    <button id="smx_close_debug"
+      style="background:#3a3a3a;color:#fff;border:0;padding:6px 12px;border-radius:6px">
+      Schließen
+    </button>
+  </div>
+  `;
+
+  const { wrap, box } = smxCreateOverlayBox(html);
+
+  box.querySelector('#smx_close_debug')
+    .addEventListener('click', () => wrap.remove());
+}
+
 
 //// KAPITEL 3 //// ADAPTER ////////////////////////////////////////////////////////////////////////
-//// KAPITEL 3.1 // Rollen & Begriffe ///////////////////////////////////////////////////////////////
+//// KAPITEL 3.1 // Rollen & Begriffe //////////////////////////////////////////////////////////////
 const LABELS = {
 headline_pro:['headline_pro'],
 headline:['überschrift','headline','titel'],
@@ -16246,6 +16497,17 @@ async function superREDRun(){
       headline: values.headline,
       headline_pro: values.headline_pro
     });
+
+    // --- DETEKTOR: optionale Ortsanalyse ---------------------------------------
+    if (CFG?.SUPERRED?.debugLocality) {
+      const debugData = smxAnalyzeLocalityDebug({
+        headline: values.headline,
+        subline: values.subline,
+        body: values.body
+      });
+      smxShowLocalityDebugOverlay(debugData);
+    }
+    // --------------------------------------------------------------------------
 
     // optionale Caption/Credit-Paare
     const capIds = CUE._tabs.TESTIDS?.caption ?? [];
