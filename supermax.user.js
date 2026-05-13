@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 6.1.4 Multi-Site Struktur
+// @name SuperMAX 6.1.41 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 6.1.4
+// @version 6.1.41
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -208,7 +208,7 @@ filenameDelimiter: ' II ',          // Einheitlich: Pipes ohne Leerzeichen
 filenameDelimiterFallback: ' II ',  // Fallback entspricht Standard
 wrapStichwortInParens: true,        // "(Stichwort)" hinter Headline
 headlineFirst: false,               // "Überschrift (Stichwort)" bleibt wie gewünscht
-debugLocality: true,                // DETEKTOR auf true schalten bei Bedarf
+debugLocality: false,               // DETEKTOR auf true schalten bei Bedarf
 
 editionMap: {
 CH:['Charlottenburg-Nord','Charlottenburg-Wilmersdorf','Charlottenburg','Westend'],
