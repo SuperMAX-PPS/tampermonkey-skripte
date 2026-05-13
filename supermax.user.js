@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 6.1.41 Multi-Site Struktur
+// @name SuperMAX 6.1.43 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 6.1.41
+// @version 6.1.43
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -208,7 +208,7 @@ filenameDelimiter: ' II ',          // Einheitlich: Pipes ohne Leerzeichen
 filenameDelimiterFallback: ' II ',  // Fallback entspricht Standard
 wrapStichwortInParens: true,        // "(Stichwort)" hinter Headline
 headlineFirst: false,               // "Überschrift (Stichwort)" bleibt wie gewünscht
-debugLocality: false,               // DETEKTOR auf true schalten bei Bedarf
+debugLocality: false,                // DETEKTOR auf true schalten bei Bedarf (experimentell)
 
 editionMap: {
 CH:['Charlottenburg-Nord','Charlottenburg-Wilmersdorf','Charlottenburg','Westend'],
@@ -3334,7 +3334,6 @@ streetDirectory: {
 "Fortuna":	{ districts: ["Treptow-Köpenick"], localities: ["Plänterwald"] },	// Kleingartenanlage
 "Fortunaallee":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Forum Köpenick":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },	// Handel
-"Forum Landsberger Allee":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },	// Handel
 "Forum Steglitz":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },	// Handel
 "Föttingerzeile":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Marienfelde"] },
 "Foxweg":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
@@ -6361,22 +6360,23 @@ streetDirectory: {
 "Landoltwegbrücke":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Landreiterweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
 "Landréstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
-"Landsberger Allee":    { variants: [{ localities: ["Alt-Hohenschönhausen", "Fennpfuhl", "Friedrichshain", "Lichtenberg", "Marzahn", "Prenzlauer Berg"],
-      segments: [
-        { from: 2,   to: 102,  parity: "even", locality: "Friedrichshain" },
-        { from: 15,  to: 77,   parity: "odd",  locality: "Friedrichshain" },
-        { from: 79,  to: 127,  parity: "odd",  locality: "Prenzlauer Berg" },
-        { from: 104, to: 104,  parity: "even", locality: "Prenzlauer Berg" },
-        { from: 106, to: 228,  parity: "even", locality: "Fennpfuhl" },
-        { from: 131, to: 193,  parity: "odd",  locality: "Fennpfuhl" },
-        { from: 201, to: 367,  parity: "odd",  locality: "Alt-Hohenschönhausen" },
-        { from: 230, to: 364,  parity: "even", locality: "Lichtenberg" },
-        { from: 366, to: 576,  parity: "even", locality: "Marzahn" },
-        { from: 401, to: 565,  parity: "odd",  locality: "Marzahn" }
-      ] },
-        { localities: ["Prenzlauer Berg"], white: ["s-bahnhof", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
-        { localities: ["Lichtenberg"], white: ["einkaufspassage", "einkaufspassagen"] }  // Handel
-      ] },
+"Landsberger Allee":    { variants: [
+                { localities: ["Prenzlauer Berg"], white: ["s-bahnhof", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
+                { localities: ["Prenzlauer Berg"], white: ["forum landsberger allee"] },  // Handel
+                { localities: ["Lichtenberg"],     white: ["einkaufspassage", "einkaufspassagen"] },  // Handel
+                { localities: ["Alt-Hohenschönhausen", "Fennpfuhl", "Friedrichshain", "Lichtenberg", "Marzahn", "Prenzlauer Berg"],
+                  segments:   [
+                { from: 2,   to: 102,  parity: "even", locality: "Friedrichshain" },
+                { from: 15,  to: 77,   parity: "odd",  locality: "Friedrichshain" },
+                { from: 79,  to: 127,  parity: "odd",  locality: "Prenzlauer Berg" },
+                { from: 104, to: 104,  parity: "even", locality: "Prenzlauer Berg" },
+                { from: 106, to: 228,  parity: "even", locality: "Fennpfuhl" },
+                { from: 131, to: 193,  parity: "odd",  locality: "Fennpfuhl" },
+                { from: 201, to: 367,  parity: "odd",  locality: "Alt-Hohenschönhausen" },
+                { from: 230, to: 364,  parity: "even", locality: "Lichtenberg" },
+                { from: 366, to: 576,  parity: "even", locality: "Marzahn" },
+                { from: 401, to: 565,  parity: "odd",  locality: "Marzahn" } ] },
+                ] },
 "Landsberger Chaussee":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },	// Spielplatz
 "Landsberger Straße":	{ districts: ["Marzahn-Hellersdorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Mahlsdorf"] },
 "Landschaftsfriedhof Gatow":	{ districts: ["Spandau"], localities: ["Gatow"] },	// Friedhof
@@ -13553,26 +13553,28 @@ function smxFindLocalityViaAliases(text) {
 
   for (const entry of list) {
     const needleRaw = Array.isArray(entry) ? entry[0] : entry?.match;
-    const locRaw    = Array.isArray(entry) ? entry[1] : entry?.locality;
-    if (!needleRaw || !locRaw) continue;
+    const locRaw = Array.isArray(entry) ? entry[1] : entry?.locality;
 
-    // mapped locality muss gültig sein (editionMap)
+    if (!needleRaw || !locRaw) continue;
     if (!smxIsValidLocalityName(locRaw)) continue;
 
     const canonNeedle = smxCanonLoc(needleRaw);
     if (!canonNeedle) continue;
 
-    const pos = canonText.indexOf(canonNeedle);
-    if (pos < 0) continue;
+    // robust: Wortgrenzen statt indexOf
+    const re = new RegExp(`\\b${smxEscapeRegex(canonNeedle)}\\b`, 'i');
+    const m = canonText.match(re);
+    if (!m) continue;
 
-    // Wortgrenzen wie bei der Ortsmarken-Suche
-    if (!smxIsWordBoundaryAt(canonText, pos, canonNeedle.length)) continue;
+    const pos = m.index ?? 0;
 
-    if (pos < best.pos) best = { pos, locality: String(locRaw).trim() };
+    if (pos < best.pos) {
+      best = { pos, locality: String(locRaw).trim() };
+    }
   }
 
-   return best.locality || '';
-  }
+  return best.locality || '';
+}
 function smxEscapeRegex(s){
   return String(s ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -13641,19 +13643,28 @@ function smxResolveStreetSegmentLocality(entry, houseNumber) {
  * - Straße mit segments + Hausnummer => segmentierter Treffer ("segment")
  * - mehrdeutige Straße ohne Segmenttreffer => kein Treffer
  */
-function smxPassesContextFilter(variant, context) {
+function smxPassesContextFilter(variant, fullText) {
   const white = variant.white ?? [];
   const black = variant.black ?? [];
 
+  const textCanon = smxCanonLoc(fullText);
+
+  // Blacklist blockiert sofort
   for (const b of black) {
-    if (context.includes(b)) return false;
+    const bc = smxCanonLoc(b);
+    if (textCanon.includes(bc)) {
+      return false;
+    }
   }
 
+  // Whitelist: muss matchen, wenn vorhanden
   if (white.length) {
-    return white.some(w => context.includes(w));
+    return white.some(w => {
+      const wc = smxCanonLoc(w);
+      return textCanon.includes(wc);
+    });
   }
-
-  return true;
+  return true; // Standard: erlaubt
 }
 function smxExtractStreetLocalityHits(text) {
   const canonText = smxCanonLoc(text);
@@ -13697,7 +13708,7 @@ function smxExtractStreetLocalityHits(text) {
 
         // optional: Kontextfilter (Whitelist / Blacklist)
         if (typeof smxPassesContextFilter === 'function') {
-          if (!smxPassesContextFilter(variant, context)) {
+          if (!smxPassesContextFilter(variant, canonText)) {
             continue;
           }
         }
@@ -14148,9 +14159,12 @@ function smxExtractStichwort(values){
 }
 
 // Nummern-Erkennung und RED-Dateiname bauen
-function guessArticleNumber(list, min=5, max=12){
-  const re = new RegExp(`\\b${smxEscapeRegex(canonNeedle)}\\b`, 'i');
-  for(const s of list){ const m = String(s??'').match(re); if(m) return m[1]; }
+function guessArticleNumber(list, min = 5, max = 12){
+  const re = new RegExp(`\\b(\\d{${min},${max}})\\b`);
+  for (const s of list) {
+    const m = String(s ?? '').match(re);
+    if (m) return m[1];
+  }
   return '';
 }
 function getExistingNumberFromField(inputEl){
