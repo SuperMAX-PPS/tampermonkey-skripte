@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.4 Multi-Site Struktur
+// @name SuperMAX 7.0.5 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.4
+// @version 7.0.5
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17674,21 +17674,51 @@ function smxEventHasAccel(e) {
 }
 
 function smxEventKeyName(e) {
+  try {
+    const code = String(e?.code || '').trim();
+
+    // WICHTIG für Mac + Option/Alt:
+    // e.key kann durch Alt/Option zu Sonderzeichen werden.
+    // e.code bleibt die physische Taste: KeyS, KeyL, KeyR usw.
+    const mKey = code.match(/^Key([A-Z])$/);
+    if (mKey) return mKey[1];
+
+    const mDigit = code.match(/^Digit([0-9])$/);
+    if (mDigit) return mDigit[1];
+
+    const mNumpad = code.match(/^Numpad([0-9])$/);
+    if (mNumpad) return mNumpad[1];
+
+    const codeMap = {
+      Space: 'Space',
+      Escape: 'Escape',
+      Enter: 'Enter',
+      Tab: 'Tab',
+      Backspace: 'Backspace',
+      Delete: 'Delete',
+      ArrowUp: 'ArrowUp',
+      ArrowDown: 'ArrowDown',
+      ArrowLeft: 'ArrowLeft',
+      ArrowRight: 'ArrowRight'
+    };
+
+    if (codeMap[code]) return codeMap[code];
+  } catch {}
+
+  // Fallback: bisheriges Verhalten über e.key
   const raw = String(e?.key || '').trim();
   if (!raw) return '';
 
-  // Buchstaben/Ziffern normalisieren: s -> S, p -> P
   if (raw.length === 1) return raw.toUpperCase();
 
-  // Kleine Alias-Tabelle für Sondertasten
-  const map = {
+  const keyMap = {
     ' ': 'Space',
     Spacebar: 'Space',
     Esc: 'Escape',
     Del: 'Delete'
   };
 
-  return map[raw] || raw;
+  return keyMap[raw] || raw;
 }
 
 function smxKeyCombo(e) {
@@ -17701,16 +17731,45 @@ function smxKeyCombo(e) {
   // Auf Mac darf die echte Ctrl-Taste trotzdem separat unterscheidbar bleiben
   if (isMac && e.ctrlKey) parts.push('Ctrl');
 
-  if (e.altKey) parts.push('Alt');
-  if (e.shiftKey) parts.push('Shift');
+  const hasAlt = !!(
+    e.altKey ||
+    (typeof e.getModifierState === 'function' && e.getModifierState('Alt'))
+  );
+
+  const hasShift = !!(
+    e.shiftKey ||
+    (typeof e.getModifierState === 'function' && e.getModifierState('Shift'))
+  );
+
+  if (hasAlt) parts.push('Alt');
+  if (hasShift) parts.push('Shift');
 
   const key = smxEventKeyName(e);
 
   // Reine Modifier-Tasten ignorieren
-  if (!key || /^(Control|Ctrl|Alt|Shift|Meta|Command|OS)$/i.test(key)) return '';
+  if (!key || /^(Control|Ctrl|Alt|Shift|Meta|Command|OS|Dead)$/i.test(key)) return '';
 
   parts.push(key);
   return parts.join('+');
+}
+
+// Debug-Helfer für den Mac-Test einbauen (TEMPORÄR)
+
+function smxDebugHotkeyEvent(e, label = 'raw') {
+  try {
+    console.log('[SMX][HotkeyDebug]', label, {
+      key: e.key,
+      code: e.code,
+      combo: typeof smxKeyCombo === 'function' ? smxKeyCombo(e) : '',
+      ctrlKey: e.ctrlKey,
+      altKey: e.altKey,
+      shiftKey: e.shiftKey,
+      metaKey: e.metaKey,
+      modAlt: typeof e.getModifierState === 'function' ? e.getModifierState('Alt') : null,
+      modShift: typeof e.getModifierState === 'function' ? e.getModifierState('Shift') : null,
+      mac: typeof smxIsMacPlatform === 'function' ? smxIsMacPlatform() : null
+    });
+  } catch {}
 }
 
 // Lookup mit Legacy-Fallback:
@@ -17777,10 +17836,22 @@ function smxRouteHotkey(e) {
     DEFAULT_HOTKEYS[siteId] ||
     DEFAULT_HOTKEYS.CUE;
 
-  const combo = smxKeyCombo(e);
-  const hit = smxHotkeyLookup(map, combo);
+  // const combo = smxKeyCombo(e);
+  // const hit = smxHotkeyLookup(map, combo);
 
-  if (!hit?.action) return false;
+  // if (!hit?.action) return false;
+
+  // --- TEMPORÄRER ERSATZ FÜR MAC-TEST ---
+const combo = smxKeyCombo(e);
+const hit = smxHotkeyLookup(map, combo);
+
+// TEMP-Debug: zeigt auch nicht gematchte Mac-Option-Shortcuts
+if (!hit?.action && (e.metaKey || e.ctrlKey || e.altKey)) {
+  smxDebugHotkeyEvent(e, 'no-match');
+}
+
+if (!hit?.action) return false;
+// ENDE
 
   const parsed = smxParseHotkeyAction(hit.action);
 
