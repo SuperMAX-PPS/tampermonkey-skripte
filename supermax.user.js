@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 6.1.67 Multi-Site Struktur
+// @name SuperMAX 7.0.4 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 6.1.67
+// @version 7.0.4
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -102,27 +102,27 @@ window.SMX_CFG.profiles.EDITION.SUPERADD = window.SMX_CFG.profiles.EDITION.SUPER
 window.SMX_CFG.profiles.PUBLISH.SUPERADD = window.SMX_CFG.profiles.PUBLISH.SUPERADD || {};
 // --- STELLWERK: Hotkey-Mapping pro App (Hotkey -> "Modul.Methode" --------------------------------
 window.SMX_CFG.profiles.CUE.HOTKEYS = window.SMX_CFG.profiles.CUE.HOTKEYS || {
-  'Ctrl+S': 'SuperMAX.oneClick',
-  'Ctrl+Alt+S': 'SuperSHIRT.run',
-  'Ctrl+Alt+Shift+P': 'SuperPORT.fillAll',
-  'Ctrl+Alt+P': 'SuperPORT.probe',
-  'Ctrl+Alt+L': 'SuperLINK.run',
-  'Ctrl+E': 'SuperERASER.run',
-  'Ctrl+Alt+R': 'SuperRED.run'
+  'Accel+S': 'SuperMAX.oneClick',
+  'Accel+Alt+S': 'SuperSHIRT.run',
+  'Accel+Alt+Shift+P': 'SuperPORT.fillAll',
+  'Accel+Alt+P': 'SuperPORT.probe',
+  'Accel+Alt+L': 'SuperLINK.run',
+  'Accel+E': 'SuperERASER.run',
+  'Accel+Alt+R': 'SuperRED.run'
 };
-// DAM: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
+
 window.SMX_CFG.profiles.DAM.HOTKEYS = window.SMX_CFG.profiles.DAM.HOTKEYS || {
-  'Ctrl+S': 'SuperADD.oneClick',
+  'Accel+S': 'SuperADD.oneClick',
 };
-// EDITION: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
+
 window.SMX_CFG.profiles.EDITION.HOTKEYS = window.SMX_CFG.profiles.EDITION.HOTKEYS || {
-  'Ctrl+S': 'SuperADD.oneClick',
+  'Accel+S': 'SuperADD.oneClick',
 };
-// PUBLISH: bewusst schlank starten (nur ausgewählte Module/Hotkeys)
+
 window.SMX_CFG.profiles.PUBLISH.HOTKEYS = window.SMX_CFG.profiles.PUBLISH.HOTKEYS || {
-  'Ctrl+S': 'SuperADD.oneClick',
-  'Ctrl+Alt+L': 'SuperADD.link',
-  'Ctrl+E': 'SuperADD.eraser',
+  'Accel+S': 'SuperADD.oneClick',
+  'Accel+Alt+L': 'SuperADD.link',
+  'Accel+E': 'SuperADD.eraser',
 };
 
 // --- Optional: Modul-Whitelist pro App (zusätzliche Sicherheitsbremse) ---------------------------
@@ -1647,7 +1647,10 @@ streetDirectory: {
 "Antwerpener Straße":	    { districts: ["Mitte"], localities: ["Wedding"] },
 "Anzengruberstraße":{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Apfelblütenweg":   { districts: ["Pankow"], localities: ["Französisch Buchholz"] },
-"Apfelweg":	        { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
+"Apfelweg":	        { variants:  [
+                    { black:     ["bananenapfelweg", "edelapfelweg", "eiserapfelweg", "glasapfelweg", "herrgottsapfelweg", "jubiläumsapfelweg", "kantapfelweg", "klarapfelweg", "kornapfelweg", "landapfelweg", "mönchsapfelweg", "nelkenapfelweg", "paradiesapfelweg", "petersapfelweg", "pfaffenapfelweg", "prinzenapfelweg", "rosenapfelweg", "silberapfelweg", "stechapfelweg", "weinapfelweg"]},
+                    { localities:["Altglienicke"],             white: ["altglienicke", "köpenick", "treptow", "anne-frank-straße", "birnenweg", "cabuwazi", "erxlebenstraße", "grünbergallee", "krümelnest", "mohnweg", "ortolfstraße", "pfirsichweg", "quittenweg", "renettenweg", "schule am mohnweg", "venusstraße"] }
+                    ]},
 "Apfelwicklerstraße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Apoldaer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Apollofalterallee":{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -2712,7 +2715,8 @@ streetDirectory: {
 "Böhmisch-Lutherischer Bethlehems-Friedhof":	{ districts: ["Neukölln"], localities: ["Neukölln"] }, // Friedhof
 "Böhmisch-Reformierter Bethlehems-Friedhof":	{ districts: ["Neukölln"], localities: ["Neukölln"] }, // Friedhof
 "Bohm-Schuch-Weg":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },
-"Bohnenweg":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
+"Bohnenweg":	    { districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg", "Johannisthal"] }, // CHECKEN!
+
 "Bohnsacker Steig":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Bohnsdorfer Chaussee":	    { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Bohnsdorfer Kirchsteig":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
@@ -6664,7 +6668,8 @@ streetDirectory: {
 "Grundackerweg":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Gründerstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Gründerzeitmuseum":{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] }, // Museum
-"Grüne Aue":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
+"Grüne Aue":	    { districts: ["Marzahn-Hellersdorf", "Treptow-Köpenick"], localities: ["Biesdorf", "Baumschulenweg"] }, // CHECKEN
+
 "Grüne Trift am Walde":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Grüne Trift":	    { districts: ["Lichtenberg", "Treptow-Köpenick"], localities: ["Köpenick", "Wartenberg"] },
 
@@ -12234,7 +12239,7 @@ streetDirectory: {
 "Seerosensteig":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Seesener Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Halensee"] },
 "Seestraße":	    { variants:  [
-                    { black:     ["ammerseestraße", "baderseestraße", "baggerseestraße", "chausseestraße", "chiemseestraße", "dabelowseestraße", "dolgenseestraße", "eibseestraße", "flakenseestraße", "gehrenseestraße", "glindowseestraße", "große Seestraße", "halenseestraße", "heiligenseestraße", "hiddenseestraße", "huronseestraße", "kalkseestraße", "kochelseestraße", "kombibad seestraße", "königsseestraße", "kulmseestraße", "mellenseestraße", "michiganseestraße", "möllenseestraße", "oberseestraße", "ontarioseestraße", "ostseestraße", "peetzseestraße", "pohleseestraße", "rießerseestraße", "schlierseestraße", "schluchseestraße", "schwielowseestraße", "spirdingseestraße", "stienitzseestraße", "störitzseestraße", "tegernseestraße", "teufelsseestraße", "titiseestraße", "üderseestraße", "urnenfriedhof seestraße", "walchenseestraße", "walderseestraße", "werlseestraße", "wetterseestraße", "wupatzseestraße", "würmseestraße", "zernseestraße"] },
+                    { black:     ["ammerseestraße", "baderseestraße", "baggerseestraße", "chausseestraße", "chiemseestraße", "dabelowseestraße", "dolgenseestraße", "eibseestraße", "flakenseestraße", "gehrenseestraße", "glindowseestraße", "große Seestraße", "halenseestraße", "heiligenseestraße", "hiddenseestraße", "huronseestraße", "kalkseestraße", "kochelseestraße", "kombibad seestraße", "königsseestraße", "kulmseestraße", "mellenseestraße", "michiganseestraße", "möllenseestraße", "oberseestraße", "ontarioseestraße", "ostseestraße", "peetzseestraße", "pohleseestraße", "rießerseestraße", "schlierseestraße", "schluchseestraße", "schwielowseestraße", "spirdingseestraße", "stienitzseestraße", "störitzseestraße", "tegernseestraße", "teufelsseestraße", "titiseestraße", "üderseestraße", "urnenfriedhof seestraße", "walchenseestraße", "walderseestraße", "werlseestraße", "wetterseestraße", "wupatzseestraße", "würmseestraße", "zernseestraße"]},
                     { localities:["Charlottenburg-Nord"], white: ["charlottenburg", "wilmersdorf"] },
                     { localities:["Hermsdorf"],           white: ["hermsdorf", "reinickendorf"] },
                     { localities:["Mahlsdorf"],           white: ["hellersdorf", "mahlsdorf", "marzahn"] },
@@ -12783,6 +12788,7 @@ streetDirectory: {
                     { localities:["Alt-Hohenschönhausen"],white: ["13053", "straße 150", "straße 155", "alt-hohenschönhausen", "lichtenberg", "gärtnerstraße", "laakegraben", "rhinstraße"] },
                     { localities:["Alt-Hohenschönhausen"],white: ["13053", "straße 156", "alt-hohenschönhausen", "lichtenberg", "gärtnerstraße", "laakegraben", "marzahner straße", "rhinstraße"] },
                     { localities:["Alt-Hohenschönhausen"],white: ["13053", "straße 158", "alt-hohenschönhausen", "lichtenberg", "plauener straße", "rhinstraße", "treffurter straße"] },
+                    { localities:["Baumschulenweg"],      white: ["12487", "straße 207", "baumschulenweg", "treptow", "A113", "am hederichweg", "bohnenweg", "ginkgoweg", "grüne aue", "hederichweg", "springbornstraße", "stubenrauchstraße", "teltowkanal", "wegegrün"] },
                     { localities:["Blankenburg"],         white: ["13129", "straße 7", "straße 47", "blankenburg", "pankow", "A114", "hartmutstraße", "heimburgstraße", "panke", "rhönstraße", "rudelsburgstraße", "rüdigerstraße"] },
                     { localities:["Blankenburg"],         white: ["13129", "straße 18", "blankenburg", "pankow", "eifelstraße", "fußball", "gartenstraße", "ilsenburggraben", "ilsenburgstraße", "priesterstege", "SG blankenburg", "vogesenstraße"] },
                     { localities:["Blankenburg"],         white: ["13129", "straße 26", "straße 27", "straße 56", "blankenburg", "pankow", "karower damm", "klagenfurter straße", "linderberger weg", "okertalstraße", "treseburger straße", "villacher straße"] },
@@ -12790,9 +12796,30 @@ streetDirectory: {
                     { localities:["Blankenburg"],         white: ["13129", "straße 36", "straße 38", "straße 39", "straße 40", "blankenburg", "pankow", "blankenburger chaussee", "upstallgraben"] },
                     { localities:["Blankenburg"],         white: ["13129", "straße 42", "straße 24", "blankenburg", "pankow", "brockenweg", "georgenstraße", "kirchstraße", "lindenberger weg", "mühlenstraße", "suderoder graben", "ziegelstraße"] },
                     { localities:["Blankenburg"],         white: ["13129", "straße 87", "blankenburg", "pankow", "A114", "flaischlenstraße", "frankensteinstraße", "frankenstraße", "königsteinbrücke", "laake"] },
+                    { localities:["Britz"],               white: ["12347", "straße 614", "britz", "neukölln", "behinderte", "britzer damm", "franz-körner-straße", "hippelstraße", "integration", "kindertagesstätte", "lebenshilfe", "spielstraße", "teltowkanal", "wohnheim"] },
+
+
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 28", "straße 30", "französisch buchholz", "pankow", "apfelblütenweg", "birnenblütenweg", "cevennenstraße", "chantiéweg", "fliederblütenweg", "mirabellenblütenweg", "nisbléstraße", "pflaumenblütenweg", "rosenthaler straße", "schönhauser straße", "suzetteweg"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 42", "straße 44", "französisch buchholz", "pankow", "blankenburger weg", "einsiedelring", "margaretenaue", "panke", "pasewalker straße"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 55", "straße 160", "französisch buchholz", "pankow", "buchholz", "dr.-markus-straße", "ferdinand-buisson-straße", "graben 60", "ludwig-quidde-straße", "nizzastraße", "panke", "parkgraben"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 59", "französisch buchholz", "pankow", "bahnhofstraße", "blankenburger weg", "ferdinand-buisson-straße", "panke", "parkgraben", "pasewalker straße"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 72", "straße 73", "straße 74", "französisch buchholz", "pankow", "eddastraße", "edelapfelweg", "glasapfelweg", "gravenstein", "gravensteinstraße", "klarapfelweg", "ludwig-quidde-straße", "mönchsapfelweg", "nelkenapfelweg", "panke", "parkstraße", "viktoriapark", "weinapfelweg"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 76", "straße 76a", "straße 77", "straße 77a", "straße 89", "straße 175", "französisch buchholz", "pankow", "A114", "brendegraben", "bucher straße", "eddastraße", "glasapfelweg", "gravensteinstraße", "herrgottsapfelweg", "prinzenapfelweg", "rosenapfelweg", "silberapfelweg", "tomatenweg", "töpperweg"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 103", "französisch buchholz", "pankow", "A114", "baltrumstraße", "becken", "bucher straße", "pappelgrund"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 123", "straße 124", "französisch buchholz", "pankow", "blankenfelde", "blankenfelder straße", "buchholzer straße", "favierweg", "gartenvörde", "graben 5", "kapellenweg", "koppelgraben", "krugpfuhl", "möllersfelde", "schillingweg", "weg A", "weg B"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 145", "französisch buchholz", "pankow", "guyotstraße", "henrionweg", "mazetstraße", "nantesstraße", "nisbléstraße", "nordgraben", "picardieweg"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 147", "französisch buchholz", "pankow", "blankenfelder straße", "chartronstraße", "la-rochelle-straße", "nisbléstraße", "stadtgärten", "saupéweg"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 163", "straße 164", "straße 165", "straße 166", "straße 167", "französisch buchholz", "pankow", "eddastraße", "gellertstraße", "ludwig-quidde-straße", "viktoriapark"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 179", "straße 180", "französisch buchholz", "pankow", "A114", "baltrumstraße", "brendegraben", "pappelgrund", "schönerlinder straße", "straße nach arkenberge"] },
+                    { localities:["Französisch Buchholz"],white: ["13127", "straße 182", "straße 199", "französisch buchholz", "pankow", "akkordeonweg", "blankenburger straße", "buchholzer straße", "fagottstraße", "grumbkowstraße", "hoffnung", "karlinekenweg", "okarinastraße", "pasewalker straße", "schönhauser straße", "wackenbergstraße", "zimbelstraße"] },
+
+                    { localities:["Neukölln"],            white: ["12347", "straße 614", "britz", "neukölln", "behinderte", "britzer damm", "franz-körner-straße", "hippelstraße", "integration", "kindertagesstätte", "lebenshilfe", "spielstraße", "teltowkanal", "wohnheim"] },
+
+                    { localities:["Niederschönhausen"],   white: ["13156", "straße 103", "niederschönhausen", "pankow", "blankenburger straße", "charlottenstraße", "friedhof", "herthaplatz", "klothildestraße", "lyonstraße", "spatzenhaus", "stechowstraße", "wackenbergstraße"] },
+
                     // OLD STYLE
                     { localities:["Borsigwalde"],         white: ["13509", "straße 12", "borsigwalde", "reinickendorf", "allerheiligenkirche", "alt-wittenau", "am nordgraben", "borsigwalde 1910", "borsigwalder weg", "eichborndamm", "ernststraße", "evangelisch", "fußball", "gnade-christi-kirche", "grundschule", "katholisch", "kirchengemeinde", "klinnerweg", "kriegsopfer", "miraustraße", "peter-witte", "räuschstraße", "rüdnitzer zeile", "schubartstraße", "tietzstraße"] },
-                    { localities:["Britz"],               white: ["12347", "straße 174", "straße 614", "britz", "neukölln", "am teltowkanal", "behinderte", "britzer damm", "buschkrugallee", "buschrosenplatz", "buschrosensteig", "franz-körner-straße", "grundschule", "hannemannstraße", "herman-nohl", "hermannstraße", "hippelstraße", "integration", "kindertagesstätte", "lebenshilfe", "pintschallee", "rathaus britz", "rungiusstraße", "spielstraße", "teltowkanal", "vivantes", "wohnheim", "wussowstraße"] },
+
                     { localities:["Buch"],                white: ["13125", "straße 4", "straße 5", "straße 6", "straße 7", "buch", "pankow", "akademie der gesundheit", "alwall-haus", "am stener berg", "ilse-krause-straße", "nadrauer straße", "panke", "pankeland", "rosa-coutelle-straße", "rose-scheuer-karpin-streaße", "röntgental", "schwanebeck", "sudauer straße", "villa kunterbunt", "zepernicker straße", "zillertaler straße"] },
                     { localities:["Buch"],                white: ["13125", "straße 10", "straße 40", "buch", "pankow", "alt-karow", "grundschule", "karower knirpse", "königsteinstraße", "liebenstraße", "nahestraße", "nettestraße", "siegstraße", "streckfußstraße", "upstallgraben"] },
                     { localities:["Buch"],                white: ["13125", "straße 34", "straße 41", "buch", "pankow", "alt-karow", "blankenburger chaussee", "grundschule", "karower knirpse", "kattowitzer straße", "schräger weg", "steinauer straße", "tarnowitzer straße", "upstrallgraben"] },
@@ -17604,48 +17631,190 @@ function getActiveEditable(){ try{ const sel=window.getSelection?.(); const n=se
 
 //// KAPITEL 4 //// ENGINES & HELPERS //////////////////////////////////////////////////////////////
 //// KAPITEL 4.1 // Hotkeys /////////////////////////////////////////////////////////////////////////
+// NEU --- Beginn Version 7.0.2 für Win+Mac-Kompativilität ---
 const DEFAULT_HOTKEYS = {
-CUE: {
-'Ctrl+S':'SuperMAX.oneClick',
-'Ctrl+Alt+S':'SuperSHIRT.run',
-'Ctrl+Alt+Shift+P':'SuperPORT.fillAll',
-'Ctrl+Alt+P':'SuperPORT.probe',
-'Ctrl+Alt+L':'SuperLINK.run',
-'Ctrl+Shift+L':'SuperLINK.run',
-'Ctrl+Shift+Alt+L':'SuperLINK.run',
-'Ctrl+E':'SuperERASER.run',
-'Ctrl+Alt+R':'SuperRED.run'
-}
+  CUE: {
+    'Accel+S': 'SuperMAX.oneClick',
+    'Accel+Alt+S': 'SuperSHIRT.run',
+    'Accel+Alt+Shift+P': 'SuperPORT.fillAll',
+    'Accel+Alt+P': 'SuperPORT.probe',
+    'Accel+Alt+L': 'SuperLINK.run',
+    'Accel+Shift+L': 'SuperLINK.run',
+    'Accel+Shift+Alt+L': 'SuperLINK.run',
+    'Accel+E': 'SuperERASER.run',
+    'Accel+Alt+R': 'SuperRED.run'
+  },
+  DAM: {
+    'Accel+S': 'SuperADD.oneClick'
+  },
+  EDITION: {
+    'Accel+S': 'SuperADD.oneClick'
+  },
+  PUBLISH: {
+    'Accel+S': 'SuperADD.oneClick',
+    'Accel+Alt+L': 'SuperADD.link',
+    'Accel+E': 'SuperADD.eraser'
+  }
 };
-function smxKeyCombo(e) {
-const parts = [];
-if (e.ctrlKey) parts.push('Ctrl');
-if (e.altKey) parts.push('Alt');
-if (e.shiftKey) parts.push('Shift');
-parts.push(String(e.key || '').toUpperCase());
-return parts.join('+');
-}
-function smxRouteHotkey(e) {
-const a = currentAdapter(); const siteId = (a?.id || 'CUE').toUpperCase();
-const map = smxGetCfgProfile(siteId)?.HOTKEYS || DEFAULT_HOTKEYS[siteId] || DEFAULT_HOTKEYS.CUE;
-const combo = smxKeyCombo(e);
-const action = map?.[combo];
-if (!action) return false;
-e.preventDefault();
-// CUE-Schutz: verhindere CUE-eigene Hotkey-Handler (Scroll zur Bildübersicht etc.)
-if (siteId === 'CUE' && combo === 'Ctrl+Alt+R') {
-  try { e.stopImmediatePropagation(); } catch {}
-  try { e.stopPropagation(); } catch {}
-}
-const [mod, fn] = action.split('.');
-const m = MODULES[mod];
-if (m && typeof m[fn] === 'function') { m[fn](); return true; }
-smxToast(`Aktion nicht gefunden: ${action}`, false);
-return false;
-try { console.log('[SMX][Hotkey]', { siteId, combo, action }); } catch {}
-if (!action) return false;
+
+// Plattform-Erkennung: Accel = Windows/Linux Ctrl, Mac Command
+function smxIsMacPlatform() {
+  try {
+    const uaData = navigator.userAgentData;
+    if (uaData?.platform) return /mac/i.test(uaData.platform);
+
+    return /mac/i.test(navigator.platform || navigator.userAgent || '');
+  } catch {
+    return false;
+  }
 }
 
+function smxEventHasAccel(e) {
+  return smxIsMacPlatform() ? !!e.metaKey : !!e.ctrlKey;
+}
+
+function smxEventKeyName(e) {
+  const raw = String(e?.key || '').trim();
+  if (!raw) return '';
+
+  // Buchstaben/Ziffern normalisieren: s -> S, p -> P
+  if (raw.length === 1) return raw.toUpperCase();
+
+  // Kleine Alias-Tabelle für Sondertasten
+  const map = {
+    ' ': 'Space',
+    Spacebar: 'Space',
+    Esc: 'Escape',
+    Del: 'Delete'
+  };
+
+  return map[raw] || raw;
+}
+
+function smxKeyCombo(e) {
+  const parts = [];
+  const isMac = smxIsMacPlatform();
+
+  // Hauptmodifier plattformneutral
+  if (smxEventHasAccel(e)) parts.push('Accel');
+
+  // Auf Mac darf die echte Ctrl-Taste trotzdem separat unterscheidbar bleiben
+  if (isMac && e.ctrlKey) parts.push('Ctrl');
+
+  if (e.altKey) parts.push('Alt');
+  if (e.shiftKey) parts.push('Shift');
+
+  const key = smxEventKeyName(e);
+
+  // Reine Modifier-Tasten ignorieren
+  if (!key || /^(Control|Ctrl|Alt|Shift|Meta|Command|OS)$/i.test(key)) return '';
+
+  parts.push(key);
+  return parts.join('+');
+}
+
+// Lookup mit Legacy-Fallback:
+// Falls irgendwo noch alte Ctrl-Mappings stehen, funktionieren sie weiterhin.
+function smxHotkeyLookup(map, combo) {
+  if (!map || !combo) return null;
+
+  // 1) Neue Schreibweise
+  if (map[combo]) {
+    return { combo, action: map[combo] };
+  }
+
+  // 2) Legacy: Accel+... darf alte Ctrl+... Einträge treffen
+  if (combo.startsWith('Accel+')) {
+    const legacyCtrl = combo.replace(/^Accel\+/, 'Ctrl+');
+    if (map[legacyCtrl]) {
+      return { combo: legacyCtrl, action: map[legacyCtrl] };
+    }
+  }
+
+  return null;
+}
+
+function smxParseHotkeyAction(action) {
+  const m = String(action || '').trim().match(/^([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)$/);
+  return m ? { mod: m[1], fn: m[2] } : null;
+}
+
+function smxRunHotkeyAction(action) {
+  const parsed = smxParseHotkeyAction(action);
+  if (!parsed) return false;
+
+  const modObj = MODULES?.[parsed.mod];
+  const fn = modObj?.[parsed.fn];
+
+  if (typeof fn !== 'function') {
+    smxToast(`Aktion nicht gefunden: ${action}`, false);
+    return false;
+  }
+
+  try {
+    fn.call(modObj);
+    return true;
+  } catch (err) {
+    console.warn('[SMX][HotkeyAction] Fehler:', action, err);
+    smxToast(`Fehler bei Aktion: ${action}`, false);
+    return false;
+  }
+}
+
+function smxRouteHotkey(e) {
+  const appId = (typeof smxStellwerkGetAppId === 'function')
+    ? smxStellwerkGetAppId()
+    : null;
+
+  const siteId = String(appId || currentAdapter()?.id || 'CUE').toUpperCase();
+
+  const profile = (typeof smxGetCfgProfile === 'function')
+    ? (smxGetCfgProfile(siteId) || {})
+    : (window.SMX_CFG?.profiles?.[siteId] || {});
+
+  const map =
+    profile?.HOTKEYS ||
+    DEFAULT_HOTKEYS[siteId] ||
+    DEFAULT_HOTKEYS.CUE;
+
+  const combo = smxKeyCombo(e);
+  const hit = smxHotkeyLookup(map, combo);
+
+  if (!hit?.action) return false;
+
+  const parsed = smxParseHotkeyAction(hit.action);
+
+  // Modul-Whitelist aus STELLWERK respektieren
+  const allow = Array.isArray(profile?.ALLOW_MODULES)
+    ? new Set(profile.ALLOW_MODULES)
+    : null;
+
+  if (allow && parsed?.mod && !allow.has(parsed.mod)) {
+    try { smxToast(`Stellwerk: ${parsed.mod} ist in ${siteId} gesperrt`, false); } catch {}
+    try { e.preventDefault(); } catch {}
+    try { e.stopPropagation(); } catch {}
+    try { e.stopImmediatePropagation?.(); } catch {}
+    return true;
+  }
+
+  // Wichtig: Browser/CUE/TinyMCE sollen den Shortcut nicht vorher/eigenständig verarbeiten
+  try { e.preventDefault(); } catch {}
+  try { e.stopPropagation(); } catch {}
+  try { e.stopImmediatePropagation?.(); } catch {}
+
+  try {
+    console.log('[SMX][Hotkey]', {
+      siteId,
+      combo,
+      matchedCombo: hit.combo,
+      action: hit.action,
+      mac: smxIsMacPlatform()
+    });
+  } catch {}
+
+  return smxRunHotkeyAction(hit.action);
+}
+// NEU --- Ende Version 7.0.2 für Win+Mac-Kompativilität ---
 window.addEventListener('keydown', (e) => {
   // 1) Erst das reguläre Routing (inkl. Stellwerk-Gatekeeper-Patch)
   if (smxRouteHotkey(e)) return;
@@ -17655,6 +17824,7 @@ window.addEventListener('keydown', (e) => {
   try {
     swAppId = (typeof smxStellwerkGetAppId === 'function') ? smxStellwerkGetAppId() : null;
     swProfile = swAppId ? (smxGetCfgProfile?.(swAppId) || window.SMX_CFG?.profiles?.[swAppId] || null) : null;
+    swIsCore = String(swAppId || '').toUpperCase() === 'CUE';
 
     // Wichtig: {} (leeres HOTKEYS-Objekt) zählt als "Profil ist aktiv".
     swHasProfile = !!(swProfile && swProfile.HOTKEYS !== undefined);
@@ -17672,14 +17842,14 @@ window.addEventListener('keydown', (e) => {
 
   const k = e.key?.toLowerCase?.() ?? '';
 
-  if (e.ctrlKey && e.altKey && e.shiftKey && k === 'p') {
+  if (smxEventHasAccel(e) && e.altKey && e.shiftKey && k === 'p') {
     if (!allowFallback('SuperPORT')) return;
     e.preventDefault();
     fillAllEverywhere();
     return;
   }
 
-  if (e.ctrlKey && e.altKey && !e.shiftKey && k === '0') {
+  if (smxEventHasAccel(e) && e.altKey && !e.shiftKey && k === '0') {
     // Profil-Reset nur in CUE (oder wenn Stellwerk gar nicht aktiv ist)
     if (swIsCore || !swHasProfile) {
       e.preventDefault();
@@ -17688,7 +17858,7 @@ window.addEventListener('keydown', (e) => {
     return;
   }
 
-  if (e.ctrlKey && e.altKey && !e.shiftKey && k === 'p') {
+  if (smxEventHasAccel(e) && e.altKey && !e.shiftKey && k === 'p') {
     // "Prüfer"-Pfad: nur CUE oder wenn explizit erlaubt
     if (!swIsCore && swHasProfile && !allowFallback('SuperPORT')) return;
 
@@ -17787,7 +17957,10 @@ try {
       const combo = (typeof smxKeyCombo === 'function') ? smxKeyCombo(e) : null;
       if (!combo) return _orig.call(this, e);
 
-      const action = hotkeys[combo];
+      const hit = (typeof smxHotkeyLookup === 'function')
+      ? smxHotkeyLookup(hotkeys, combo)
+      : (hotkeys[combo] ? { combo, action: hotkeys[combo] } : null);
+      const action = hit?.action;
       if (!action) {
         // Nicht gemappt => Hotkey wird nicht von SuperMAX verarbeitet (verhindert Konflikte)
         return false;
@@ -20502,6 +20675,7 @@ GM_registerMenuCommand('SuperMAX – Tastaturkürzel', ()=>{
   try{ const box=document.createElement('div'); box.style.cssText='position:fixed;right:18px;top:18px;z-index:2147483647;background:#0b1e2d;color:#fff;border:1px solid #0d3a5c;border-radius:10px;padding:14px;max-width:560px;font:13px/1.35 system-ui,Segoe UI,Arial'; box.innerHTML=`
     <div style="font-weight:700;margin-bottom:8px">SuperMAX – Tastaturkürzel</div>
     <ul style="margin-top:10px;padding-left:18px">
+      Auf dem <b>MAC</b> bitte <b>CMD (⌘)</b> statt CTRL drücken<br><br>
       <li><b>SuperMAX Tastaturkürzel:</b></li>
       CTRL+S > RegEx- und Hashtag-Regeln
     </ul>
@@ -21199,11 +21373,12 @@ function smxAdd_installTinyMceHotkeyBridge() {
 
     const IF_FLAG = '__smxTinyHotkeyBound';
 
+
     const isSaveCombo = (e) =>
-      (e.ctrlKey || e.metaKey) &&
-      !e.altKey &&
-      !e.shiftKey &&
-      String(e.key || '').toLowerCase() === 's';
+    (typeof smxEventHasAccel === 'function' ? smxEventHasAccel(e) : (e.ctrlKey || e.metaKey)) &&
+    !e.altKey &&
+    !e.shiftKey &&
+    String(e.key || '').toLowerCase() === 's';
 
     const bindInnerDoc = (innerDoc) => {
       try {
