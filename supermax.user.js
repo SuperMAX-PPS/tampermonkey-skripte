@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.70 Multi-Site Struktur
+// @name SuperMAX 7.0.71 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.70
+// @version 7.0.71
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -223,7 +223,7 @@ ST:['Lankwitz','Lichterfelde','Steglitz-Zehlendorf','Steglitz'],
 SV:['Falkenhagener Feld','Gatow','Hakenfelde','Haselhorst','Kladow','Siemensstadt','Spandau','Wilhelmstadt'],
 TH:['Friedenau','Lichtenrade','Mariendorf','Marienfelde','Schöneberg','Tempelhof-Schöneberg','Tempelhof'],
 WI:['Charlottenburg-Wilmersdorf','Grunewald','Halensee','Schmargendorf','Wilmersdorf'],
-ZD:['Dahlem','Nikolassee','Schlachtensee','Steglitz-Zehlendorf','Zehlendorf'],
+ZD:['Dahlem','Nikolassee','Schlachtensee','Steglitz-Zehlendorf','Wannsee','Zehlendorf'],
 DL:['Berlin']
 },
 localityAliases: [
@@ -3591,7 +3591,7 @@ streetDirectory: {
 "Colditzstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Colmarer Weg":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Colomierstraße":	{ variants:  [
-                    { localities:["Wansee"],              white: ["liebermann-villa", "liebermann villa", "museum", "steglitz", "villa am wannssee", "zehlendorf"] },
+                    { localities:["Wannsee"],              white: ["liebermann-villa", "liebermann villa", "museum", "steglitz", "villa am wannssee", "wannsee", "zehlendorf"] },
                     ]},
 "Coloniaallee":	    { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Coloniapark":	    { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },	// Grünanlage
@@ -9720,6 +9720,7 @@ streetDirectory: {
 "Mausohrweg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
 "Mauswieselweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
 "Max Liebermann Haus":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
+"Max-Liebermann-Haus":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
 "Max-Beckmann-Platz":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
 "Max-Beer-Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Max-Born-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
