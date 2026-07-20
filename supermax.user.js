@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.73 Multi-Site Struktur
+// @name SuperMAX 7.0.74 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.73
+// @version 7.0.74
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -2542,7 +2542,7 @@ streetDirectory: {
                     { localities:["Steglitz"],            white: ["12165", "blindenbibliothek", "betty hirsch","rothenburgstraße", "zeune-schule"] },
                     { localities:["Steglitz"],            white: ["12165", "ingeborg drewitz", "ingeborg-drewitz", "das schloss", "stadtbibliothek-steglitz-zehlendorf", "grunewaldstraße" ] },
                     { localities:["Tegel"],               white: ["13507", "humboldt-bibliothek", "kinder- und jugendbibliothek", "karolinenstraße"] },
-                    { localities:["Tempelhof"],           white: ["12099", "bezirkszentralbibliothek", "eva maria buch", "eva-maria-buch-haus"", "götzstraße"] },
+                    { localities:["Tempelhof"],           white: ["12099", "bezirkszentralbibliothek", "eva maria buch", "eva-maria-buch-haus", "götzstraße"] },
                     { localities:["Tiergarten"],          white: ["10785", "ibero-amerikanischen instituts", "ibero-amerikanisches institut", "preußischer kulturbesitz", "potsdamer straße", "iai.spk-berlin", "kunstbibliothek ", "smb.museum", "matthäikirchplatz", "staatsbibliothek", "potsdamer straße", "staatsbibliothek-berlin", "tiergarten süd", "tiergarten-süd", "lützowstraße"] },
                     { localities:["Wedding"],             white: ["13353", "schiller-bibliothek", "müllerstraße"] },
                     { localities:["Weißensee"],           white: ["13088",  "wolfdietrich schnurre", "wolfdietrich-schnurre", "bizetstraße"] },
