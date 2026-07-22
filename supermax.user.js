@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.76 Multi-Site Struktur
+// @name SuperMAX 7.0.77 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.76
+// @version 7.0.77
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -11893,7 +11893,15 @@ streetDirectory: {
 "Rungiusbrücke":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Rungiusstraße":	{ districts: ["Neukölln"], localities: ["Britz"] },	// Spielplatz
 "Rupertweg":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
-"Ruppiner Chaussee":	{ districts: ["Reinickendorf"], localities: ["Heiligensee", "Tegel"] },
+"Ruppiner Chaussee":	{ variants:  [
+                    { localities:["Heiligensee"],         white: ["an der aussicht", "bahnhof", "henningsdorf", "henningsdorfer straße", "kiefheider weg", "neubrück", "stolpe-süd", "stolpmünder weg", "ziegwnorter pfad", "zur sonnenhöhe"] },
+                    { localities:["Tegel"],               white: [""] },
+                    { localities:["Heiligensee", "Tegel"],
+                      segments:  [
+                    { from: 0,   to: 0,    parity: "both", locality: "Heiligensee" },
+                    { from: 0,   to: 0,    parity: "both", locality: "Tegel" }]},
+                    { localities:["Heiligensee", "Tegel"] }
+                    ]},
 "Ruppiner Straße":	{ districts: ["Mitte"], localities: ["Gesundbrunnen", "Mitte"] },
 "Ruppiner-See-Straße":	{ districts: ["Spandau"], localities: ["Haselhorst"] },
 "Rupprechtstraße":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
@@ -11936,6 +11944,7 @@ streetDirectory: {
                     { from: 1,   to: 95,   parity: "both", locality: "Charlottenburg-Nord" },
                     { from: 100, to: 299,  parity: "both", locality: "Siemensstadt" },
                     { from: 317, to: 369,  parity: "both",  locality: "Haselhorst" }]},
+                    { localities:["Charlottenburg-Nord", "Haselhorst", "Siemensstadt"] }
                     ]},
 "Saatwinkler Steg":	{ districts: ["Spandau"], localities: ["Haselhorst"] },
 "Sabinensteig":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
@@ -14805,7 +14814,17 @@ streetDirectory: {
 "Wilhelmshöher Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },
 "Wilhelmsmühlenweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf", "Mahlsdorf"] },
 "Wilhelmsruh":	{ districts: ["Pankow"], localities: ["Wilhelmsruh"] },	// S-Bahnhof
-"Wilhelmsruher Damm":	{ districts: ["Pankow", "Reinickendorf"], localities: ["Märkisches Viertel", "Rosenthal", "Wittenau"] },
+"Wilhelmsruher Damm":	{ variants:  [
+                    { localities:["Märkisches Viertel"],  white: ["apostel-petrus", "benn", "beratungsstelle", "bibliothek", "dannenwalder weg", "eichhorster weg", "finsterwalder straße", "fontanehaus", "fontane-haus", "forumhaus", "gandenitzer weg", "germendorfer straße", "grundschule", "kindertheater", "kirchengemeinde", "kirchenmäuse", "königshorster straße", "markendorfer straße", "märkisches zentrum", "mäusekiste", "sankt martin", "st. martin", "senftenberger ring", "stadtplatz", "steinkirchener straße", "tiefenseer straße", "treuenbritzener straße"] },
+                    { localities:["Rosenthal"],           white: ["friedrich-engels-straße", "hauptstraße", "pankow", "rosenthal nord", "rosenthal-nord", "uhlandstraße"] },
+                    { localities:["Wittenau"],            white: ["amboßweg", "bahnhof", "bauhaus", "eichborndamm", "oranienburger straße", "volkspark", "zangengasse"] },
+                    { localities:["Märkisches Viertel", "Rosenthal", "Wittenau"],
+                      segments:  [
+                    { from: 1,   to: 23,  parity: "both", locality: "Rosenthal" },
+                    { from: 30,  to: 228, parity: "both", locality: "Märkisches Viertel" },
+                    { from: 229, to: 246, parity: "both", locality: "Wittenau" }]},
+                    { localities:["Märkisches Viertel", "Rosenthal", "Wittenau"] }
+                    ]},
 "Wilhelm-Stolze-Straße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Wilhelmstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte", "Reinickendorf", "Spandau"], localities: ["Hermsdorf", "Kreuzberg", "Mitte", "Wilhelmstadt"] },
 "Wilhelm-von-Siemens-Park":	{ districts: ["Spandau"], localities: ["Siemensstadt"] },
@@ -16169,13 +16188,15 @@ const CFG_DEFAULTS = {
         { pattern: "#(?:René Rögner-Francke|Rögner-Francke)\\b", flags: "gu", replacement: "René Rögner-Francke (CDU)" },
         { pattern: "##(?:Carolina Böhm|Böhm)\\b", flags: "gu", replacement: "Carolina Böhm (SPD), Stadträtin für Jugend und Gesundheit" },
         { pattern: "#(?:Carolina Böhm|Böhm)\\b", flags: "gu", replacement: "Carolina Böhm (SPD)" },
+        { pattern: "##(?:Malgorzata Sijbrandij|Sijbrandij)\\b", flags: "gu", replacement: "Malgorzata Sijbrandij (CDU), Stadträtin für Bildung, Kultur und Sport" },
+        { pattern: "#(?:Malgorzata Sijbrandij|Sijbrandij)\\b", flags: "gu", replacement: "Malgorzata Sijbrandij (CDU)" },
         { pattern: "##(?:Maren Schellenberg|Schellenberg)\\b", flags: "gu", replacement: "Maren Schellenberg (Bündnis 90/Die Grünen), Bürgermeisterin und Stadträtin für Finanzen, Personal und Facility Management" },
         { pattern: "#(?:Maren Schellenberg|Schellenberg)\\b", flags: "gu", replacement: "Maren Schellenberg (Bündnis 90/Die Grünen)" },
         { pattern: "##(?:Patrick Steinhoff|Steinhoff)\\b", flags: "gu", replacement: "Patrick Steinhoff (CDU), Stadtrat für Stadtentwicklung, Schule und Sport" },
         { pattern: "#(?:Patrick Steinhoff|Steinhoff)\\b", flags: "gu", replacement: "Patrick Steinhoff (CDU)" },
         { pattern: "##(?:Sören Grawert|Grawert)\\b", flags: "gu", replacement: "Stellvertretender BV-Vorsteher Sören Grawert (FDP)" },
         { pattern: "#(?:Sören Grawert|Grawert)\\b", flags: "gu", replacement: "Sören Grawert (FDP)" },
-        { pattern: "##(?:Tim Richter|Richter)\\b", flags: "gu", replacement: "Tim Richter (CDU), Stellvertretender Bürgermeister und Stadtrat für Bürgerdienste, Soziales, Bildung und Kultur" },
+        { pattern: "##(?:Tim Richter|Richter)\\b", flags: "gu", replacement: "Tim Richter (CDU), Stellvertretender Bürgermeister und Stadtrat für Bürgerdienste und Soziales" },
         { pattern: "#(?:Tim Richter|Richter)\\b", flags: "gu", replacement: "Tim Richter (CDU)" },
         { pattern: "##(?:Urban Aykal|Aykal)\\b", flags: "gu", replacement: "Urban Aykal (Bündnis 90/Die Grünen), Stadtrat für Ordnung, Umwelt- und Naturschutz, Straßen und Grünflächen" },
         { pattern: "#(?:Urban Aykal|Aykal)\\b", flags: "gu", replacement: "Urban Aykal (Bündnis 90/Die Grünen)" },
@@ -21407,7 +21428,7 @@ GM_registerMenuCommand('SuperMAX – Gendern (Hashtag-Regeln)', () => {
         <b>Neukölln</b><br>Karsten Schulze (CDU) • Gerrit Kringel (CDU) • Hannes Rehfeldt (CDU) • Janine Wolter (SPD) • Jochen Biedermann (Bündnis 90/Die Grünen) • Martin Hikel (SPD) • Sarah Nagel (Die Linke) • Lars Oeverdieck (SPD)<br><br>
         <b>Pankow</b><br>Oliver Jütting (Bündnis 90/Die Grünen) • Cornelius Bechtler (Bündnis 90/Die Grünen) • Dominique Krössin (Die Linke) •  Cordelia Koch (Bündnis 90/Die Grünen) • Jörn Pasternack (CDU) • Manuela Anders-Granitzki (CDU) • Rona Tietje (SPD) • David Paul (CDU)<br><br>
         <b>Reinickendorf</b><br>Alexander Ewers (SPD) • Kerstin Köppen (CDU) • Emine Demirbüken-Wegner (CDU) • Harald Muschner (CDU) • Julia Schrod-Thiel (CDU) • Korinna Stephan (Bündnis 90/Die Grünen) • Sevda Boyraci (SPD) • Uwe Brockhausen (SPD)<br><br>
-        <b>Steglitz-Zehlendorf</b><br>René Rögner-Francke (CDU) • Carolina Böhm (SPD) • Maren Schellenberg (Bündnis 90/Die Grünen) • Patrick Steinhoff (CDU) • Sören Grawert (FDP) • Tim Richter (CDU) • Urban Aykal (Bündnis 90/Die Grünen)<br><br>
+        <b>Steglitz-Zehlendorf</b><br>René Rögner-Francke (CDU) • Carolina Böhm (SPD) • Malgorzata Sijbrandij (CDU) • Maren Schellenberg (Bündnis 90/Die Grünen) • Patrick Steinhoff (CDU) • Sören Grawert (FDP) • Tim Richter (CDU) • Urban Aykal (Bündnis 90/Die Grünen)<br><br>
         <b>Spandau</b><br>Christian Heck (CDU) •  Carola Brückner (SPD) • Frank Bewig (CDU) • Gregor Kempert (SPD) • Uwe Ziesak (SPD) • Tanja Franzke (CDU) • Thorsten Schatz (CDU)<br><br>
         <b>Tempelhof-Schöneberg</b><br>Stefan Böltes (SPD) •  Saskia Ellenbeck (Bündnis 90/Die Grünen) • Eva Majewski (CDU) • Jörn Oltmann (Bündnis 90/Die Grünen) • Matthias Steuckardt (CDU) • Oliver Schworck (SPD) • Martina Zander-Rade (Bündnis 90/Die Grünen) • Tobias Dollase (parteilos für die CDU)<br><br>
         <b>Treptow-Köpenick</b><br>André Grammelsdorff (CDU) • Bernd Geschanowski (AfD) • Peter Groos (SPD) • Carolin Weingart (Die Linke) •  Claudia Leistner (Bündnis 90/Die Grünen) • Marco Brauchmann (CDU) • Oliver Igel (SPD) • André Schubert (Die Linke)<br></ul>
