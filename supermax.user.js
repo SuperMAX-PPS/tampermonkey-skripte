@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.75 Multi-Site Struktur
+// @name SuperMAX 7.0.76 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.75
+// @version 7.0.76
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -6979,9 +6979,11 @@ streetDirectory: {
 "Gutzmannstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Guyotstraße":	    { districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Gymnasium":        { variants:  [
-                    { localities:["Alt-Hohenschönhausen"],white: ["manfred von ardenne", "manfred-von-ardenne", "ardenne-gymnasium", "werneuchener straße"] },
+                    { localities:["Alt-Hohenschönhausen"],white: ["manfred von ardenne", "manfred-von-ardenne", "ardenne-gymnasium", "werneuchener straße"] },
                     { localities:["Biesdorf"],            white: ["otto-nagel-gymnasium", "ong.berlin", "schulstraße"] },
                     { localities:["Biesdorf"],            white: ["wilhelm von siemens", "wilhelm-von-siemens", "wilhelm-von-siemens-gymnasium", "wvsiemens-berlin", "allee der kosmonauten"] },
+                    { localities:["Britz"],               white: ["albert einstein", "alber-einstein", "albert-einstein-gymnasium", "aeo.de", "parchimer Allee"] },
+                    { localities:["Buckow"],              white: ["leonardo da vinci", "leonardo-da-vinci", "leonardo-da-vinci-gymnasium", "christoph-ruden-straße"] },
                     { localities:["Charlottenburg"],      white: ["gottfried keller", "gottfried-keller", "gks-berlin", "olbersstraße"] },
                     { localities:["Charlottenburg"],      white: ["mentora gymnasium", "mentora-gymnasium", "mentora-schule", "salzufer"] },
                     { localities:["Charlottenburg"],      white: ["privates europa-gymnasium", "europa-gymnasium", "haubachstraße"] },
@@ -6993,24 +6995,47 @@ streetDirectory: {
                     { localities:["Friedrichshain"],      white: ["dathe-schule", "dathe-gymnasium", "heinrich dathe", "helsingforser straße"] },
                     { localities:["Friedrichshain"],      white: ["georg friedrich händel", "georg-friedrich-händel", "haendelgym", "frankfurter allee"] },
                     { localities:["Friedrichshain"],      white: ["heinrich hertz", "heinrich-hertz", "hhgym", "rigaer straße"] },
+                    { localities:["Gesundbrunnen"],       white: ["diesterweg-gymnasium", "dwgym", "böttgerstraße"] },
                     { localities:["Grunewald"],           white: ["hildegard wegscheider", "hildegard-wegscheider", "wegscheider-gymnasium", "lassenstraße"] },
                     { localities:["Grunewald"],           white: ["walther rathenau", "walther-rathenau", "wrg-berlin", "herbertstraße"] },
+                    { localities:["Hansaviertel"],        white: ["gymnasium tiergarten", "gymnasium-tiergarten", "altonaer straße"] },
                     { localities:["Hellersdorf"],         white: ["12. schule", "adw.berlin", "erich-kästner-straße"] },
                     { localities:["Hellersdorf"],         white: ["melanchthon-gymnasium", "adele-sandrock-straße"] },
                     { localities:["Hellersdorf"],         white: ["sartre-gymnasium", "kyritzer straße"] },
                     { localities:["Karlshorst"],          white: ["hans-und-hilde-coppi", "coppi-gym", "römerweg"] },
+                    { localities:["Karow"],               white: ["robert havemann", "robert-havemann", "robert havemann gymnasium", "robert-havemann-gymnasium", "achillesstraße"] },
                     { localities:["Kreuzberg"],           white: ["hermann hesse", "hermann-hesse", "hesse-kreuzberg", "böckhstraße"] },
                     { localities:["Kreuzberg"],           white: ["leibniz-gymnasium", "leibniz-schule", "leibnizschule-berlin", "schleiermacherstraße"] },
                     { localities:["Kreuzberg"],           white: ["robert koch", "robert-koch", "dieffenbachstraße"] },
                     { localities:["Lichtenberg"],         white: ["12. schule", "gym.adkosmos", "allee der kosmonauten"] },
-                    { localities:["Marzahn"],             white: [ "tagore gymnasium", "tagore-gymnasium", "sella-hasse-straße"] },
+                    { localities:["Marzahn"],             white: ["tagore gymnasium", "tagore-gymnasium", "sella-hasse-straße"] },
+                    { localities:["Mitte"],               white: ["john lennon", "john-lennon", "john-lennon-gymnasium", "jlgym-berlin", "zehdenicker straße"] },
+                    { localities:["Mitte"],               white: ["jüdisches gymnasium", "moses", "mendelssohn", "jgmm", "große hamburger straße"] },
+                    { localities:["Mitte"],               white: ["max planck", "max-planck", "max-planck-gymnasium", "mpg-berlin", "singerstraße"] },
+                    { localities:["Mitte"],               white: ["musikgymnasium", "carl philipp emanuel bach", "musikgymnasium-berlin", "rheinsberger straße"] },
+                    { localities:["Moabit"],              white: ["rosalind franklin", "rosalind-franklin", "rosalind-franklin-gymnasium", "turmstraße"] },
+                    { localities:["Neukölln"],            white: ["albert schweitzer", "albert-schweitzer", "albert-schweitzer-gymnasium", "die-schweitzer", "karl-marx-straße"] },
+                    { localities:["Neukölln"],            white: ["albrecht dürer", "albrecht-dürer", "albrecht-dürer-gymnasium", "albrecht-duerer-gymnasium", "emser straße"] },
+                    { localities:["Neukölln"],            white: ["ernst abbe", "ernst-abbe", "ernst-abbe-gymnasium", "sonnenallee"] },
+                    { localities:["Niederschönhausen"],   white: ["max delbrück", "max-delbrück", "max-delbrück-gymnasium", "kuckhoffstraße"] },
+                    { localities:["Pankow"],              white: ["carl von ossietzky", "carl-von-ossietzky", "carl-von-ossietzky-gymnasium", "cvo.berlin", "görschstraße"] },
+                    { localities:["Pankow"],              white: ["rosa luxemburg", "rosa-luxemburg", "rosa luxemburg gymnasium", "rosa-luxemburg-gymnasium", "kissingenstraße"] },
+                    { localities:["Prenzlauer Berg"],     white: ["felix mendelssohn bartholdy", "felix-mendelssohn-bartholdy", "felix-mendelssohn-bartholdy-gymnasium", "fmbg-berlin", "pasteurstraße"] },
+                    { localities:["Prenzlauer Berg"],     white: ["heinrich schliemann", "heinrich-schliemann", "heinrich-schliemann-gymnasium", "heinrich-schliemann-schule", "hsg-berlin", "dunckerstraße"] },
+                    { localities:["Prenzlauer Berg"],     white: ["käthe kollwitz", "käthe-kollwitz", "käthe-kollwitz-gymnasium", "kaethe-kollwitz-gymnasium", "dunckerstraße"] },
+                    { localities:["Rudow"],               white: ["hannah arendt", "hannah-arendt", "hannah-arendt-gymnasium", "hag-berlin", "elfriede-kuhr-straße"] },
                     { localities:["Rummelsburg"],         white: ["immanuel kant", "immanuel-kant-gymnasium", "kant-gymnasium", "lückstraße"] },
                     { localities:["Schmargendorf"],       white: ["evangelisches gymnasium zum grauen kloster", "graues-kloster", "zum grauen kloster", "salzbrunner straße"] },
+                    { localities:["Tiergarten"],          white: ["französisches gymnasium", "fg-berlin", "derfflingerstraße"] },
+                    { localities:["Wedding"],             white: ["lessing-gymnasium", "schöningstraße"] },
+                    { localities:["Weißensee"],           white: ["katholische theresienschule", "kath. theresienschule", "theresienschule", "gymnasium", "behaimstraße"] },
+                    { localities:["Weißensee"],           white: ["primo levi gymnasium", "primo-levi-gymnasium", "plg-berlin", "pistoriusstraße"] },
                     { localities:["Westend"],             white: ["heinz berggruen", "heinz-berggruen", "hbgym", "bayernallee"] },
                     { localities:["Westend"],             white: ["herder-gymnasium", "herder-schule", "westendallee"] },
                     { localities:["Westend"],             white: ["katholische schule", "kath. Schule", "liebfrauen", "ksliebfrauen", "ahornallee"] },
-                    { localities:["Westend"],             white: ["hans moser", "schweizer gymnasium", "mosergymnasium", "moser-gymnasium",  "moserschule", "moser-schule", "badenallee"] },
+                    { localities:["Westend"],             white: ["hans moser", "schweizer gymnasium", "mosergymnasium", "moser-gymnasium", "moserschule", "moser-schule", "badenallee"] },
                     { localities:["Westend"],             white: ["wald-gymnasium", "Waldschulallee"] },
+                    { localities:["Wilhelmsruh"],         white: ["inge deutschkron", "inge-deutschkron", "inge-deutschkron-gymnasium", "idg.berlin", "kopenhagener straße"] },
                     { localities:["Wilmersdorf"],         white: ["friedrich ebert", "friedrich-ebert", "feoberlin", "blissestraße"] },
                     { localities:["Wilmersdorf"],         white: ["goethe-gymnasium", "goethe-schule", "johann wolfgang von goethe", "gasteiner straße"] },
                     { localities:["Wilmersdorf"],         white: ["marie curie", "marie-curie", "mcg-berlin", "weimarische straße"] }
@@ -15768,11 +15793,14 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(e-Mail|E–Mail)", flags: "gu", replacement: "E-Mail" },
         { pattern: "\\b(Spammail|Spam–Mail)", flags: "gu", replacement: "Spam-Mail" },
         { pattern: "\\b(auf|unter):(?=\\s*(¿|https?://|www\\.))", flags: "gu", replacement: "$(1)" }, // Doppelpunkt entfernen
+        { pattern: "\\b(https?|ftp)\\s*:{2,}\\s*//", flags: "gu", replacement: "$(1)://"}, // mehfachen Doppelpunkt auf einen reduzieren
         { pattern: "\\b(https:\\s*//\\s*|http:\\s*//\\s*)", flags: "gu", replacement: "" },
-        { pattern: "(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})", flags: "gu", replacement: "/$(2)/$(4)" }, // zwei Slashs in URL ohne Leerzeichen
+        // { pattern: "(\\s*/\\s*)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]+)(\\s*/\\s*)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]+)(?=[/?#]|\\.|$)", flags: "gu", replacement: "/$(2)/$(4)" }, // zwei Slashs in URL ohne Leerzeichen
         { pattern: "(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})(\\s*?/\\s*?)", flags: "gu", replacement: "/$(2)/" }, // zwei Slashs in URL ohne Leerzeichen
         { pattern: "(\\.)([a-zA-ZäöüÄÖÜß]{2,6})(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})", flags: "gu", replacement: ".$(2)/$(4)" }, // ein Slash nach Domainendung ohne Leerzeichen
         { pattern: "\\.(com|community|de|info|berlin|org|net)(/\\s|/\\.)", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL entfernen.
+        { pattern: "/\\u202F(?=\\w)", flags: "gu", replacement: " " }, // Geschütztes Leerzeichen hinter URL-Endslash entfernen
+
 
         // Finishing
         { pattern: "\\u0020{2,}", flags: "gu", replacement: " " }, // Mehrere Leerzeichen reduzieren
