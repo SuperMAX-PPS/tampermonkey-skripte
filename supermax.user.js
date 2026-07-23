@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.77 Multi-Site Struktur
+// @name SuperMAX 7.0.78 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.77
+// @version 7.0.78
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -7977,6 +7977,7 @@ streetDirectory: {
 "Illzacher Weg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Ilmenauer Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
 "Ilmenauer Weg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Ilsekiez":	        { districts: ["Lichtenberg"], localities: ["Karlshorst"] }, // Kiez
 "Ilsenburger Straße":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Ilsenburgstraße":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
 "Ilsenhof":	        { districts: ["Neukölln"], localities: ["Neukölln"] },
@@ -11894,12 +11895,12 @@ streetDirectory: {
 "Rungiusstraße":	{ districts: ["Neukölln"], localities: ["Britz"] },	// Spielplatz
 "Rupertweg":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Ruppiner Chaussee":	{ variants:  [
-                    { localities:["Heiligensee"],         white: ["an der aussicht", "bahnhof", "henningsdorf", "henningsdorfer straße", "kiefheider weg", "neubrück", "stolpe-süd", "stolpmünder weg", "ziegwnorter pfad", "zur sonnenhöhe"] },
-                    { localities:["Tegel"],               white: [""] },
+                    { localities:["Heiligensee"],         white: ["akademie", "am tegelgrund", "an der aussicht", "bahnhof", "beyschlagstraße", "demokratische schule", "diakonieweg", "feuerwehr", "heiligensee", "henningsdorf", "henningsdorfer straße", "im waldwinkel", "kiefheider weg", "kremmener bahn", "martin-rudloff-weg", "neubrück", "polizei", "rausendorffweg", "rettungsdienst", "schulzendorf", "stolpe-süd", "stolpmünder weg", "ziegwnorter pfad", "zur sonnenhöhe"] },
+                    { localities:["Tegel"],               white: ["camping", "forstamt", "gruppenhaus", "heiligenseestraße", "jugendzeltplatz", "karolinenstraße"] },
                     { localities:["Heiligensee", "Tegel"],
                       segments:  [
-                    { from: 0,   to: 0,    parity: "both", locality: "Heiligensee" },
-                    { from: 0,   to: 0,    parity: "both", locality: "Tegel" }]},
+                    { from: 1,   to: 137,  parity: "both", locality: "Tegel" },
+                    { from: 139, to: 417,  parity: "both", locality: "Heiligensee" }]},
                     { localities:["Heiligensee", "Tegel"] }
                     ]},
 "Ruppiner Straße":	{ districts: ["Mitte"], localities: ["Gesundbrunnen", "Mitte"] },
@@ -11936,14 +11937,14 @@ streetDirectory: {
 "Saarstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau", "Schöneberg"] },
 "Saatwinkel":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },	// Kleingartenanlage
 "Saatwinkler Damm":	{ variants:  [
-                    { localities:["Charlottenburg"],      white: ["kolonie"] }, // Kolonie
-                    { localities:["Charlottenburg-Nord"], white: ["luftikus", "tennisclub westend"] },
-                    { localities:["Siemensstadt"],        white: ["saatwinkler küken"] },
+                    { localities:["Charlottenburg-Nord"], white: ["adam-von-trost-straße", "beusselstraße", "birkenweg", "buchholzweg", "emmy-zehden-weg", "friedrich-olbricht-damm", "frischauf", "heidefreiheit", "hinkelday", "hüttigpfad", "jungbrunnen", "jungfernheide", "justizvollzugsanstalt", "jva", "landesleistungszentrum", "lindenblüte", "luftikus", "pfefferluchwiesen", "plötzensee", "riedemannweg", "rudern", "schleuse", "sportanlage", "straße 70", "tennisclub westend", "volkspark", "waldfrieden", "westhafenkanal", "zufahrt zum flughafen"] },
+                    { localities:["Haselhorst"],          white: ["airportparking", "haselhorster damm", "küstenstraße", "riensbergstraße", "schwerter weg", "weihnachtskirche"] },
+                    { localities:["Siemensstadt"],        white: ["citycamp", "city camp", "elsa-neumann-straße", "gartenfelder straße", "heinrich-hertz-straße", "rohrdamm", "saatwinkler küken", "seniorenwohnhaus", "siedlung", "siedlungsverein", "stiller und niebus"] },
                     { localities:["Charlottenburg-Nord", "Haselhorst", "Siemensstadt"],
                       segments:  [
                     { from: 1,   to: 95,   parity: "both", locality: "Charlottenburg-Nord" },
                     { from: 100, to: 299,  parity: "both", locality: "Siemensstadt" },
-                    { from: 317, to: 369,  parity: "both",  locality: "Haselhorst" }]},
+                    { from: 317, to: 369,  parity: "both", locality: "Haselhorst" }]},
                     { localities:["Charlottenburg-Nord", "Haselhorst", "Siemensstadt"] }
                     ]},
 "Saatwinkler Steg":	{ districts: ["Spandau"], localities: ["Haselhorst"] },
@@ -14427,6 +14428,10 @@ streetDirectory: {
 "Waldschule Grunewald":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },	// Museum
 "Waldschule":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },	// Kleingartenanlage
 "Waldschützpfad":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
+"Waldsee":	    { variants: [
+                { black: ["waldseepark", "waldseeweg"] },
+                { localities: ["Zehlendorf"], white: ["argentinische allee", "erdmann-graeser-weg", "goethestraße", "haus am waldsee", "limastraße", "südwestbecken", "waldseebrücke"] },
+                ] },
 "Waldseebrücke":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Waldseepark":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },	// Grünanlage
 "Waldseeweg":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
@@ -15303,9 +15308,9 @@ const CFG_DEFAULTS = {
         { pattern: "Die drei \\?{3}", flags: "gu", replacement: "DREI_FRAGE" }, // Debugging
         { pattern: "Die drei !{3}", flags: "gu", replacement: "DREI_AUSRUFE" }, // Debugging
         { pattern: "\\b(\\d{1,4})\\s*[–-]\\s*(\\d{1,4})\\b", flags: "gu", replacement: "$(1)-$(2)" }, // Gedankenstrich zwischen zwei Zahlen wird Bindestrich
-        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" }, // Gedankenstrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
-        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich vorweg mit geschütztem Leerzeichen
-        { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s*/\\s*(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u202F/\u202F" },    // Slash zwischen zwei Wörtern vorweg mit geschütztem Leerzeichen
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" }, // Gedankenstrich mit Leerzeichen bekommt geschützte Leerzeichen
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u202F–\u202F$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich mit geschützten Leerzeichen
+        { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s+/\\s+(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u202F/\u202F" },    // Slash mit Leerzeichen bekommt geschützte Leerzeichen
         { pattern: "(\\(?\\d+)(\\s*)(/)(\\s*)(\\(?\\d+)", flags: "gu", replacement: "$(1)$(3)$(5)" }, // Slash zwischen zwei Zahlen ohne Leerzeichen
         { pattern: "\\s*#\\+\\s*", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
         { pattern: "\\s*#\\%\\s*", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
@@ -15396,8 +15401,8 @@ const CFG_DEFAULTS = {
         { pattern: "\\bTel.:\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
         { pattern: "\\s+t\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: " Tel. " },
         { pattern: "\\u00BF\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
-        // { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" }, // schmales, geschütztes Leerzeichen
-        { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (Testweise)
+        // { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u202F" }, // schmales, geschütztes Leerzeichen (optional für PEIQ)
+        { pattern: "(?<=\\d)\\u0020(?=[\\d/()+-])", flags: "gu", replacement: "\u00A0" }, // normales, geschütztes Leerzeichen (für CUE/APTOMA)
 
         // Kalendermonate mit Regeln zu 2026
         { pattern: "(\\d{1,2})\\.\\s*(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)(\\s*)(2026|26)", flags: "gu", replacement: "$(1). $(2)" }, // Kalenderjahr manuell anpassen!
@@ -15813,13 +15818,10 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(Spammail|Spam–Mail)", flags: "gu", replacement: "Spam-Mail" },
         { pattern: "\\b(auf|unter):(?=\\s*(¿|https?://|www\\.))", flags: "gu", replacement: "$(1)" }, // Doppelpunkt entfernen
         { pattern: "\\b(https?|ftp)\\s*:{2,}\\s*//", flags: "gu", replacement: "$(1)://"}, // mehfachen Doppelpunkt auf einen reduzieren
-        { pattern: "\\b(https:\\s*//\\s*|http:\\s*//\\s*)", flags: "gu", replacement: "" },
-        // { pattern: "(\\s*/\\s*)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]+)(\\s*/\\s*)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]+)(?=[/?#]|\\.|$)", flags: "gu", replacement: "/$(2)/$(4)" }, // zwei Slashs in URL ohne Leerzeichen
-        { pattern: "(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})(\\s*?/\\s*?)", flags: "gu", replacement: "/$(2)/" }, // zwei Slashs in URL ohne Leerzeichen
-        { pattern: "(\\.)([a-zA-ZäöüÄÖÜß]{2,6})(\\s*?/\\s*?)([0-9a-zA-ZäöüÄÖÜß\\-_.~+=&%$§|?#:]{1,})", flags: "gu", replacement: ".$(2)/$(4)" }, // ein Slash nach Domainendung ohne Leerzeichen
-        { pattern: "\\.(com|community|de|info|berlin|org|net)(/\\s|/\\.)", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL entfernen.
-        { pattern: "/\\u202F(?=\\w)", flags: "gu", replacement: " " }, // Geschütztes Leerzeichen hinter URL-Endslash entfernen
-
+        { pattern: "\\b(https:\\s*//\\s*|http:\\s*//\\s*)", flags: "gu", replacement: "" }, // URL-Protokoll entfernen (https://, http://)
+        { pattern: "\\bwww\\.", flags: "gu", replacement: ""}, // Standard-Subdomain "www." entfernen
+        { pattern: "\\.(app|berlin|cloud|com|community|de|digital|edu|eu|info|io|net|online|org|schule|shop|versicherung)(/\\s|/(?=[.!?\\s]|$)", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL zum Satzende entfernen
+        { pattern: "(?<=\\w)/(?=\\u0020|[.!?\\s]|$)", flags: "gu", replacement: "" }, // Slash am Ende einer URL entfernen
 
         // Finishing
         { pattern: "\\u0020{2,}", flags: "gu", replacement: " " }, // Mehrere Leerzeichen reduzieren
