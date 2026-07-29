@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.0.79 Multi-Site Struktur
+// @name SuperMAX 7.1.0 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.0.79
+// @version 7.1.0
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -1656,6 +1656,7 @@ streetDirectory: {
 "Anna-Seghers-Gedenkstätte":{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] }, // Museum
 "Anna-Seghers-Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Anna-Siemsen-Weg":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },
+"Anna-und-Hermann-Muthesius-Steig": { districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Annastraße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Anne Frank Zentrum":       { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Annedore-Leber-Park":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Grünanlage
@@ -2000,7 +2001,10 @@ streetDirectory: {
 "Bahrendorfer Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Bahrfeldtstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Baikalstraße":	    { districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },
-"Bäke":             { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde", "Steglitz"] }, // Fluss
+"Bäke":             { variants:  [
+                    { black:     ["an der bäke", "bäkebrücke", "bäkepark", "bäkequell", "bäke-grundschule", "bäke-schule", "bäkestraße", "bäketal"] },
+                    { localities:["Lichterfelde", "Steglitz"] } // Fluss
+                    ]},
 "Bäkebrücke":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Bäkepark":	        { districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Bäkestraße":	    { variants:  [
@@ -2008,6 +2012,7 @@ streetDirectory: {
                     { localities:["Wannsee"],             white: ["königsweg", "neue kreisstraße", "wannsee", "zehlendorf"] },
                     { localities:["Lichterfelde", "Wannsee"] }
                     ]},
+"Bäketal":	        { districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Balatonstraße":    { districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },
 "Balbronner Straße":{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Baldersheimer Weg":{ districts: ["Neukölln"], localities: ["Buckow"] },
@@ -2816,7 +2821,7 @@ streetDirectory: {
 "Blumenstraße":	    { variants:  [
                     { black:     ["neue blumenstraße"] },
                     { localities:["Friedrichshain"],      white: ["andreasstraße", "friedrichshain", "strausberger platz"] },
-                    { localities:["Spandau"],             white: ["ackerstraße", "flanckenschanze", "spandau"] },
+                    { localities:["Spandau"],             white: ["ackerstraße", "flanckenschanze", "sekundarschule", "spandau", "wolfgang-borchert-schule"] },
                     { localities:["Friedrichshain", "Spandau"] }
                     ]},
 "Blumenthalstraße":	{ variants:  [
@@ -4235,7 +4240,7 @@ streetDirectory: {
 "Draesekestraße":	{ districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
 "Draisweg":	        { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Drakestraße":	    { variants:  [
-                    { localities:["Lichterfelde"],        white: ["akademisch", "appenzell", "boulevardbuch", "drake-eck", "el caracol", "filouu", "friedrich-drake-grundschule", "goerzallee", "goethe-oberschule", "habelschwerdter allee", "hindenburgdamm", "katholisch", "kinderheim", "kinderkreisel", "kindertheater", "kinderwohnen", "königsberger straße", "lernwerk", "lichterfelde west", "paul-braune-schule", "ringstraße", "steglitz", "stubenrauchstraße", "suevia", "theater lichterfelde", "unter den eichen", "wadzeck"] },
+                    { localities:["Lichterfelde"],        white: ["akademisch", "appenzell", "boulevardbuch", "drake-eck", "el caracol", "filouu", "friedrich-drake-grundschule", "goerzallee", "goethe-gymnasium", "goethe-oberschule", "habelschwerdter allee", "hindenburgdamm", "katholisch", "kinderheim", "kinderkreisel", "kindertheater", "kinderwohnen", "königsberger straße", "lernwerk", "lichterfelde west", "paul-braune-schule", "ringstraße", "steglitz", "stubenrauchstraße", "suevia", "theater lichterfelde", "unter den eichen", "wadzeck"] },
                     { localities:["Mahlsdorf"],           white: ["golzower straße", "hellersdorf", "rauchstraße"] },
                     { localities:["Tiergarten"],          white: ["corneliusstraße", "tiergarten", "thomas-dehler-straße"] },
                     { localities:["Lichterfelde", "Mahlsdorf", "Tiergarten"] }
@@ -4248,6 +4253,7 @@ streetDirectory: {
 "Dreherweg":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Dreieck Nord":	    { districts: ["Pankow"], localities: ["Heinersdorf"] },	// Kleingartenanlage
 "Dreifelderweg":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
+"Dreilinden":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Dreilindenstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Drei-Linien-Weg":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Dreipfuhlpark":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
@@ -4613,6 +4619,7 @@ streetDirectory: {
 "Elfriedestraße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Elfriede-Tygör-Straße":	{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },
 "Elgersburger Straße":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
+"Elisabeth-Aue":	{ districts: ["Pankow"], localities: ["Niederschönhausen"] },
 "Elisabeth-Abegg-Straße":	{ districts: ["Mitte"], localities: ["Moabit"] },
 "Elisabeth-Bergner-Park":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Grünanlage
 "Elisabeth-Christinen-Straße":	    { districts: ["Pankow"], localities: ["Niederschönhausen"] },
@@ -4927,6 +4934,7 @@ streetDirectory: {
 "Eulenweg":	        { districts: ["Neukölln"], localities: ["Rudow"] },
 "Eulerstraße":	    { districts: ["Mitte"], localities: ["Gesundbrunnen"] },
 "Eupener Straße":	{ districts: ["Pankow"], localities: ["Buch"] },
+"EURASIA-Institute":{ districts: ["Spandau"], localities: ["Siemensstadt"] }, // Schule
 "EUREF-Campus":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Europacenter":     { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Handel
 "Europa-Center":    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Handel
@@ -5387,7 +5395,7 @@ streetDirectory: {
 "Forstmeisterweg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
 "Forststraße":	    { variants:  [
                     { localities:["Hermsdorf"],           white: ["dohnensteig", "freiherr-vom-stein-straße", "hermsdorfer damm", "martin-luther-straße", "reinickendorf"] },
-                    { localities:["Steglitz"],            white: ["breitenbachplatz", "brentanostraße", "lepsiusstraße", "schloßstraße", "steglitz"] },
+                    { localities:["Steglitz"],            white: ["breitenbachplatz", "brentanostraße", "lepsiusstraße", "msk berlin", "schloßstraße", "schule für musik, sprache und kunst", "steglitz"] },
                     { localities:["Zehlendorf"],          white: ["argentinische allee", "krumme lanke", "mexikoplatz", "potsdamer straße", "zehlendorf"] },
                     { localities:["Hellersdorf", "Kreuzberg"] }
                     ]},
@@ -6544,7 +6552,7 @@ streetDirectory: {
 "Golmer Straße":	{ districts: ["Spandau"], localities: ["Spandau"] },
 "Golßener Straße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Goltzstraße":	    { variants:  [
-                    { localities:["Hakenfelde"],          white: ["hakenfelde", "rauchstraße", "spandau", "sportanlage", "streitstraße", "werderstraße"] },
+                    { localities:["Hakenfelde"],          white: ["hakenfelde", "havel-grundschule", "rauchstraße", "spandau", "sportanlage", "streitstraße", "werderstraße"] },
                     { localities:["Lichtenrade"],         white: ["domstift", "evangelisch", "horstwalder straße", "kirchengemeinde", "kirchhainer damm", "kita", "klein-beerener-straße", "lichtenrade", "lichtenrader damm", "lortzingstraße", "paplitzer straße", "schülerhilfe", "tempelhof"] },
                     { localities:["Schöneberg"],          white: ["akazienstraße", "bureau", "café pink", "caritas", "chatwins", "eisenacher straße", "geschichtswerkstatt", "grunewaldstraße", "hobbyshop", "kardinal von galen", "kiezoase", "mieterverein", "mimi", "nollendorfplatz", "salut", "schöneberg", "seniorenwohnhaus", "slumberland", "sorgenfrei", "winterfeldtplatz", "winterfeldtstraße"] },
                     { localities:["Hakenfelde", "Lichtenrade", "Schöneberg"] }
@@ -6837,6 +6845,11 @@ streetDirectory: {
 "Großenhainer Weg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Großer Spreering":	{ districts: ["Spandau"], localities: ["Haselhorst"] },
 "Großer Stern":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
+"Großer Stern":	    { variants:  [
+                    { localities:["Grunewald"],           white: ["a115", "e51", "autobahn", "charlottenburg", "hüttenweg", "königsweg", "kronprinzessinnenweg", "teltower weg", "wilmersdorf"] },
+                    { localities:["Tiergarten"],          white: ["b2", "altonaer straße", "bismarck", "bremer weg", "bundespräsidalamt", "bundesstraße", "fasanerieallee", "große sternallee", "hofjägerallee", "moltke", "roon", "spreeweg", "straße des 17. juni", "tiergarten"] },
+                    { localities:["Grunewald", "Tiergarten"] }
+                    ]},
 "Großer Tiergarten":{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Grünanlage
 "Großer Wannsee": { districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] }, // See
 "Großer Weg":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
@@ -7024,6 +7037,7 @@ streetDirectory: {
                     { localities:["Charlottenburg"],      white: ["privates europa-gymnasium", "europa-gymnasium", "haubachstraße"] },
                     { localities:["Charlottenburg"],      white: ["schiller-gymnasium", "sgym", "schillerstraße"] },
                     { localities:["Charlottenburg"],      white: ["sophie charlotte", "sophie-charlotte", "scgberlin", "sybelstraße"] },
+                    { localities:["Dahlem"],              white: ["arndt gymnasium", "arndt schule", "arndt-gymnasium", "arndt-schule", "königin-luise-straße"] },
                     { localities:["Falkenberg"],          white: ["barnim-gymnasium", "ahrensfelder chaussee"] },
                     { localities:["Fennpfuhl"],           white: ["johann gottfried herder", "johann-gottfried-herder", "jgherder", "franz-jacob-straße"] },
                     { localities:["Friedrichshain"],      white: ["andreas-gymnasium", "andreas-schule", "koppenstraße"] },
@@ -7040,10 +7054,15 @@ streetDirectory: {
                     { localities:["Hermsdorf"],           white: ["georg herwegh", "georg-herwegh", "georg-herwegh-gymnasium", "herwegh-gymnasium", "fellbacher straße"] },
                     { localities:["Karlshorst"],          white: ["hans-und-hilde-coppi", "coppi-gym", "römerweg"] },
                     { localities:["Karow"],               white: ["robert havemann", "robert-havemann", "robert havemann gymnasium", "robert-havemann-gymnasium", "achillesstraße"] },
+                    { localities:["Kladow"],              white: ["hans carossa", "hans-carossa", "hans-carossa-gymnasium", "hcg-berlin", "am landschaftspark gatow"] },
                     { localities:["Kreuzberg"],           white: ["hermann hesse", "hermann-hesse", "hesse-kreuzberg", "böckhstraße"] },
                     { localities:["Kreuzberg"],           white: ["leibniz-gymnasium", "leibniz-schule", "leibnizschule-berlin", "schleiermacherstraße"] },
                     { localities:["Kreuzberg"],           white: ["robert koch", "robert-koch", "dieffenbachstraße"] },
+                    { localities:["Lankwitz"],            white: ["beethoven gymnasium", "beethoven schule", "beethoven-gymnasium", "beethoven-schule", "barbarastraße"] },
                     { localities:["Lichtenberg"],         white: ["12. schule", "gym.adkosmos", "allee der kosmonauten"] },
+                    { localities:["Lichterfelde"],        white: ["goethe schule", "goethe oberschule", "goethe gymnasium", "goethe-schule", "goethe-oberschule", "goethe-gymnasium", "goethe-gymnasium-lichterfelde", "drakestraße"] },
+                    { localities:["Lichterfelde"],        white: ["lilienthal gymnasium", "lilienthal schule", "lilienthal-gymnasium", "lilienthal-schule", "ringstraße"] },
+                    { localities:["Lichterfelde"],        white: ["willi graf", "willi-graf", "willi graf gymnasium", "willi graf schule", "willi-graf-gymnasium", "willi-graf-schule", "ostpreußendamm"] },
                     { localities:["Märkisches Viertel"],  white: ["thomas mann", "thomas-mann", "thomas-mann-gymnasium", "tmgberlin", "königshorster straße"] },
                     { localities:["Marzahn"],             white: ["tagore gymnasium", "tagore-gymnasium", "sella-hasse-straße"] },
                     { localities:["Mitte"],               white: ["john lennon", "john-lennon", "john-lennon-gymnasium", "jlgym-berlin", "zehdenicker straße"] },
@@ -7055,6 +7074,8 @@ streetDirectory: {
                     { localities:["Neukölln"],            white: ["albrecht dürer", "albrecht-dürer", "albrecht-dürer-gymnasium", "albrecht-duerer-gymnasium", "emser straße"] },
                     { localities:["Neukölln"],            white: ["ernst abbe", "ernst-abbe", "ernst-abbe-gymnasium", "sonnenallee"] },
                     { localities:["Niederschönhausen"],   white: ["max delbrück", "max-delbrück", "max-delbrück-gymnasium", "kuckhoffstraße"] },
+                    { localities:["Nikolassee"],          white: ["dreilinden gymnasium", "dreilinden-gymnasium", "dreilindenstraße"] },
+                    { localities:["Nikolassee"],          white: ["werner-von-siemens", "werner von siemens", "werner-von-siemens-gymnasium", "siemens-gymnasium", "beskidenstraße"] },
                     { localities:["Pankow"],              white: ["carl von ossietzky", "carl-von-ossietzky", "carl-von-ossietzky-gymnasium", "cvo.berlin", "görschstraße"] },
                     { localities:["Pankow"],              white: ["rosa luxemburg", "rosa-luxemburg", "rosa luxemburg gymnasium", "rosa-luxemburg-gymnasium", "kissingenstraße"] },
                     { localities:["Prenzlauer Berg"],     white: ["felix mendelssohn bartholdy", "felix-mendelssohn-bartholdy", "felix-mendelssohn-bartholdy-gymnasium", "fmbg-berlin", "pasteurstraße"] },
@@ -7065,6 +7086,13 @@ streetDirectory: {
                     { localities:["Rudow"],               white: ["hannah arendt", "hannah-arendt", "hannah-arendt-gymnasium", "hag-berlin", "elfriede-kuhr-straße"] },
                     { localities:["Rummelsburg"],         white: ["immanuel kant", "immanuel-kant-gymnasium", "kant-gymnasium", "lückstraße"] },
                     { localities:["Schmargendorf"],       white: ["evangelisches gymnasium zum grauen kloster", "graues-kloster", "zum grauen kloster", "salzbrunner straße"] },
+                    { localities:["Siemensstadt"],        white: ["carl friedrich von siemens", "carl-friedrich-von-siemens", "carl-friedrich-von-siemens-gymnasium", "jungfernheideweg"] },
+                    { localities:["Spandau"],             white: ["freiherr vom stein", "freiherr-vom-stein", "freiherr-vom-stein-gymnasium", "steingymnasium", "galenstraße"] },
+                    { localities:["Spandau"],             white: ["kant-gymnasium", "kant-gymnasium-berlin", "bismarckstraße"] },
+                    { localities:["Spandau"],             white: ["lily-braun", "lily braun", "lily-braun-gymnasium", "münsingerstraße"] },
+                    { localities:["Steglitz"],            white: ["gymnasium steglitz", "gymnasium-steglitz", "gymnasiumsteglitz", "heesestraße"] },
+                    { localities:["Steglitz"],            white: ["hermann-ehlers", "hermann ehlers", "hermann-ehlers-gymnasium", "hermann-ehlers-schule", "hermann ehlers gymnasium" , "hermann ehlers schule", "elisenstraße"] },
+                    { localities:["Steglitz"],            white: ["paulsen gymnasium", "paulsen schule", "paulsen-gymnasium", "paulsen-schule", "wp.paulsen-gymnasium", "gritznerstraße"] },
                     { localities:["Tegel"],               white: ["gabriele von bülow", "gabriele-von-bülow", "gabriele-von-bülow-gymnasium", "gvb-berlin", "tile-brügge-weg"] },
                     { localities:["Tegel"],               white: ["humboldt-gymnasium", "humboldt-schule", "humboldtschule", "hatzfeldtallee"] },
                     { localities:["Tiergarten"],          white: ["französisches gymnasium", "fg-berlin", "derfflingerstraße"] },
@@ -7080,7 +7108,9 @@ streetDirectory: {
                     { localities:["Wilmersdorf"],         white: ["friedrich ebert", "friedrich-ebert", "feoberlin", "blissestraße"] },
                     { localities:["Wilmersdorf"],         white: ["goethe-gymnasium", "goethe-schule", "johann wolfgang von goethe", "gasteiner straße"] },
                     { localities:["Wilmersdorf"],         white: ["marie curie", "marie-curie", "mcg-berlin", "weimarische straße"] },
-                    { localities:["Wittenau"],            white: ["romain rolland", "romain-rolland", "romain-rolland-gymnasium", "romain-rolland-schule", "place molière", "place moliere"] }
+                    { localities:["Wittenau"],            white: ["romain rolland", "romain-rolland", "romain-rolland-gymnasium", "romain-rolland-schule", "place molière", "place moliere"] },
+                    { localities:["Zehlendorf"],          white: ["droste-hülshoff", "droste hülshoff", "droste hülshoff gymnasium",  "droste-hülshoff-gymnasium", "droste-hülshoff-schule", "droste-berlin", "schönower straße"] },
+                    { localities:["Zehlendorf"],          white: ["schadow gymnasium", "schadow schule", "schadow-gymnasium", "schadow-schule", "beuckestraße"] }
                     ]},
 //// H /////////////
 "Haackzeile":	    { districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
@@ -7349,8 +7379,16 @@ streetDirectory: {
 "Havensteinstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Havermannstraße":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Havestadtplatz":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
-"Haydnstraße":	    { districts: ["Marzahn-Hellersdorf", "Steglitz-Zehlendorf"], localities: ["Biesdorf", "Lichterfelde", "Steglitz"] },
-
+"Haydnstraße":	    { variants:  [
+                    { localities:["Biesdorf"],            white: ["alt-biesdorf", "beethovenstraße", "hellersdorf", "landsberger allee", "märkische allee", "marzahn", "mozartstraße", "schulstraße", "waldbacher weg"] },
+                    { localities:["Lichterfelde"],        white: ["an der bäke", "brahmsstraße", "flotowstraße", "grundschule", "hindenburgdamm", "kita", "marschnerstraße", "pippifax", "undinestraße"] },
+                    { localities:["Steglitz"],            white: ["bäkepark", "bäketal", "birkbuschstraße", "gartenarbeitsschule", "kleingartenanlage", "kleingärten", "kühlebornweg"] },
+                    { localities:["Lichterfelde", "Steglitz"],
+                      segments:   [
+                    { from: 1,   to: 18,  parity: "both", locality: "Lichterfelde" },
+                    { from: 20,  to: 28,  parity: "both", locality: "Steglitz" }]},
+                    { localities:["Lichterfelde", "Steglitz"] }
+                    ]},
 "Haynauer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Hebammensteig":	{ districts: ["Pankow"], localities: ["Blankenburg", "Französisch Buchholz"] },
 
@@ -7684,8 +7722,16 @@ streetDirectory: {
 "Himmelsteig":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Hinckeldey":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },	// Kleingartenanlage
 "Hindemithplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
-"Hindenburgdamm":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde", "Steglitz"] },
-
+"Hindenburgdamm":	{ variants:  [
+                    { localities:["Lichterfelde"],        white: ["augustastraße", "bäkestraße", "charité", "dorfkirche", "drakestraße", "dürerstraße", "flotowstraße", "fröbel", "gardenschützenweg", "gelieustraße", "goerzallee", "gutshaus", "händelplatz", "haydnstraße", "institut", "karwendelstraße", "klingsorstraße", "königsberger straße", "krahmerstraße", "lipaerstraße", "manteuffelstraße", "marschnerstraße", "mikrobiologie", "moltkestraße", "neuchateller straße", "pauluskirche", "postamt", "roonstraße", "schlosspark", "sommerbad", "spatzennest", "spucki", "stockweg", "tibor", "tinkerbell", "wolfensteindamm", "zwergenwiese"] },
+                    { localities:["Steglitz"],            white: ["am bäkequell", "fronhoferstraße", "geranienstraße", "resedenstraße", "schloßstraße"] },
+                    { localities:["Lichterfelde", "Steglitz"],
+                      segments:   [
+                    { from: 1,   to: 62,  parity: "both", locality: "Lichterfelde" },
+                    { from: 64,  to: 65,  parity: "both", locality: "Steglitz" },
+                    { from: 68,  to: 138, parity: "both", locality: "Lichterfelde" }]},
+                    { localities: ["Lichterfelde", "Steglitz"] }
+                    ]},
 "Hindenburgplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Hinter dem Gießhaus":	    { districts: ["Mitte"], localities: ["Mitte"] },
 "Hinter dem Kurpark":	    { districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
@@ -8002,8 +8048,19 @@ streetDirectory: {
 "Hüttenroder Weg":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Huttenstraße":	    { districts: ["Mitte", "Reinickendorf"], localities: ["Frohnau", "Moabit"] },
 
-"Hüttenweg":	    { districts: ["Charlottenburg-Wilmersdorf", "Steglitz-Zehlendorf"], localities: ["Dahlem", "Grunewald", "Nikolassee", "Zehlendorf"] },
-
+"Hüttenweg":	    { variants:  [
+                    { black: ["bauhüttenweg", "fischerhüttenweg"] },
+                    { localities:["Dahlem"],              white: ["all saints church", "am petersberg", "auf dem grat", "biesalski", "clayallee", "cole-sport", "flanaganstraße", "freie universität", "fünf morgen", "gelfertstraße", "gemeindehaus", "grundschule", "landefeld", "marshallstraße", "quentin blake", "quentin-blake", "schwimmhalle", "sonderschule", "taylorstraße", "tennis", "thielpark", "waldfriedhof"] },
+                    { localities:["Grunewald"],           white: ["a115", "e51", "dachsberg", "großer stern", "koenigsallee", "revierförsterei", "sprengplatz", "teltower weg", "umgehungsschaussee"] },
+                    { localities:["Nikolassee"],          white: ["kronprinzessinnenweg"] },
+                    { localities:["Zehlendorf"],          white: ["kleiner stern", "onkel-tom-straße"] },
+                    { localities:["Dahlem", "Grunewald", "Nikolassee", "Zehlendorf"],
+                      segments:   [
+                    { from: 5,   to: 55,  parity: "odd",  locality: "Dahlem" },
+                    { from: 10,  to: 100, parity: "even", locality: "Dahlem" },
+                    { from: 102, to: 118, parity: "even", locality: "Grunewald" }]},
+                    { localities:["Dahlem", "Grunewald", "Nikolassee", "Zehlendorf"] }
+                    ]},
 "Hüttigpfad":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },
 "Huttwiler Weg":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Hyazinthenstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -8149,6 +8206,7 @@ streetDirectory: {
 
 "Insterburgallee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Institut Buhara":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
+"Institut für Psychotherapie":	 { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Insulanerpark":	{ districts: ["Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Schöneberg", "Steglitz"] },
 
 "Interessentenweg":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
@@ -8735,6 +8793,7 @@ streetDirectory: {
 "Kleiner Mohnweg":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Kleiner Park":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Grünanlage
 "Kleiner Querweg":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
+"Kleiner Stern":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Kleiner Tiergarten":	{ districts: ["Mitte"], localities: ["Moabit"] },	// Grünanlage
 "Kleiner Wannsee": { districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] }, // See
 "Kleiner-Heufalter-Weg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -8865,6 +8924,7 @@ streetDirectory: {
 "Komturstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Kongostraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Königin-Elisabeth-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
+"Königin-Luise-Stiftung":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },	// Schule
 "Königin-Luise-Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem", "Steglitz"] },
 "Königsbacher Zeile":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Königsberger Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -9413,6 +9473,8 @@ streetDirectory: {
 "Lichtelfensteg":	{ districts: ["Pankow"], localities: ["Stadtrandsiedlung Malchow"] },
 "Lichtenauer Straße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Lichtenberg":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },	// S+U-Bahnhof
+"Lichtenberg Kolleg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Schule
+"Lichtenberg-Kolleg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Schule
 "Lichtenberger Straße":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte"], localities: ["Friedrichshain", "Mitte"] },
 "Lichtenhainer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Lichtenrade":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },	// S-Bahnhof
@@ -10088,6 +10150,7 @@ streetDirectory: {
 "Metastraße":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
 "Meteorstraße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Methfesselstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Metropolitan Park":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
 "Mettestraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Mettkauer Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Mettlacher Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -10605,7 +10668,16 @@ streetDirectory: {
 "Nollendorfplatz":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // U-Bahnhof
 "Nollendorfstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Nonnendamm":	{ districts: ["Charlottenburg-Wilmersdorf", "Spandau"], localities: ["Charlottenburg-Nord", "Siemensstadt"] },
-"Nonnendammallee":	{ districts: ["Spandau"], localities: ["Haselhorst", "Siemensstadt"] },
+"Nonnendammallee":	{ variants:  [
+                    { localities:["Haselhorst"],   white: ["am juliusturm", "bahnhof", "bautechnik", "ferdinand-friedensburg-platz", "finanzamt", "gasdruckregelanlage", "haselhorst", "oberstufenzentrum", "osz", "umspannwerk"] },
+                    { localities:["Siemensstadt"], white: ["bambooland", "bödikersteig", "boltonstraße", "ehrenhof", "ehrenmal", "grammestraße", "kapellensteig", "landesverband", "otternbuchtstraße", "paulsternstraße", "quellweg", "refa", "reisstraße", "repair", "rohrdamm", "siemens", "siemensdamm", "siemensstadt", "voltastraße", "wattstraße", "wehneltsteig", "werkberufsschule"] },
+                    { localities:["Haselhorst", "Siemensstadt"],
+                      segments:  [
+                    { from: 1,   to: 37,   parity: "both", locality: "Haselhorst" },
+                    { from: 41,  to: 42,   parity: "both", locality: "Siemensstadt" },
+                    { from: 44,  to: 121,  parity: "both", locality: "Siemensstadt" },
+                    { from: 128, to: 175,  parity: "both", locality: "Haselhorst" }]},
+                    ]},
 "Norastraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
 "Norbertstraße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Nordbahnstraße":	{ districts: ["Mitte", "Reinickendorf"], localities: ["Gesundbrunnen", "Reinickendorf"] },
@@ -10672,6 +10744,8 @@ streetDirectory: {
 "Oberlandgarten":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Oberlandpark":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Grünanlage
 "Oberlandstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
+"Oberlin Seminar":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] }, // Schule
+"Oberlin-Seminar":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] }, // Schule
 "Oberlinstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Obermeierweg":	{ districts: ["Spandau"], localities: ["Spandau"] },
 "Obernburger Weg":	{ districts: ["Pankow"], localities: ["Pankow"] },
@@ -11295,7 +11369,21 @@ streetDirectory: {
 "Poßwegbrücke":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Posthausweg":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
 "Poststraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
-"Potsdamer Chaussee":	{ districts: ["Spandau", "Steglitz-Zehlendorf"], localities: ["Gatow", "Kladow", "Nikolassee", "Wannsee", "Wilhelmstadt", "Zehlendorf"] },
+"Potsdamer Chaussee":	{ variants:  [
+                    { localities:["Gatow"],                white: ["außenweg", "landschaftsfriedhof", "maximilian-kolbe-straße", "schießplatz", "straße 269"] },
+                    { localities:["Kladow"],               white: ["am landschaftspark gatow", "ritterfelddamm", "stadtgrenze"] },
+                    { localities:["Nikolassee"],           white: ["17. juni 1953", "anna-und-hermann-muthesius-steig", "dreilinden", "isoldestraße", "jugendausbildungszentrum", "kreuz zehlendorf", "kurstraße", "lissabonallee", "mutter-mochow-weg", "nibelungenstraße", "quantzstraße", "spanische allee", "theodor-wenzel-werk", "von-luck-straße", "waldfriedhof", "wasgensraße", "wiesenschlag", "zollamt"] },
+                    { localities:["Wannsee"],              white: ["bahnhof", "königstraße", "reichsbahnstraße", "stahnsdorfer damm", "wannsee"] },
+                    { localities:["Wilhelmstadt"],         white: ["daberkowstraße", "karolinenhöhe", "straße 270", "wilhelmstraße"] },
+                    { localities:["Zehlendorf"],           white: ["hohentwielsteig", "niklasstraße", "oertzenweg", "potsdamer straße"] },
+                    { localities:["Nikolassee", "Wannsee", "Zehlendorf"],
+                      segments:  [
+                    { from: 1,   to: 23,   parity: "both", locality: "Zehlendorf" },
+                    { from: 24,  to: 87,   parity: "both", locality: "Nikolassee" },
+                    { from: 90,  to: 90,   parity: "even", locality: "Nikolassee" },
+                    { from: 95,  to: 95,   parity: "odd",  locality: "Nikolassee" },
+                    { from: 101, to: 101,  parity: "odd",  locality: "Zehlendorf" }]},
+                    ]},
 "Potsdamer Platz":	{ districts: ["Mitte"], localities: ["Mitte", "Tiergarten"] },	// S+U-Bahnhof
 "Potsdamer Straße":	{ districts: ["Mitte", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Lichterfelde", "Schöneberg", "Tiergarten", "Zehlendorf"] },
 "Pottensteiner Weg":	{ districts: ["Spandau"], localities: ["Kladow"] },
@@ -11923,6 +12011,7 @@ streetDirectory: {
 "Rotkehlchenweg":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Buckow", "Rahnsdorf"] },
 "Rotkleeweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Rotkopfweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
+"Rotkreuz-Institut":	{ districts: ["Spandau"], localities: ["Kladow"] }, // Schule
 "Rotkreuz-Museum":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },	// Museum
 "Rotraudstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Rotraut-Richter-Platz":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },
@@ -12020,6 +12109,7 @@ streetDirectory: {
 "Rumeyplan":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Rummelsburg":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },	// S-Bahnhof
 "Rummelsburger Landstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
+"Rummelsburger Bucht": { districts: ["Lichtenberg"], localities: ["Rummelsburg"] }, // See
 "Rummelsburger See": { districts: ["Lichtenberg"], localities: ["Rummelsburg"] }, // See
 "Rummelsburger Straße":	{ districts: ["Lichtenberg", "Treptow-Köpenick"], localities: ["Friedrichsfelde", "Oberschöneweide"] },
 "Rumoldstraße":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
@@ -12579,7 +12669,23 @@ streetDirectory: {
                     { localities:["Charlottenburg-Nord"], white: ["erwin von witzleben", "erwin-von-witzleben", "erwinvonwitzleben", "halemweg"] },
                     { localities:["Charlottenburg-Nord"], white: ["helmuth james von moltke", "helmuth-james-von-moltke", "moltke-grundschule", "heckerdamm"] },
                     { localities:["Charlottenburg-Nord"], white: ["willkommensschule txl", "willkommensschule-txl", "saatwinkler damm"] },
-                    { localities:["Dahlem"],              white: ["private kant", "private-kant", "berlin international school", "berlin-international-school", "lentzeallee"] },
+                    { localities:["Dahlem"],              white: ["arndt gymnasium", "arndt schule", "arndt-gymnasium", "arndt-schule", "königin-luise-straße"] },
+                    { localities:["Dahlem"],              white: ["biesalski", "biesalski-schule", "sonderschule", "hüttenweg"] },
+                    { localities:["Dahlem"],              white: ["erich kästner", "erich-kästner", "erich kästner grundschule", "erich kästner schule", "erich-kästner-grundschule", "erich-kästner-schule", "bachstelzenweg"] },
+                    { localities:["Dahlem"],              white: ["gail s. halvorsen", "gail-s.-halvorsen", "integrierte sekundarschule", "im gehege"] },
+                    { localities:["Dahlem"],              white: ["mühlenau grundschule", "mühlenau schule", "mühlenau-grundschule", "mühlenau-schule", "muehlenau.de", "molsheimer straße"] },
+                    { localities:["Dahlem"],              white: ["quentin blake", "quentin-blake", "quentin blake grundschule", "quentin blake schule", "quentin-blake-grundschule", "quentin-blake-schule", "qbgs", "hüttenweg"] },
+                    { localities:["Dahlem"],              white: ["rudolf-steiner", "rudolf steiner", "rudolf-steiner-schule", "rudolf steiner schule", "dahlem.waldorf", "auf dem grat"] },
+                    { localities:["Dahlem"],              white: ["wilma rudolph", "wilma-rudolph", "wilma-rudolph-schule", "integrierte sekundarschule", "am hegewinkel"] },
+                    { localities:["Falkenhagener Feld"],  white: ["b.-traven", "gemeinschaftsschule", "b.-traven-gemeinschaftsschule", "btg-schule", "recklinghauser weg"] },
+                    { localities:["Falkenhagener Feld"],  white: ["freie georgschule", "fgs.berlin", "metropolitan park"] },
+                    { localities:["Falkenhagener Feld"],  white: ["grundschule am wasserwerk", "schule am wasserwerk", "pionierstraße"] },
+                    { localities:["Falkenhagener Feld"],  white: ["grundschule im beerwinkel", "schule im beerwinkel", "beerwinkel", "im spektefeld"] },
+                    { localities:["Falkenhagener Feld"],  white: ["immanuel-grundschule", "immanuel-schule", "stadtrandstraße"] },
+                    { localities:["Falkenhagener Feld"],  white: ["klosterfeld-grundschule", "klosterfeld grundschule", "klosterfeld-schule", "klosterfeld schule", "seegefelder straße"] },
+                    { localities:["Falkenhagener Feld"],  white: ["martin buber", "martin-buber", "martin-buber-oberschule", "martin-buber-schule", "integrierte sekundarschule", "im spektefeld"] },
+                    { localities:["Falkenhagener Feld"],  white: ["schule am stadtrand", "pionierstraße"] },
+                    { localities:["Falkenhagener Feld"],  white: ["siegerland-grundschule", "siegerland-schule", "siegerland grundschule", "siegerland schule", "hermann-schmidt-weg"] },
                     { localities:["Falkenberg"],          white: ["barnim-gymnasium", "gymnasium", "ahrensfelder chaussee"] },
                     { localities:["Fennpfuhl"],           white: ["bmu", "wirtschafts- und steuerfachschule", "mittelstand", "franz-jacob-straße"] },
                     { localities:["Fennpfuhl"],           white: ["hans rosenthal", "hans-rosenthal-grundschule", "hans-rosenthal-schule", "bernhard-bästlein-straße"] },
@@ -12596,7 +12702,7 @@ streetDirectory: {
                     { localities:["Friedrichsfelde"],     white: ["adam ries", "adam-ries-schule", "adamries.schule", "alt-friedrichsfelde"] },
                     { localities:["Friedrichsfelde"],     white: ["alexander puschkin", "alexander-puschkin-schule", "puschkinschule", "massower straße"] },
                     { localities:["Friedrichsfelde"],     white: ["bernhard grzimek", "bernhard-grzimek-schule", "sewanstraße"] },
-                    { localities:["Friedrichsfelde"],     white: ["bürgermeister-ziethen-schule", "buezie", "massower straße"] },
+                    { localities:["Friedrichsfelde"],     white: ["bürgermeister-ziethen-schule", "buezie", "massower straße"] },
                     { localities:["Friedrichsfelde"],     white: ["evangelische schule lichtenberg", "ev. schule lichtenberg", "ev-schule-lichtenberg", "rummelsburger straße"] },
                     { localities:["Friedrichsfelde"],     white: ["friedrichsfelder schule", "friedrichsfelder grundschule", "friedrichsfelder-schule", "lincolnstraße"] },
                     { localities:["Friedrichsfelde"],     white: ["grundschule am tränkegraben", "gs-traenkegraben", "sewanstraße"] },
@@ -12633,9 +12739,10 @@ streetDirectory: {
                     { localities:["Friedrichshain"],      white: ["temple grandin", "temple-grandin", "temple-grandin-schule", "gemeinschaftsschule", "lasdehner straße"] },
                     { localities:["Friedrichshain"],      white: ["thalia-grundschule", "alt-stralau"] },
                     { localities:["Friedrichshain"],      white: ["zille-grundschule", "heinrich zille", "boxhagener straße"] },
-                    { localities:["Frohnau"],             white: ["evangelische schule frohnau",  "ev. schule frohnau", "ev-frohnau", "benediktinerstraße"] },
+                    { localities:["Frohnau"],             white: ["evangelische schule frohnau", "ev. schule frohnau", "ev-frohnau", "benediktinerstraße"] },
                     { localities:["Frohnau"],             white: ["renée sintenis", "renée-sintenis", "renee sintenis", "renee-sintenis", "renee-sintenis-schule", "renée-sintenis-schule", "renee-sintenis-grundschule", "renée-sintenis-grundschule", "laurinsteig"] },
                     { localities:["Frohnau"],             white: ["victor gollancz", "victor gollancz", "victor-gollancz-grundschule", "victor-gollancz-schule", "gollanczstraße"] },
+                    { localities:["Gatow"],               white: ["grundschule am windmühlenberg", "schule am windmühlenberg", "schuleamwindmuehlenberg", "am Kinderdorf"] },
                     { localities:["Gesundbrunnen"],       white: ["albert gutzmann", "albert-gutzmann", "gutzmannschule", "grundschule", "pankstraße"] },
                     { localities:["Gesundbrunnen"],       white: ["andersen-grundschule", "grundschule", "kattegatstraße"] },
                     { localities:["Gesundbrunnen"],       white: ["bilinguale schule", "phorms", "berlin-mitte.phorms", "ackerstraße"] },
@@ -12664,11 +12771,20 @@ streetDirectory: {
                     { localities:["Grunewald"],           white: ["grunewald-grundschule", "grunewald-schule", "delbrückstraße"] },
                     { localities:["Grunewald"],           white: ["hildegard wegscheider", "hildegard-wegscheider", "wegscheider-gymnasium", "gymnasium", "lassenstraße"] },
                     { localities:["Grunewald"],           white: ["walther rathenau", "walther-rathenau", "wrg-berlin", "gymnasium", "herbertstraße"] },
+                    { localities:["Hakenfelde"],          white: ["august hermann francke", "august-hermann-francke", "august-hermann-francke-schule", "johannesstift-diakonie", "schönwalder allee"] },
+                    { localities:["Hakenfelde"],          white: ["carl schurz", "carl-schurz", "carl-schurz-grundschule", "carl-schurz-schule", "hakenfelder straße"] },
+                    { localities:["Hakenfelde"],          white: ["evangelische schule spandau", "ev. schule spandau", "ev-schule-spandau", "johannesstift", "schönwalder allee"] },
+                    { localities:["Hakenfelde"],          white: ["grundschule am eichenwald", "eichenwald-grundschule", "schule am eichenwald", "gaismannshofer weg"] },
+                    { localities:["Hakenfelde"],          white: ["havel-grundschule", "havel-schule", "goltzstraße"] },
+                    { localities:["Hakenfelde"],          white: ["heinrich böll", "heinrich-böll", "heinrich-böll-oberschule", "heinrich-böll-schule", "boell-schule", "integrierte sekundarschule", "am forstacker"] },
+                    { localities:["Hakenfelde"],          white: ["soziale fachschulen", "johannesstift diakonie", "johannesstift-diakonie", "schönwalder allee"] },
                     { localities:["Halensee"],            white: ["paracelsus", "schulen für naturheilverfahren", "nestorstraße"] },
                     { localities:["Halensee"],            white: ["halensee-grundschule", "halensee-schule", "joachim-friedrich-straße"] },
                     { localities:["Halensee"],            white: ["japanische ergänzungsschule", "berlin-hoshuko", "joachim-friedrich-straße"] },
                     { localities:["Hansaviertel"],        white: ["gymnasium tiergarten", "gymnasium-tiergarten", "gymnasium", "altonaer straße"] },
                     { localities:["Hansaviertel"],        white: ["hansa grundschule", "hansa-grundschule", "hansa-grundschule-online", "grundschule", "lessingstraße"] },
+                    { localities:["Haselhorst"],          white: ["bernd-ryke", "bernd ryke", "bernd-ryke-grundschule", "bernd-ryke-schule", "bernd-ryke-gs", "daumstraße"] },
+                    { localities:["Haselhorst"],          white: ["grundschule an der pulvermühle", "schule an der pulvermühle", "gs-pulvermuehle", "grützmacherweg"] },
                     { localities:["Heiligensee"],         white: ["albrecht haushofer", "albrecht-haushofer", "albrecht-haushofer-schule", "kurzebracker weg"] },
                     { localities:["Heiligensee"],         white: ["demokratische schule", "demokratische-schule-x", "gemeinschaftsschule", "ruppiner chaussee"] },
                     { localities:["Heiligensee"],         white: ["ejf", "fachschule für soziale berufe", "ejf.de", "keilerstraße"] },
@@ -12718,6 +12834,11 @@ streetDirectory: {
                     { localities:["Kaulsdorf"],	      	  white: ["dreieins grundschule", "dreieins-grundschule", "kaulsdorf", "dreieins.org", "peter-huchel-straße"] },
                     { localities:["Kaulsdorf"],	      	  white: ["franz carl achard", "franz-carl-achard", "fc-achard", "waplitzer straße"] },
                     { localities:["Kaulsdorf"],	      	  white: ["ulmen grundschule", "ulmen-grundschule", "ulmenstraße"] },
+                    { localities:["Kladow"],              white: ["artaban schule", "künstlerische therapie", "kladower damm"] },
+                    { localities:["Kladow"],              white: ["freie waldorfschule havelhöhe", "waldorfschule havelhöhe", "havelhoehe.net", "neukladower allee"] },
+                    { localities:["Kladow"],              white: ["grundschule am ritterfeld", "schule am ritterfeld", "ritterfeldschule", "schallweg"] },
+                    { localities:["Kladow"],              white: ["hans carossa", "hans-carossa", "hans-carossa-gymnasium", "hcg-berlin", "am landschaftspark gatow"] },
+                    { localities:["Kladow"],              white: ["mary poppins", "mary-poppins", "mary-poppins-grundschule", "mary-poppins-schule", "am flugplatz gatow"] },
                     { localities:["Konradshöhe"],         white: ["grundschule am tegelschen ort", "grundschule tegelort", "grundschule-tegelort", "gerlindeweg"] },
                     { localities:["Kreuzberg"],           white: ["adolf glaßbrenner", "adolf glassbrenner", "adolf-glaßbrenner", "adolf-glassbrenner", "hagelberger straße"] },
                     { localities:["Kreuzberg"],           white: ["albrecht von graefe", "albrecht-von-graefe", "integrierte sekundarschule", "graefestraße"] },
@@ -12758,6 +12879,14 @@ streetDirectory: {
                     { localities:["Kreuzberg"],           white: ["sozialpädagogisches institut", "walter may", "stiftung spi", "spi-fachschulen", "hallesches ufer"] },
                     { localities:["Kreuzberg"],           white: ["trend-schule", "trendschule", "mariannenstraße"] },
                     { localities:["Kreuzberg"],           white: ["weiterdenker", "weiterdenker-fachschule", "fachschule für sozialpädagogik", "axel-springer-straße"] },
+                    { localities:["Lankwitz"],            white: ["alt lankwitzer grundschule", "alt lankwitzer schule", "alt-lankwitzer grundschule", "alt-lankwitzer schule", "schulstraße"] },
+                    { localities:["Lankwitz"],            white: ["beethoven gymnasium", "beethoven schule", "beethoven-gymnasium", "beethoven-schule", "barbarastraße"] },
+                    { localities:["Lankwitz"],            white: ["bröndby", "bröndby-schule", "integrierte sekundarschule", "broendby", "dessauerstraße"] },
+                    { localities:["Lankwitz"],            white: ["grundschule am königsgraben", "schule am königsgraben", "grundschule-am-königsgraben", "schule-am-königsgraben", "grundschule-am-koenigsgraben", "gallwitzallee"] },
+                    { localities:["Lankwitz"],            white: ["japanische internationale schule", "jap-schule-berlin", "haynauer straße"] },
+                    { localities:["Lankwitz"],            white: ["ludwig bechstein", "ludwig-bechstein", "ludwig bechstein grundschule", "ludwig bechstein schule", "ludwig-bechstein-grundschule", "ludwig-bechstein-schule", "halbauer weg"] },
+                    { localities:["Lankwitz"],            white: ["paul schneider", "paul-schneider", "paul schneider grundschule", "paul schneider schule", "paul-schneider-grundschule", "paul-schneider-schule", "seydlitzstraße"] },
+                    { localities:["Lankwitz"],            white: ["peter frankenfeld", "peter-frankenfeld", "peter-frankenfeld-schule", "wedellstraße"] },
                     { localities:["Lichtenberg"],         white: ["12. schule", "gymnasium", "gym.adkosmos", "allee der kosmonauten"] },
                     { localities:["Lichtenberg"],         white: ["7. schule", "hermann-gmeiner-schule", "harnackstraße"] },
                     { localities:["Lichtenberg"],         white: ["carl von linné", "carl-von-linné-schule", "linne.schule", "paul-junius-straße"] },
@@ -12768,11 +12897,29 @@ streetDirectory: {
                     { localities:["Lichtenberg"],         white: ["may ayim", "may-ayim", "may-ayim-schule", "integrierte sekundarschule", "storkower straße"] },
                     { localities:["Lichtenberg"],         white: ["mildred harnack", "mildred-harnack", "mildred-harnack-schule", "schulze-boysen-straße"] },
                     { localities:["Lichtenberg"],         white: ["schule am grünen grund", "am grünen grund", "herzbergstraße"] },
-                    { localities:["Lichtenberg"],         white: ["schule am rathaus", "schuleamrathaus", "schule", "rathausstraße"] },
+                    { localities:["Lichtenberg"],         white: ["schule am rathaus", "schuleamrathaus", "schule", "rathausstraße"] },
                     { localities:["Lichtenberg"],         white: ["schule auf dem lichten berg", "schule auf dem lichtenberg", "gs-lichtenberg-berlin", "atzpodienstraße"] },
                     { localities:["Lichtenberg"],         white: ["schule im gutspark", "grundschule-im-gutspark", "josef-orlopp-straße"] },
                     { localities:["Lichtenberg"],         white: ["selma lagerlöf", "selma-lagerlöf", "selma-lagerlöf-schule", "sprachheilschule-selma-lagerloef", "sprachheilschule", "rüdigerstraße"] },
                     { localities:["Lichtenberg"],         white: ["semper schulen", "semper-schulen", "möllendorffstraße"] },
+                    { localities:["Lichterfelde"],        white: ["anna essinger", "anna-essinger", "gemeinschaftsschule", "anna-essinger-gemeinschaftsschule", "anna-essinger-schule", "aegs.de", "tietzenweg"] },
+                    { localities:["Lichterfelde"],        white: ["athene-grundschule", "athene-schule", "curtiusstraße"] },
+                    { localities:["Lichterfelde"],        white: ["bilinguale schule", "phorms", "berlin süd", "harry-s.-truman-allee"] },
+                    { localities:["Lichterfelde"],        white: ["clemens brentano", "clemens-brentano", "clemens-brentano-grundschule", "clemens-brentano-schule", "c-brentano-grundschule", "kommandantenstraße"] },
+                    { localities:["Lichterfelde"],        white: ["friedrich drake", "friedrich-drake", "friedrich drake grundschule", "friedrich drake schule", "friedrich-drake-grundschule", "friedrich-drake-schule", "drakestraße"] },
+                    { localities:["Lichterfelde"],        white: ["gemeinschaftsschule", "nach der pädagogik", "berthold otto", "berthold-otto-schule", "berthold-otto-gemeinschaftsschule", "holbeinstraße"] },
+                    { localities:["Lichterfelde"],        white: ["giesensdorfer schule", "giesensdorfer-schule", "giesensdorfer grundschule", "giesensdorfer-grundschule", "ostpreußendamm"] },
+                    { localities:["Lichterfelde"],        white: ["goethe schule", "goethe oberschule", "goethe gymnasium", "goethe-schule", "goethe-oberschule", "goethe-gymnasium", "goethe-gymnasium-lichterfelde", "drakestraße"] },
+                    { localities:["Lichterfelde"],        white: ["grundschule am karpfenteich", "grundschule-am-karpfenteich", "schule am karpfenteich", "schule-am-karpfenteich", "hildburghauser straße"] },
+                    { localities:["Lichterfelde"],        white: ["grundschule an der bäke", "schule an der bäke", "grundschule-an-der-bäke", "schule-an-der-bäke", "haydnstraße"] },
+                    { localities:["Lichterfelde"],        white: ["grundschule unter den kastanien", "grundschule-unter-den-kastanien", "schule unter den kastanien", "schule-unter-den-kastanien", "kastanienstraße"] },
+                    { localities:["Lichterfelde"],        white: ["käthe kruse", "käthe-kruse", "käthe-kruse-grundschule", "käthe kruse grundschule", "käthe-kruse-schule", "käthe kruse schule", "tietzenweg"] },
+                    { localities:["Lichterfelde"],        white: ["kronach grundschule", "kronach schule", "kronach-grundschule", "kronach-schule", "moltkestraße"] },
+                    { localities:["Lichterfelde"],        white: ["lilienthal gymnasium", "lilienthal schule", "lilienthal-gymnasium", "lilienthal-schule", "ringstraße"] },
+                    { localities:["Lichterfelde"],        white: ["max von laue", "max-von-laue", "oberschule", "max-von-laue-schule", "max-von-laue-oberschule", "dürerstraße"] },
+                    { localities:["Lichterfelde"],        white: ["mercator grundschule", "mercator schule", "mercator-grundschule", "mercator-schule", "mercator-gs", "mercatorweg"] },
+                    { localities:["Lichterfelde"],        white: ["private musikschule", "johannes knebel", "zerbster straße"] },
+                    { localities:["Lichterfelde"],        white: ["willi graf", "willi-graf", "willi graf gymnasium", "willi graf schule", "willi-graf-gymnasium", "willi-graf-schule", "ostpreußendamm"] },
                     { localities:["Lübars"],              white: ["grundschule am vierrutenberg", "grundschule-am-vierrutenberg", "am freibad"] },
                     { localities:["Malchow"],             white: ["grüner campus malchow", "gruener-campus-malchow", "gemeinschaftsschule", "malchower chaussee"] },
                     { localities:["Mahlsdorf"],	          white: ["14. schule", "gemeinschaftsschule", "landsberger straße"] },
@@ -12892,7 +13039,7 @@ streetDirectory: {
                     { localities:["Neukölln"],            white: ["sonnen schule", "sonnen grundschule", "sonnen-schule", "sonnen-grundschule", "dammweg"] },
                     { localities:["Neukölln"],            white: ["theodor storm schule", "theodor storm grundschule", "theodor-storm-schule", "theodor-storm-grundschule", "grundschule", "hobrechtstraße"] },
                     { localities:["Neukölln"],            white: ["adolf reichwein", "adolf-reichwein", "adolf-reichwein-schule", "sonnenallee"] },
-                    { localities:["Neukölln"],            white: ["rütlischule", "rütli schule", "rütli-schule", "gemeinschaftsschule auf dem campus rütli", "campus rütli", "campusruetli", "gemeischaftsschule", "rütlistraße"] },
+                    { localities:["Neukölln"],            white: ["rütlischule", "rütli schule", "rütli-schule", "gemeinschaftsschule auf dem campus rütli", "campus rütli", "campusruetli", "gemeischaftsschule", "rütlistraße"] },
                     { localities:["Neukölln"],            white: ["hans fallada", "hans-fallada", "hans-fallada-schule", "harzer straße"] },
                     { localities:["Neukölln"],            white: ["katholische schule", "sankt marien", "kath. schule", "st. marien", "marienschule-berlin", "donaustraße"] },
                     { localities:["Neukölln"],            white: ["zuckmayer schule", "zuckmayer-schule", "kopfstraße"] },
@@ -12904,6 +13051,12 @@ streetDirectory: {
                     { localities:["Niederschönhausen"],   white: ["hasengrund-schule", "hasengrund-grundschule", "hasengrund-berlin", "hermann-hesse-straße"] },
                     { localities:["Niederschönhausen"],   white: ["konrad duden", "konrad-duden", "konrad-duden-schule", "integrierte sekundarschule", "isskd", "rolandstraße"] },
                     { localities:["Niederschönhausen"],   white: ["max delbrück", "max-delbrück", "max-delbrück-gymnasium", "kuckhoffstraße"] },
+                    { localities:["Nikolassee"],          white: ["6. schule", "potsdamer chaussee"] },
+                    { localities:["Nikolassee"],          white: ["dreilinden grundschule", "dreilinden schule", "dreilinden-grundschule", "dreilinden-schule", "dreilindenstraße"] },
+                    { localities:["Nikolassee"],          white: ["dreilinden gymnasium", "dreilinden-gymnasium", "dreilindenstraße"] },
+                    { localities:["Nikolassee"],          white: ["johannes tews", "johannes-tews", "johannes-tews-grundschule", "johannes-tews-schule", "jtg-berlin", "wasgenstraße"] },
+                    { localities:["Nikolassee"],          white: ["sancta-maria", "sancta maria", "sancta-maria-schule", "hedwigschwestern", "dreilindenstraße"] },
+                    { localities:["Nikolassee"],          white: ["werner-von-siemens", "werner von siemens", "werner-von-siemens-gymnasium", "siemens-gymnasium", "beskidenstraße"] },
                     { localities:["Pankow"],              white: ["47. schule", "grundschule", "schuleanderstrauchwiese", "mendelstraße"] },
                     { localities:["Pankow"],              white: ["arnold zweig", "arnold-zweig", "arnold-zweig-grundschule", "arnold-zweig-schule", "wollankstraße"] },
                     { localities:["Pankow"],              white: ["berlin-bilingual-school", "bilingual school", "integrierte sekundarschule", "granitzstraße"] },
@@ -12991,8 +13144,51 @@ streetDirectory: {
                     { localities:["Schmargendorf"],       white: ["alt-schmargendorf", "reichenhaller straße"] },
                     { localities:["Schmargendorf"],       white: ["carl orff", "carl-orff", "carl-orff-gs", "berkaer straße"] },
                     { localities:["Schmargendorf"],       white: ["evangelisches gymnasium zum grauen kloster", "graues-kloster", "zum grauen kloster", "gymnasium", "salzbrunner straße"] },
-                    { localities:["Schmargendorf"],       white: ["sekundarschule wilmersdorf", "sekundarschule-wilmersdorf", "kranzer straße"] },
                     { localities:["Schmargendorf"],       white: ["judith kerr", "judith-kerr", "friedrichshaller straße"] },
+                    { localities:["Schmargendorf"],       white: ["private kant", "private-kant", "berlin international school", "berlin-international-school", "lentzeallee"] },
+                    { localities:["Schmargendorf"],       white: ["sekundarschule wilmersdorf", "sekundarschule-wilmersdorf", "kranzer straße"] },
+                    { localities:["Siemensstadt"],        white: ["10. schule", "gemeinschaftsschule", "gartenfelder straße"] },
+                    { localities:["Siemensstadt"],        white: ["carl friedrich von siemens", "carl-friedrich-von-siemens", "carl-friedrich-von-siemens-gymnasium", "jungfernheideweg"] },
+                    { localities:["Siemensstadt"],        white: ["robert reinick", "robert-reinick", "robert-reinick-grundschule", "robert-reinick-schule", "jungfernheideweg"] },
+                    { localities:["Siemensstadt"],        white: ["schule an der jungfernheide", "schule-an-der-jungfernheide", "integrierte sekundarschule", "lenther steig"] },
+                    { localities:["Siemensstadt"],        white: ["werner von siemens", "werner-von-siemens", "ausbildung.siemens", "werkberufsschule", "nonnendammallee"] },
+                    { localities:["Spandau"],             white: ["askanier-grundschule", "askanier-schule", "borkzeile"] },
+                    { localities:["Spandau"],             white: ["birken-schule", "birken-grundschule", "inklusiver-campus-spandau", "hügelschanze"] },
+                    { localities:["Spandau"],             white: ["ernst-ludwig-heim", "ernst ludwig heim", "ernst-ludwig-heim-grundschule", "ernst-ludwig-heim-schule", "elhg", "grunewaldstraße"] },
+                    { localities:["Spandau"],             white: ["freiherr vom stein", "freiherr-vom-stein", "freiherr-vom-stein-gymnasium", "steingymnasium", "galenstraße"] },
+                    { localities:["Spandau"],             white: ["kant-gymnasium", "kant-gymnasium-berlin", "bismarckstraße"] },
+                    { localities:["Spandau"],             white: ["katholische schule", "kath. schule", "bernhard lichtenberg", "grundschule", "ksbl", "hohenzollernring"] },
+                    { localities:["Spandau"],             white: ["konkordia-grundschule", "konkordia-schule", "konkordia grundschule", "konkordia schule", "elsflether weg"] },
+                    { localities:["Spandau"],             white: ["lillian zeller", "lillian-zeller", "lillian-zeller-grundschule", "lillian-zeller-schule", "32. schule", "grundschule", "fehrbelliner tor"] },
+                    { localities:["Spandau"],             white: ["lily-braun", "lily braun", "lily-braun-gymnasium", "münsingerstraße"] },
+                    { localities:["Spandau"],             white: ["lynar-grundschule", "lynar-schule", "lutherstraße"] },
+                    { localities:["Spandau"],             white: ["peter härtling", "peter-härtling", "peter-härtling-grundschule", "peter-härtling-schule", "falkenseer damm", "peter-haertling-gs"] },
+                    { localities:["Spandau"],             white: ["schule am grüngürtel", "schule-am-grüngürtel", "schule-am-gruenguertel", "askanierring"] },
+                    { localities:["Spandau"],             white: ["wolfgang borchert", "wolfgang-borchert", "wolfgang-borchert-schule", "wolfgang borchert schule", "borchertschule-spandau", "integrierte sekundarschule", "blumenstraße"] },
+                    { localities:["Staaken"],             white: ["33. schule", "grundschule", "compartmentschule", "05g33", "heerstraße"] },
+                    { localities:["Staaken"],             white: ["astrid lindgren", "astrid-lindgren", "astrid-lindgren-grundschule", "astrid-lindgren-schule", "lindgrenschule", "südekumzeile"] },
+                    { localities:["Staaken"],             white: ["christian morgenstern", "christian-morgenstern", "christian-morgenstern-grundschule", "christian-morgenstern-schule", "räcknitzer steig"] },
+                    { localities:["Staaken"],             white: ["grundschule am brandwerder", "schule am brandwerder", "brandwerder.de", "spandauer straße"] },
+                    { localities:["Staaken"],             white: ["linden-grundschule", "linden-schule", "staakener feldstraße"] },
+                    { localities:["Staaken"],             white: ["schule am staakener kleeblatt", "integrierte sekundarschule", "brunsbütteler damm"] },
+                    { localities:["Staaken"],             white: ["zeppelin-grundschule", "zeppelin-schule", "zeppelin-gs", "heidebergplan"] },
+                    { localities:["Staaken"],             white: ["conrad schule", "conrad grundschule", "conrad-schule", "conrad-grundschule", "schulstraße"] },
+                    { localities:["Steglitz"],            white: ["dunant-grundschule", "dunant-schule", "dunant-gs", "gritznerstraße"] },
+                    { localities:["Steglitz"],            white: ["evangelische schule steglitz", "ev. schule", "ev-schule-steglitz", "integrierte sekundarschule", "beymestraße"] },
+                    { localities:["Steglitz"],            white: ["fichtenberg oberschule", "fichtenberg schule", "fichtenberg-oberschule", "fichtenberg-schule", "rothenburgstraße"] },
+                    { localities:["Steglitz"],            white: ["schule am insulaner", "grundschule am insulaner", "grundschuleaminsulaner", "hanstedter weg"] },
+                    { localities:["Steglitz"],            white: ["grundschule am stadtpark", "grundschule-am-stadtpark", "schule am stadtpark", "schule-am-stadtpark", "karl-stieler-straße"] },
+                    { localities:["Steglitz"],            white: ["schule in der plantagenstraße", "grundschule in der plantagenstraße", "grundschuleplantagenstrasse", "plantagenstraße"] },
+                    { localities:["Steglitz"],            white: ["gymnasium steglitz", "gymnasium-steglitz", "gymnasiumsteglitz", "heesestraße"] },
+                    { localities:["Steglitz"],            white: ["helene lange", "helene-lange", "helene-lange-schule", "integrierte sekundarschule", "lauenburger straße"] },
+                    { localities:["Steglitz"],            white: ["hermann-ehlers", "hermann ehlers", "hermann-ehlers-gymnasium", "hermann-ehlers-schule", "hermann ehlers gymnasium", "hermann ehlers schule", "elisenstraße"] },
+                    { localities:["Steglitz"],            white: ["j.-a.-zeune-schule", "blinde und berufsfachschule", "dr. silex", "zeune-schule", "rothenburgstraße"] },
+                    { localities:["Steglitz"],            white: ["kopernikus schule", "kopernikus oberschule", "kopernikus-schule", "kopernikus-oberschule", "integrierte sekundarschule", "lepsiusstraße"] },
+                    { localities:["Steglitz"],            white: ["msk berlin", "schule für musik, sprache und kunst", "forststraße"] },
+                    { localities:["Steglitz"],            white: ["paulsen gymnasium", "paulsen schule", "paulsen-gymnasium", "paulsen-schule", "wp.paulsen-gymnasium", "gritznerstraße"] },
+                    { localities:["Steglitz"],            white: ["private kant", "private-kant", "private-kant-schulen", "kant-oberschule", "grundschule", "oberschule", "grunewaldstraße", "körnerstraße"] },
+                    { localities:["Steglitz"],            white: ["rothenburg grundschule", "rothenburg schule", "rothenburg-grundschule", "rothenburg-schule", "rothenburgstraße"] },
+                    { localities:["Steglitz"],            white: ["sachsenwald schule", "sachsenwald grundschule", "sachsenwald-schule", "sachsenwald-grundschule", "sachsenwaldstraße"] },
                     { localities:["Tegel"],               white: ["alfred brehm", "alfred-brehm", "alfred-brehm-grundschule", "ascheberger weg"] },
                     { localities:["Tegel"],               white: ["euro akademie", "euroakademie", "schule für übersetzer und dolmetscher", "berliner straße"] },
                     { localities:["Tegel"],               white: ["franz marc", "franz-marc", "franz-marc-grundschule", "franz-marc-schule", "fmg-tegel", "treskowstraße"] },
@@ -13016,6 +13212,7 @@ streetDirectory: {
                     { localities:["Waidmannslust"],       white: ["grundschule in den rollbergen", "gs-rollberge", "waldshuter zeile"] },
                     { localities:["Waidmannslust"],       white: ["katholische schule salvator", "kath. schule salvator", "fürst-bismarck-straße"] },
                     { localities:["Waidmannslust"],       white: ["münchhausen-schule", "münchhausen-grundschule", "muenchhausen-grundschule", "artemisstraße"] },
+                    { localities:["Wannsee"],             white: ["montessori", "montessorischule", "grundschule", "montessori-am-wannsee", "zum heckeshorn"] },
                     { localities:["Wedding"],             white: ["anna lindh", "anna-lindh", "anna-lindh-grundschule", "anna-lindh-schule", "grundschule", "reinickendorfer straße"] },
                     { localities:["Wedding"],             white: ["brüder-grimm", "bggs-berlin", "grundschule", "tegeler straße"] },
                     { localities:["Wedding"],             white: ["erika mann", "erika-mann", "grundschule", "schule", "utrechter straße"] },
@@ -13063,6 +13260,16 @@ streetDirectory: {
                     { localities:["Westend"],             white: ["wald-gymnasium", "gymnasium", "waldschulallee"] },
                     { localities:["Wilhelmsruh"],         white: ["grundschule wilhelmsruh", "grundschule-wilhelmsruh", "lessingstraße"] },
                     { localities:["Wilhelmsruh"],         white: ["inge deutschkron", "inge-deutschkron", "inge-deutschkron-gymnasium", "idg.berlin", "kopenhagener straße"] },
+                    { localities:["Wilhelmstadt"],        white: ["bertolt brecht", "bertolt-brecht", "bertolt-brecht-schule", "bertolt-brecht-oberschule", "integrierte sekundarschule", "wilhelmstraße"] },
+                    { localities:["Wilhelmstadt"],        white: ["carlo-schmid", "carlo schmid", "carlo-schmid-oberschule", "integrierte sekundarschule", "lutoner straße"] },
+                    { localities:["Wilhelmstadt"],        white: ["christoph földerich", "christoph-földerich", "christoph-földerich-grundschule", "christoph-földerich-schule", "foelleschule", "földerichplatz"] },
+                    { localities:["Wilhelmstadt"],        white: ["grundschule am amalienhof", "schule am amalienhof", "gsamalienhof", "weinmeisterhornweg"] },
+                    { localities:["Wilhelmstadt"],        white: ["grundschule am birkenhain", "grundschule-am-birkenhain", "schule am birkenhain", "schule-am-birkenhain", "seeburger straße"] },
+                    { localities:["Wilhelmstadt"],        white: ["grundschule am weinmeisterhorn", "schule am weinmeisterhorn", "daberkowstraße"] },
+                    { localities:["Wilhelmstadt"],        white: ["paul-moor", "paul moor", "paul-moor-grundschule", "paulmoor-gs", "adamstraße"] },
+                    { localities:["Wilhelmstadt"],        white: ["schule am gartenfeld", "schule-am-gartenfeld", "seecktstraße"] },
+                    { localities:["Wilhelmstadt"],        white: ["schule an der haveldüne", "havelduene", "integrierte sekundarschule", "jaczostraße"] },
+                    { localities:["Wilhelmstadt"],        white: ["wilhelmstadt schulen", "wilhelmstadt-schulen", "wilhelmstadtschulen", "wilhelmstraße"] },
                     { localities:["Wilmersdorf"],         white: ["annie heuser", "annie-heuser", "eisenzahnstraße"] },
                     { localities:["Wilmersdorf"],         white: ["birger forell", "birger-forell", "koblenzer straße"] },
                     { localities:["Wilmersdorf"],         white: ["cecilien-grundschule", "cecilien-schule", "nikolsburger platz"] },
@@ -13090,7 +13297,23 @@ streetDirectory: {
                     { localities:["Wittenau"],            white: ["private goethe-schulen", "goethe-grundschule", "wittenauer straße"] },
                     { localities:["Wittenau"],            white: ["ringelnatz-grundschule", "ringelnatz-schule", "wilhelm-gericke-straße"] },
                     { localities:["Wittenau"],            white: ["romain rolland", "romain-rolland", "romain-rolland-gymnasium", "romain-rolland-schule", "place molière", "place moliere"] },
-                    { localities:["Wittenau"],            white: ["schule am park", "schule-am-park", "eichborndamm"] }
+                    { localities:["Wittenau"],            white: ["schule am park", "schule-am-park", "eichborndamm"] },
+                    { localities:["Zehlendorf"],          white: ["caroline von heydebrand", "caroline-von-heydebrand", "caroline-von-heydebrand-schule", "heydebrand.waldorf", "klopstockstraße"] },
+                    { localities:["Zehlendorf"],          white: ["droste-hülshoff", "droste hülshoff", "droste hülshoff gymnasium", "droste-hülshoff-gymnasium", "droste-hülshoff-schule", "droste-berlin", "schönower straße"] },
+                    { localities:["Zehlendorf"],          white: ["emil molt", "emil-molt", "emil-molt-schule", "claszeile"] },
+                    { localities:["Zehlendorf"],          white: ["evangelische grundschule zehlendorf", "ev. grundschule", "ev-schule-zehlendorf", "ludwigsfelder straße"] },
+                    { localities:["Zehlendorf"],          white: ["freie schule", "anne-sophie", "anne sophie", "freie-schule-anne-sophie", "clayallee"] },
+                    { localities:["Zehlendorf"],          white: ["schule am buschgraben", "grundschule am buschgraben", "grundschuleambuschgraben", "ludwigsfelder straße"] },
+                    { localities:["Zehlendorf"],          white: ["john f. kennedy", "john-f.-kennedy", "john-f.-kennedy-schule", "jfks.de", "teltower damm"] },
+                    { localities:["Zehlendorf"],          white: ["katholische schule", "kath. schule", "sankt ursula", "st. ursula", "grundschule", "st-ursula-grundschule", "kleinaustraße"] },
+                    { localities:["Zehlendorf"],          white: ["nord grundschule", "nord schule", "nord-grundschule", "nord-schule", "nordgrundschule", "potsdamer straße"] },
+                    { localities:["Zehlendorf"],          white: ["parzival schule", "parzival-schule", "quermatenweg"] },
+                    { localities:["Zehlendorf"],          white: ["pestalozzi-schule", "pestalozzi schule", "hartmannsweilerweg"] },
+                    { localities:["Zehlendorf"],          white: ["schadow gymnasium", "schadow schule", "schadow-gymnasium", "schadow-schule", "beuckestraße"] },
+                    { localities:["Zehlendorf"],          white: ["schule für eurythmische art und kunst", "argentinische allee"] },
+                    { localities:["Zehlendorf"],          white: ["schweizerhof grundschule", "schweizerhof schule", "schweizerhof-grundschule", "schweizerhof-schule", "leo-baeck-straße"] },
+                    { localities:["Zehlendorf"],          white: ["süd grundschule", "süd schule", "süd-grundschule", "süd-schule", "claszeile"] },
+                    { localities:["Zehlendorf"],          white: ["zinnowwald grundschule", "zinnowwald schule", "zinnowwald-grundschule", "zinnowwald-schule", "wilskistraße"] }
                     ]},
 "Schulenburgring":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Schulenburgstraße":	{ districts: ["Reinickendorf", "Spandau"], localities: ["Reinickendorf", "Spandau", "Wilhelmstadt"] },
@@ -13217,7 +13440,17 @@ streetDirectory: {
 "Seeburger Weg":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Seecktstraße":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Seefelder Straße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
-"Seegefelder Straße":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld", "Spandau"] },
+"Seegefelder Straße":{ variants:  [
+                    { localities:["Falkenhagener Feld"],  white: ["dyrotzer straße", "gemeindehaus",  "grundschule", "kirchengemeinde", "klosterfeld", "kohstallweg", "leuthingerweg", "morgenröte", "schulzenstraße", "seegefelder weg", "senzker straße", "straße 396", "viersenener straße", "wunderwaldstraße", "wustermarker straße"]},
+                    { localities:["Spandau"],             white: ["altstädter rung", "bahnhof", "borkzeile", "carl-schuz-straße", "dallgower straße", "elstaler straße", "galenstraße", "klosterstraße", "nauener straße", "petzoldweg", "staakener straße", "zeppelinstraße"]},
+                    { localities:["Falkenhagener Feld", "Spandau"],
+                      segments:  [
+                    { from: 1,   to: 1,   parity: "odd",  locality: "Spandau" },
+                    { from: 16,  to: 16,  parity: "even", locality: "Spandau" },
+                    { from: 18,  to: 105, parity: "even", locality: "Spandau" },
+                    { from: 111, to: 219, parity: "both", locality: "Falkenhagener Feld" }]},
+                    { localities:["Falkenhagener Feld", "Spandau"] }
+                    ]},
 "Seegefelder Weg":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld", "Staaken"] },
 "Seegerstraße":	{ districts: ["Pankow"], localities: ["Wilhelmsruh"] },
 "Seehausener Straße":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
@@ -13394,6 +13627,7 @@ streetDirectory: {
 "Sinsheimer Weg":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Sinziger Straße":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
 "Siriusstraße":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Altglienicke", "Neukölln"] },
+"SIS Swiss":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Sittener Zeile":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Sittestraße":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Sitzendorfer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -14425,7 +14659,8 @@ streetDirectory: {
 "Ulrikenstraße":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Ulsterstraße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Umberto-Nobile-Straße":	{ districts: ["Spandau"], localities: ["Kladow"] },
-"Unben. Straße Schöneberg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
+"Umgehungschaussee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },
+"Unbenannte Straße Schöneberg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Undinestraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Ungarnstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Ungewitterweg":	{ districts: ["Spandau"], localities: ["Staaken"] },
@@ -14881,7 +15116,15 @@ streetDirectory: {
 "Weingartenweg":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Weinheimer Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
 "Weinholdweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
-"Weinmeisterhornweg":	{ districts: ["Spandau"], localities: ["Staaken", "Wilhelmstadt"] },
+"Weinmeisterhornweg": { variants: [
+                { localities: ["Staaken"],         white: ["hahnebergweg", "heerstraße", "polizei", "reimerweg", "schutzhundverein", "semmelländerweg", "villa amalienhof"] },
+                { localities: ["Wilhelmstadt"],    white: ["an der karolinenhöhe", "bocksfelde", "daberkowstraße", "falstaffweg", "folkungerstraße", "gatower straße", "grundschule am amalienhof", "grundschule am weinmeisterhorn", "kattfußstraße", "keltererweg", "sandheideweg", "scharfe lanke", "steinmeisterweg", "stritteweg", "weinbergsweg", "wilhelmstraße", "winzerstraße"] },
+                { localities: ["Staaken", "Wilhelmstadt"],
+                  segments:   [
+                { from: 1,   to: 43,   parity: "odd",  locality: "Wilhelmstadt" },
+                { from: 44,  to: 163,  parity: "even", locality: "Wilhelmstadt" },
+                { from: 152, to: 233,  parity: "both", locality: "Staaken" } ] },
+                ] },
 "Weinmeisterstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },	// U-Bahnhof
 "Weinstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Weisbachstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
@@ -15001,6 +15244,8 @@ streetDirectory: {
 "Weydemeyerstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte"], localities: ["Friedrichshain", "Mitte"] },
 "Weydingerstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Weygerweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
+"Wichern-Kolleg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] }, // Schule
+"Wichernkolleg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] }, // Schule
 "Wichernstraße":	{ districts: ["Spandau", "Steglitz-Zehlendorf"], localities: ["Dahlem", "Hakenfelde"] },
 "Wichertstraße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Wichmannstraße":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
@@ -16098,7 +16343,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\b(https?|ftp)\\s*:{2,}\\s*//", flags: "gu", replacement: "$(1)://"}, // mehfachen Doppelpunkt auf einen reduzieren
         { pattern: "\\b(https:\\s*//\\s*|http:\\s*//\\s*)", flags: "gu", replacement: "" }, // URL-Protokoll entfernen (https://, http://)
         { pattern: "\\bwww\\.", flags: "gu", replacement: ""}, // Standard-Subdomain "www." entfernen
-        { pattern: "\\.(app|berlin|cloud|com|community|de|digital|edu|eu|info|io|net|online|org|schule|shop|versicherung)(/\\s|/(?=[.!?\\s]|$)", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL zum Satzende entfernen
+        { pattern: "\\.(app|berlin|cloud|com|community|de|digital|edu|eu|info|io|net|online|org|schule|shop|versicherung)(/\\s|/(?=[.!?\\s]|$))", flags: "gu", replacement: ".$(1)." }, // Slash am Ende einer URL zum Satzende entfernen
         { pattern: "(?<=\\w)/(?=\\u0020|[.!?\\s]|$)", flags: "gu", replacement: "" }, // Slash am Ende einer URL entfernen
 
         // Finishing
@@ -22354,6 +22599,10 @@ return out;
 
 //// KAPITEL 8 //// SUPERADD (APTOMA) //////////////////////////////////////////////////////////////
 // APTOMA EDITION/PUBLISH nutzen SuperADD (RegEx/Hashtag) + SuperLINK + SuperERASER (SuperMAX v4) //
+
+// Wichtig: smxAdd_compileRules() bewusst streng lassen.
+// Defekte RegEx-Regeln soll SuperADD sichtbar stoppen!
+
 function smxAdd_compileRules(specs){
   return (specs ?? []).map(o => {
     const pat = String(o?.pattern ?? '');
