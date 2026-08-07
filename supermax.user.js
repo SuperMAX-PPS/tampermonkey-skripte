@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.1.80 Multi-Site Struktur
+// @name SuperMAX 7.1.81 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.1.80
+// @version 7.1.81
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -208,7 +208,7 @@ filenameDelimiter: ' II ',          // Einheitlich: Pipes ohne Leerzeichen
 filenameDelimiterFallback: ' II ',  // Fallback entspricht Standard
 wrapStichwortInParens: true,        // "(Stichwort)" hinter Headline
 headlineFirst: false,               // "Überschrift (Stichwort)" bleibt wie gewünscht
-debugLocality: false,               // DETEKTOR auf true schalten bei Bedarf (experimentell)
+debugLocality: false,                // DETEKTOR auf true schalten bei Bedarf (experimentell)
 
 editionMap: {
 CH:['Charlottenburg-Nord','Charlottenburg-Wilmersdorf','Charlottenburg','Westend'],
@@ -484,6 +484,7 @@ streetDirectory: {
 "Achtermannstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Achtrutenberg":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Ackerplanweg":	    { districts: ["Reinickendorf"], localities: ["Tegel"] },
+"Ackerhalle":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Ackerstraße":      { variants:  [
                     { localities:["Gesundbrunnen"],       white: ["angelov", "bernauer", "buddhistischer", "fo-guang-shan", "gesundbrunnen", "humboldthain", "mensa", "phorms", "studierendenwerk", "wedding", "wochenmarkt"] },
                     { localities:["Mitte"],               white: ["brewdog", "elisabeth I", "feldstraße", "junge liberale", "koppenpltz", "linienstraße", "nordbahnhof", "polnischen versager", "rosenthaler", "treberhaus", "voltastraße"] },
@@ -532,8 +533,9 @@ streetDirectory: {
                     ]},
 "Adlerhorst":	    { districts: ["Treptow-Köpenick"], localities: ["Grünau"] },
 "Adlerplatz":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
-"Adlershof":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },	 // S-Bahnhof
+"Adlershof":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] }, // S-Bahnhof
 "Adlershofer Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
+"Adlershof Tor":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] }, // Handel
 "Adlerstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Admiralbrücke":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Admiralstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
@@ -639,6 +641,7 @@ streetDirectory: {
                     { localities:["Weißensee"],           white: ["klax", "berufsakademie", "langhansstraße"] },
                     { localities:["Wilmersdorf"],         white: ["berliner straße", "kosmetikakademie", "prestige", "prestige-akad"] },
                     ]},
+"Akademie der Künste":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Akazienallee":	    { variants:  [
                     { localities:["Mahlsdorf"],           white: ["hellersdorf", "hultschi", "hultschiner", "mahlsdorf", "summter straße"] },
                     { localities:["Rosenthal"],           white: ["kastanienallee", "nordendstraße", "pankow", "rosenthal"] },
@@ -657,7 +660,8 @@ streetDirectory: {
 "Akeleiweg":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
 "Akkordeonweg":	    { districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Aktionsspielplatz":{ districts: ["Mitte"], localities: ["Moabit"] }, // Spielplatz
-"Aktivspielplatz Franz B.":	     { districts: ["Pankow"], localities: ["Französisch Buchholz"] }, // Spielplatz
+"Aktivspielplatz Franz B.":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] }, // Spielplatz
+"Al Contadino":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Alandstraße":	    { districts: ["Spandau"], localities: ["Haselhorst"] },
 "Alarichplatz":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Spielplatz
 "Alarichstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
@@ -720,6 +724,7 @@ streetDirectory: {
                     ]},
 "Alexa":	        { districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Alexander-Meißner-Straße":{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
+"Alexanderhaus":    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Alexanderplatz":	{ districts: ["Mitte"], localities: ["Mitte"] }, // S+U-Bahnhof // Sehenswürdigkeit
 "Alexanderstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Alexanderufer":	{ districts: ["Mitte"], localities: ["Mitte"] },
@@ -833,6 +838,7 @@ streetDirectory: {
 "Alte Kaulsdorfer Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Alte Kiesgrube Kladow":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Alte Leipziger Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
+"Alte Münze":       { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Alte Nationalgalerie":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Alte Potsdamer Straße":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Alte Rhinstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -1448,6 +1454,7 @@ streetDirectory: {
 "Am Weidenbruch":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Am Weidendamm":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Am Weihenhorst":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
+"Am Weinberg":	    { districts: ["Mitte"], localities: ["Mitte"] },
 "Am Weingarten":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Am Weißen Steg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Am Werksgarten":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
@@ -1675,6 +1682,7 @@ streetDirectory: {
 "Anne Frank Zentrum":       { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Annedore-Leber-Park":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Grünanlage
 "Anne-Frank-Straße":{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
+"Anne-Frank-Zentrum":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Annemariestraße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Annenallee":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Annenstraße":	    { variants:  [
@@ -1721,6 +1729,7 @@ streetDirectory: {
 "Arabisweg":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Aralienweg":	    { districts: ["Pankow"], localities: ["Rosenthal"] },
 "Arberstraße":	    { districts: ["Lichtenberg"], localities: ["Karlshorst"] },
+"Arboretum":	    { districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] }, // Kiez
 "Archenholdstraße":	{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },
 "Archibaldweg":	    { districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
 "Architekturmuseum":{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Museum
@@ -1750,6 +1759,7 @@ streetDirectory: {
 "Armbrustweg":	    { districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Armenische Straße":{ districts: ["Mitte"], localities: ["Wedding"] },
 "Arminiusmarkthalle":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Handel
+"Arminius-Markthalle":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Handel
 "Arminiusstraße":	{ districts: ["Mitte"], localities: ["Moabit"] },
 "Arnbrucker Straße":{ districts: ["Pankow"], localities: ["Karow"] },
 "Arndtplatz":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
@@ -1824,6 +1834,7 @@ streetDirectory: {
 "Ascherslebener Weg":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Asgardstraße":	    { districts: ["Pankow"], localities: ["Heinersdorf"] },
 "Ashdodstraße":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Asiatische Kunst": { districts: ["Mitte"], localities: ["Mitte"] }, // Ausstellung im Humboldt Forum
 "Askaloner Weg":    { districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Askaniawelten":    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Museum
 "Askanierring":	    { districts: ["Spandau"], localities: ["Spandau"] },
@@ -1917,7 +1928,7 @@ streetDirectory: {
                     { black:     ["kleine auguststraße"] },
                     { localities:["Kaulsdorf"],           white: ["adolfstraße", "hellersdorf", "kaulsdorf", "marzahn", "planitzstraße"] },
                     { localities:["Lichterfelde"],        white: ["heinersdorfer straße", "jägerstraße", "lange straße", "lichterfelde", "steglitz", "zehlendorf"] },
-                    { localities:["Mitte"],               white: ["armen gasse", "armesünder gasse", "aufbau alex", "ballhaus", "chacha", "clärchens", "contemporary", "eigen+art", "galerie dna", "hackescher markt", "hospitalstraße", "mitte", "oranienburger", "rosenthaler", "salzgrotte", "spielplatz", "sportplatz", "weinmeisterstraße"] },
+                    { localities:["Mitte"],               white: ["armen gasse", "armesünder gasse", "aufbau alex", "ballhaus", "chacha", "clärchens", "contemporary", "eigen+art", "galerie dna", "hackescher markt", "hospitalstraße", "kunst-werke", "mitte", "oranienburger", "rosenthaler", "salzgrotte", "spielplatz", "sportplatz", "weinmeisterstraße"] },
                     { localities:["Kaulsdorf", "Lichterfelde", "Mitte"] }
                     ]},
 "Aumetzer Weg":	    { districts: ["Spandau"], localities: ["Staaken"] },
@@ -1926,6 +1937,7 @@ streetDirectory: {
 "Aurikelweg":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Aurorafalterweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Ausbildungszentrum OTA":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
+"Aussichtsplattform Panorama":	 { districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Außenweg":	        { districts: ["Spandau"], localities: ["Gatow"] },
 "Avenue Charles de Gaulle":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Avenue Jean Mermoz":	    { districts: ["Reinickendorf"], localities: ["Tegel"] },
@@ -2061,6 +2073,7 @@ streetDirectory: {
 "Bammelecke":	    { districts: ["Treptow-Köpenick"], localities: ["Grünau"] }, // Badestelle
 "Bananenapfelweg":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Banater Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
+"Band des Bundes":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Bandelstraße":	    { districts: ["Mitte"], localities: ["Moabit"] },
 "Bänschstraße":	    { districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Bansiner Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
@@ -2088,6 +2101,7 @@ streetDirectory: {
 "Bärenlauchstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Niederschöneweide"] },
 "Bärenschaufenster":{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] }, // Handel
 "Bärensteinstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+"Bärenzwinger":     { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Barfusstraße":	    { districts: ["Mitte"], localities: ["Wedding"] },
 "Barkenhof":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Barlachweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
@@ -2132,6 +2146,8 @@ streetDirectory: {
 "Bauersfeldzeile":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Bauerwitzer Weg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
 "Bauführerweg":	    { districts: ["Neukölln"], localities: ["Britz"] },
+"Bauhaus-Archiv":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
+"Bauhausarchiv":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Bauhofstraße":	    { districts: ["Mitte"], localities: ["Mitte"] },
 "Bauhüttenweg":	    { districts: ["Neukölln"], localities: ["Britz"] },
 "Baumbachstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
@@ -2157,6 +2173,7 @@ streetDirectory: {
 "Bayernallee":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Bayernring":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Spielplatz
 "Bayreuther Straße":{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
+"Beamtentor":	    { districts: ["Mitte"], localities: ["Gesundbrunnen"] }, // Sehenswürdigkeit
 "Beatestraße":	    { districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
 "Beatrice-Zweig-Straße":    { districts: ["Pankow"], localities: ["Niederschönhausen"] },
 "Bebelplatz":	    { districts: ["Mitte"], localities: ["Mitte"] },
@@ -2215,6 +2232,8 @@ streetDirectory: {
 "Beifußweg":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Beilsteiner Straße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Beim Pfarrhof":    { districts: ["Spandau"], localities: ["Staaken"] },
+"Beisheim Center":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Gewerbe
+"Beisheim-Center":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Gewerbe
 "Beizerweg":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Bekassinenweg":    { districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Belfaster Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },
@@ -2249,6 +2268,7 @@ streetDirectory: {
 "Bendastraße":	    { districts: ["Neukölln"], localities: ["Britz", "Neukölln"] },
 "Bendemannstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Bendigstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
+"Bendlerblock":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Bendlerbrücke":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Benedicta-Teresia-Weg":    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Benediktinerstraße":       { districts: ["Reinickendorf"], localities: ["Frohnau"] },
@@ -2345,6 +2365,7 @@ streetDirectory: {
                     ]},
 "Berlin Dance Institute":	     { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Schule
 "Berlin Decks":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Gewerbegebiet
+"Berlin Global":    { districts: ["Mitte"], localities: ["Mitte"] }, // Ausstellung im Humboldt Forum
 "Berlin International School":	 { variants:  [
                     { localities:["Schmargendorf"],       white: ["international school", "charlottenburg", "kant-schule", "lentzeallee", "private kant", "schmargendorf", "school", "wilmersdorf"] },
                     ]},
@@ -2357,6 +2378,7 @@ streetDirectory: {
 "Berlin-Spandauer Schifffahrtskanal":    { districts: ["Charlottenburg-Wilmersdorf", "Mitte", "Spandau"], localities: ["Charlottenburg-Nord", "Haselhorst", "Mitte", "Moabit", "Siemensstadt"] }, // Kanal
 "Berliner Allee":	{ districts: ["Pankow"], localities: ["Weißensee"] },
 "Berliner Dom":     { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Berliner Ensemble":{ districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
 "Berliner Freiheit":{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Berliner Straße":	{ variants:  [
                     { black:     ["cora-berliner-straße"] },
@@ -2436,6 +2458,7 @@ streetDirectory: {
 "Bernstorffstraße":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Berntweg":	        { districts: ["Neukölln"], localities: ["Buckow"] },
 "Bernulfstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
+"Berolinahaus":     { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Berolinastraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Bersarinplatz":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Bertastraße":	    { variants:  [
@@ -3259,6 +3282,7 @@ streetDirectory: {
 "Brusebergstraße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Brusendorfer Straße":	    { districts: ["Neukölln"], localities: ["Neukölln"] },
 "Brussaer Weg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
+"Brüsseler Kiez":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Brüsseler Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "BTB Schulzentrum":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Schule
 "BTB-Schulzentrum":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Schule
@@ -3282,6 +3306,7 @@ streetDirectory: {
                     ]},
 "Buchholzweg":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },
 "Buchhorster Straße":	    { districts: ["Pankow"], localities: ["Wilhelmsruh"] },
+"Buchkantine":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Handel
 "Büchnerweg":	    { variants:  [
                     { localities:["Adlershof"],           white: ["adlergestell", "moissistraße", "treptow", "zinsgutstraße"] },
                     { localities:["Niederschönhausen"],   white: ["altenberger weg", "nordendstraße", "pankow"] },
@@ -3366,9 +3391,13 @@ streetDirectory: {
                     { from: 156, to: 222, parity: "both", locality: "Wilmersdorf" }]},
                     { localities:["Friedenau", "Wilmersdorf"] }
                     ]},
+"Bundesinnenministerium":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Bundeskanzleramt":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Bundeskanzler-Willy-Brandt-Stiftung":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Bundesplatz":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] }, // S+U-Bahnhof
 "Bundesplatztunnel":{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
+"Bundespräsidialamt":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
+"Bundesrat ":       { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Bundesratufer":	{ districts: ["Mitte"], localities: ["Moabit"] },
 "Bundesring":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Bundesstraße 2":	{ districts: ["Pankow"], localities: ["Stadtrandsiedlung Malchow"] },
@@ -3505,6 +3534,9 @@ streetDirectory: {
 "BWK Bildungswerk in Kreuzberg": { districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] }, // Berufsschule
 "Byronweg":	        { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 //// C /////////////
+"Ca Doro":          { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
+"Café am Neuen See":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Gastronomie
+"Café Einstein":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Cafeastraße":	    { districts: ["Neukölln"], localities: ["Britz"] },
 "Calandrelli-Anlage":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
 "Calandrellistraße":{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] }, // Spielplatz
@@ -3532,8 +3564,10 @@ streetDirectory: {
 "Cantianstraße":    { districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Cantorsteig":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Caprivibrücke":    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
+"Capt'n Schillow":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Gastronomie
 "Cardinalplatz":    { districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Cardinalstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
+"Carillion":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Carionweg":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Halensee"] },
 "Carl-Heinrich-Becker-Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Carl-Herz-Park":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] }, // Grünanlage
@@ -3614,6 +3648,7 @@ streetDirectory: {
 "Champignonstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Chance Bildung, Jugend und Sport":	     { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Chantiéweg":	    { districts: ["Pankow"], localities: ["Französisch Buchholz"] },
+"Charité ":         { districts: ["Mitte"], localities: ["Mitte"] },
 "Charitéplatz":	    { districts: ["Mitte"], localities: ["Mitte"] },
 "Charitéstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Charkiw-Park":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Grünanlage
@@ -3730,6 +3765,8 @@ streetDirectory: {
 "Clara-von-Simson-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Clara-Wieck-Straße":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
 "Clara-Zetkin-Park":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] }, // Grünanlage
+"Clärchens Ballhaus":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Classic Remise":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Claszeile":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Claudiusstraße":	{ districts: ["Mitte"], localities: ["Hansaviertel"] },
 "Clauertstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
@@ -3866,6 +3903,7 @@ streetDirectory: {
 "Dahmeweg":	        { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Dahnstraße":	    { districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Dahrendorfzeile":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },
+"Daimler City":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Gewerbe
 "Daimler Contemporary":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Museum
 "Daimlerstraße":	{ variants:  [
                     { localities:["Mariendorf"],          white: ["hollabergweg"] },
@@ -4050,14 +4088,19 @@ streetDirectory: {
 "Deulstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
 "Deutsche Kinemathek":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Deutsche Oper":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // U-Bahnhof
+"Deutsche Scholle":	{ districts: ["Neukölln"], localities: ["Britz"] }, // Kiez
 "Deutsche Straße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Deutscher Dom":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Deutscher Widerstand":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Gedenkstätte
 "Deutsches Blinden-Museum":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Museum
 "Deutsches Historisches Museum": { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Deutsches Spionagemuseum":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Deutsches Technikmuseum":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },	// Museum
+"Deutsches Theater":{ districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
 "Deutschhofer Allee":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
 "Deutsch-Kroner-Ring":	    { districts: ["Neukölln"], localities: ["Britz"] },
+"Deutschlandhaus":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] }, // Sehenswürdigkeit
+"Deutschlandmuseum":{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Deutschmeisterstraße":	    { districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
 "Deutschtaler Straße":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Deutzer Steig":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
@@ -4199,6 +4242,7 @@ streetDirectory: {
                     { localities:["Reinickendorf"],       white: ["dorotheenstädtisch", "evangelisch", "friedhof", "kirchhof", "reinickendorf"] },
                     { localities:["Gesundbrunnen", "Mitte", "Reinickendorf"] }
                     ]},
+"Dorotheenstädtischer Friedhof": { districts: ["Mitte"], localities: ["Mitte"] }, // Friedhof
 "Dorfaue":          { variants:  [
                     { localities:["Buckow"],              white: ["buckow", "dorfaue", "dorfaue buckow", "neukölln"] },
                     { localities:["Heiligensee"],         white: ["dorfaue", "dorfaue heiligensee", "heiligensee", "reinickendorf"] },
@@ -4376,6 +4420,7 @@ streetDirectory: {
 "Dürtenstraße":	    { districts: ["Neukölln"], localities: ["Britz"] },
 "Dusekestraße":	    { districts: ["Pankow"], localities: ["Pankow"] },
 "Düsseldorfer Straße":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
+"Dussmann":         { districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Düsterhauptstraße":{ districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
 "Dyrotzer Straße":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
 //// E /////////////
@@ -4545,7 +4590,7 @@ streetDirectory: {
                     { from: 48,  to: 96,  parity: "both", locality: "Wittenau" }]},
                     { localities:["Märkisches Viertel", "Wittenau"] },
                     ]},
-"Eichkamp":	        { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // S-Bahnhof
+"Eichkamp":	        { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // S-Bahnhof // Kiez
 "Eichkampstraße":	{ variants:  [
                     { localities:["Grunewald"],           white: ["forstamt", "königsweg", "revierförsterei", "waldmeister", "wilmersdorf"] },
                     { localities:["Westend"],             white: ["charlottenburg", "dressurstall", "giuseppe marcone", "lärchenweg", "messedamm"] },
@@ -4774,6 +4819,7 @@ streetDirectory: {
 "Englerallee":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Englische Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Englischer Garten":{ districts: ["Mitte"], localities: ["Tiergarten"] },
+"Englisches Viertel":	    { districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Enkenbacher Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] },
 "Enkircher Straße":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Enzianstraße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -4854,6 +4900,7 @@ streetDirectory: {
                     ]},
 "Erlenzeisigweg":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
 "Ermanstraße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
+"Ermelerhaus":      { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Ermslebener Weg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Erna-Berger-Straße":	    { districts: ["Mitte"], localities: ["Mitte"] },
 "Erna-Koschwitz-Weg":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
@@ -4950,6 +4997,7 @@ streetDirectory: {
 "Estragonweg":	    { districts: ["Pankow"], localities: ["Rosenthal"] },
 "Estrel Sommergarten":	    { districts: ["Neukölln"], localities: ["Neukölln"] }, // Biergarten
 "Ethnologisches Museum":    { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
+"Ethnologischen Sammlungen":{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Etkar-André-Straße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Ettaler Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Ettenheimer Pfad":	{ districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
@@ -5280,6 +5328,7 @@ streetDirectory: {
 "Flachsweg":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Flaischlenstraße":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
 "Flakenseestraße":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
+"Flaker Kaffeerösterei":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Flämingstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Flanaganstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Flankenschanze":	{ districts: ["Spandau"], localities: ["Spandau"] },
@@ -5435,6 +5484,7 @@ streetDirectory: {
 "Forum Berufsbildung":	    { districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] }, // Berufsschule
 "Forum Köpenick":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] }, // Handel
 "Forum Steglitz":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Handel
+"Fotografiska":     { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Föttingerzeile":	{ variants:  [
                     { localities:["Lichtenrade"],         white: ["lichtenrade", "kettinger straße"] },
                     { localities:["Mariendorf"],          white: ["mariendorf", "musikschule", "zangenbergweg"] },
@@ -5496,6 +5546,7 @@ streetDirectory: {
                     { localities:["Grunewald", "Schmargendorf"] }
                     ]},
 "Franziska-Bereit-Platz":	{ districts: ["Mitte"], localities: ["Wedding"] },
+"Franziskaner-Klosterkirche":    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Franziskastraße":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Franziusweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Franz-Jacob-Straße":	    { districts: ["Lichtenberg"], localities: ["Fennpfuhl"] },
@@ -5786,6 +5837,7 @@ streetDirectory: {
 "Friedland 2":	    { districts: ["Neukölln"], localities: ["Britz"] },	// Kleingartenanlage
 "Friedlander Straße":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Friedrich-Ebert-Platz":	{ districts: ["Mitte"], localities: ["Mitte"] },
+"Friedrich-Ebert-Siedlung":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Friedrich-Engels-Straße":	{ variants:  [
                     { localities:["Niederschönhausen"],   white: ["blau weiss", "grabbeallee", "hermann-hesse-straße", "hohen neuendorf", "kita", "niederschönhausen", "pastor-niemöller-platz", "wirbelwind"] },
                     { localities:["Rosenthal"],           white: ["hauptstraße", "nesselweg", "rosenthal", "rosenthal center", "siena", "wilhelmsruher damm"] },
@@ -5831,6 +5883,8 @@ streetDirectory: {
                     { localities:["Steglitz"],            white: ["evngelisch", "jeverstraße", "kita", "lukas-kirchenkreis", "steglitz", "thorwaldsenstraße"] },
                     { localities:["Schmargendorf", "Steglitz"] }
                     ]},
+"Friedrichstadt-Palast":    { districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
+"Friedrichstadtpalast":     { districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
 "Friedrichstadt-Passagen":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Friedrich-Stampfer-Straße":{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Friedrichsteiner Straße":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
@@ -5853,6 +5907,7 @@ streetDirectory: {
 "Friedrichsweg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },	// Kleingartenanlage
 "Friedrichswerdersche Kirche":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Friedrich-Wilhelm-Platz":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },	// U-Bahnhof
+"Friedrich-Wilhelm-Stadt":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Kiez
 "Friedrich-Wilhelm-Straße":	{ variants:  [
                     { localities:["Reinickendorf"],       white: ["breitkopfstraße", "reinickendorf", "residenzstraße"] },
                     { localities:["Tempelhof"],           white: ["alboinplatz", "bluenile", "friedrich-franz-straße", "helgoland", "herz jesu", "homm", "kaiserin-augusta-straße", "katholisch", "kinderladen", "maria-montessori-grundschule", "markthalle", "ordensmeisterstraße", "pfarrgemeinde", "schmunzelmoster", "sonnengarten", "tempelhof", "tsv", "wackelzahn", "wenckebachstraße"] },
@@ -5865,7 +5920,7 @@ streetDirectory: {
 "Friesdorfer Pfad":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
 "Friesenstraße":	{ variants:  [
                     { localities:["Altglienicke"],        white: ["köpenick", "sorbenstraße", "treptow", "endenstraße"] },
-                    { localities:["Kreuzberg"],           white: ["abschnitt 52", "bergmannstraße", "brezelbar", "friedrichshain", "gneisenaustraße", "hammett", "hot pot soup", "kreuzberg", "krimibuchhandlung", "kriminalpolizei", "leselounge", "polizeidirektion", "tausendfühler", "tausendfüßler"] },
+                    { localities:["Kreuzberg"],           white: ["abschnitt 52", "bergmannstraße", "brezelbar", "direktion", "friedrichshain", "gneisenaustraße", "hammett", "hot pot soup", "kreuzberg", "krimibuchhandlung", "kriminalpolizei", "leselounge", "tausendfühler", "tausendfüßler"] },
                     { localities:["Niederschönhausen"],   white: ["niederschönhausen", "pankow", "schönholzer heide", "volkspark"] },
                     { localities:["Tempelhof"],           white: ["columbiadamm", "platz der luftbrücke", "schöneberg", "kreuzberg"] },
                     { localities:["Kreuzberg", "Tempelhof"],
@@ -6039,6 +6094,7 @@ streetDirectory: {
 "GALB":    	        { districts: ["Reinickendorf"], localities: ["Borsigwalde"] }, // Schule
 "Galenstraße":	    { districts: ["Spandau"], localities: ["Spandau"] },
 "Galenusstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
+"Galerie Nord":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Museum
 "Galerie oqbo":	    { districts: ["Mitte"], localities: ["Gesundbrunnen"] }, // Museum
 "Galileistraße":	{ districts: ["Treptow-Köpenick"], localities: ["Plänterwald"] },
 "Gallandiweg":	    { districts: ["Spandau"], localities: ["Kladow"] },
@@ -6064,8 +6120,10 @@ streetDirectory: {
 "Gardes-Du-Corps-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Garibaldistraße":	{ districts: ["Pankow"], localities: ["Wilhelmsruh"] },
 "Garmischer Weg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Garnisonfriedhof":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Friedhof
 "Garten der Sinne":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] }, // Spielplatz
 "Gärten der Welt":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] }, // Grünanlage
+"Garten des Staatsratsgebäudes": { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Gartenbau Nordend":	    { districts: ["Pankow"], localities: ["Niederschönhausen"] }, // Kleingartenanlage
 "Gartenfelder Brücke":	    { districts: ["Spandau"], localities: ["Siemensstadt"] },
 "Gartenfelder Straße":	    { variants:  [
@@ -6126,6 +6184,7 @@ streetDirectory: {
 "GASAG Nordspitze":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Spielplatz
 "Gascogneweg":	    { districts: ["Pankow"], localities: ["Blankenfelde"] },
 "Gaslaternenmuseum":{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Museum
+"Gasthaus Zum Nußbaum":     { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Gaswerksiedlung":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
 "Gäßnerweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Gasteiner Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
@@ -6311,6 +6370,7 @@ streetDirectory: {
 "Gerhardtstraße":	{ districts: ["Mitte"], localities: ["Moabit"] },
 "Gerhard-Winkler-Weg":	    { districts: ["Neukölln"], localities: ["Rudow"] },
 "Gerhart-Hauptmann-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
+"Gerichtslaube":    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Gerichtstraße":	{ variants:  [
                     { localities:["Gesundbrunnen"],       white: ["bürgerenergie", "gartenstraße", "gesundbrunnen", "humboldthain", "ib-hochschule", "medizinische akademie", "sperrmüll", "tatlicilar"] },
                     { localities:["Wedding"],             white: ["friedhof", "julius", "leopoldplatz", "max-josef-metzger-platz", "müllerstraße", "musikbeauftragte", "nettelbeckplatz", "stattbad", "urnenfriedhof", "wedding"] },
@@ -6379,7 +6439,7 @@ streetDirectory: {
 "Gervinusstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Spielplatz
 "Gerzlower Straße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Geschichtsort Olympiagelände":	 { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] }, // Museum
-"Geschichtspark Zellengefängnis Moabit": { districts: ["Mitte"], localities: ["Moabit"] },	// Grünanlage
+"Geschichtspark":   { districts: ["Mitte"], localities: ["Moabit"] },	// Grünanlage
 "Geschwister-Scholl-Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Gesellschaft für Pflege- und Sozialberufe": { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Gesellschaftstraße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
@@ -6556,6 +6616,7 @@ streetDirectory: {
                     ]},
 "Gohliser Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Göhrener Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },	// Spielplatz
+"Golda ":	        { districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Goldammerstraße":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },
 "Goldaper Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Goldbeckweg":	    { districts: ["Spandau"], localities: ["Haselhorst"] },
@@ -6805,6 +6866,7 @@ streetDirectory: {
 "Griembergweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Grieser Platz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] }, // Spielplatz
 "Griesingerstraße":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
+"Grill Royal":      { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Grillenweg":	    { districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
 "Grillostraße":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
 "Grillparzerstraße":{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
@@ -6827,6 +6889,7 @@ streetDirectory: {
                     ]},
 "Grimselweg":	    { districts: ["Pankow"], localities: ["Heinersdorf"] },
 "Grindelwaldweg":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
+"Grips-Theater":	{ districts: ["Mitte"], localities: ["Hansaviertel"] }, // Bühne
 "Gritznerstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Groenerstraße":	{ districts: ["Spandau"], localities: ["Spandau"] },
 "Grohsteig":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -7192,6 +7255,8 @@ streetDirectory: {
 "Hackerstraße":	    { districts: ["Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Friedenau", "Steglitz"] },
 
 "Hackesche Höfe":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Hackeschen Höfe":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Hackeschen Markt":	{ districts: ["Mitte"], localities: ["Mitte"] }, // S-Bahnhof
 "Hackescher Markt":	{ districts: ["Mitte"], localities: ["Mitte"] }, // S-Bahnhof
 "Hackländerweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Hadburgpfad":	    { districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
@@ -7313,6 +7378,7 @@ streetDirectory: {
 "Hansaplatz":	    { districts: ["Mitte"], localities: ["Hansaviertel"] },	// U-Bahnhof
 "Hansastraße":	    { districts: ["Lichtenberg", "Mitte", "Pankow"], localities: ["Alt-Hohenschönhausen", "Gesundbrunnen", "Weißensee"] },
 
+"Hansa-Theater":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Bühne
 "Hansa-Ufer":	    { districts: ["Mitte"], localities: ["Moabit"] },
 "Hans-Baluschek-Park":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Grünanlage
 "Hans-Böhm-Zeile":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
@@ -7396,7 +7462,9 @@ streetDirectory: {
 "Hauptweg":	        { districts: ["Lichtenberg", "Marzahn-Hellersdorf"], localities: ["Biesdorf", "Neu-Hohenschönhausen", "Wartenberg"] },
 
 "Haus am Waldsee":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },	// Museum
+"Haus der Statistik":       { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Haus Huth":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Museum
+"Haus Schwarzenberg":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Hausburgstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Haushoferstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
 "Hauskavelweg":	    { districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
@@ -7456,6 +7524,8 @@ streetDirectory: {
 "Heckeshorn":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] }, // Badestelle
 "Heckmannufer":	    { districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Hedemannstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Heckmann-Höfe":    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Heckmannhöfe":     { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Hederichweg":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
 "Hedwig-Dohm-Straße":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Hedwigskirchgasse":{ districts: ["Mitte"], localities: ["Mitte"] },
@@ -7467,7 +7537,7 @@ streetDirectory: {
 "Heerstraße":       { variants:  [
                     { localities:["Charlottenburg"],      white: ["britischer soldatenfriedhof", "jüdischer friedhof", "orthodoxe"] },
                     { localities:["Staaken"],             white: ["allround", "amalienhof", "pflegestützpunkt spandau", "stadtteilbibliothek", "swiss", "tanzschule"] },
-                    { localities:["Westend"],             white: ["alloheim", "bildungsverein", "bürgeramt", " kkh ", "luisenstädtischer", "thermen"] },
+                    { localities:["Westend"],             white: ["alloheim", "bildungsverein", "bürgeramt", " kkh ", "luisenstädtischer", "siedlung", "thermen"] },
                     { localities:["Westend"],             white: ["s-bahnhof", "s-bahn", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
                     { localities:["Wilhelmstadt"],        white: ["botschaft", "juchanyang", "laurentius", "wander-segler-verein"] },
                     { localities:["Charlottenburg", "Westend"], white: ["friedhof"] }, // Friedhof
@@ -7571,6 +7641,7 @@ streetDirectory: {
 
 "Heinrich-von-Gagern-Straße":	 { districts: ["Mitte"], localities: ["Tiergarten"] },
 "Heinrich-von-Kleist-Park":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Grünanlage
+"Heinrich-Zille-Museum":    { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Heinrich-Zille-Park":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Grünanlage
 "Heinsestraße":	    { districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
 "Heinz-Bartsch-Straße":	    { districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
@@ -7819,7 +7890,7 @@ streetDirectory: {
 "Hirzbacher Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Hirzerweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Historiale Berlin Museum":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
-"Historischer Hafen Berlin":{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
+"Historischer Hafen":   { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Historisches Museum":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Hittorfstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Hitzigallee":	    { districts: ["Mitte"], localities: ["Tiergarten"] },
@@ -7939,6 +8010,7 @@ streetDirectory: {
 "Holländerstraße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Höllentalweg":	    { districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
 "Hollstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
+"Holocaust-Denkmal":{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Holocaust-Mahnmal":{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Holsteiner Ufer":	{ districts: ["Mitte"], localities: ["Hansaviertel"] },
 "Holsteinische Straße":	    { districts: ["Charlottenburg-Wilmersdorf", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Friedenau", "Steglitz", "Wilmersdorf"] },	// Spielplatz
@@ -8052,7 +8124,7 @@ streetDirectory: {
 "Humboldtsteg":	    { districts: ["Mitte"], localities: ["Gesundbrunnen"] },
 "Humboldtstraße":	{ districts: ["Charlottenburg-Wilmersdorf", "Reinickendorf", "Tempelhof-Schöneberg"], localities: ["Grunewald", "Lichtenrade", "Reinickendorf"] },
 
-"Humboldt-Universität zu Berlin": { districts: ["Mitte"], localities: ["Mitte"] }, // Hochschule
+"Humboldt-Universität": { districts: ["Mitte"], localities: ["Mitte"] }, // Hochschule
 "HUMBOLDT-VIADRINA":{ districts: ["Mitte"], localities: ["Mitte"] }, // Hochschule
 "Hummelstraße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
 "Hümmlingweg":	    { districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
@@ -8143,6 +8215,7 @@ streetDirectory: {
 "Ilgenweg":	        { districts: ["Neukölln"], localities: ["Britz"] },
 "Illerzeile":	    { districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Illigstraße":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
+"Illuseum":	        { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Illstraße":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },
 "Illzacher Weg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Ilmenauer Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
@@ -8266,6 +8339,7 @@ streetDirectory: {
 "Institut für Psychotherapie":	 { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Insulanerpark":	{ districts: ["Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Schöneberg", "Steglitz"] },
 
+"Interessengemeinschaft Rudow":	 { districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Interessentenweg":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Internationale Hochschule für Wirtschaft, Technik und Kultur":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Hochschule
 "Internationale Dance Academy":	 { districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },  // Schule
@@ -8417,7 +8491,26 @@ streetDirectory: {
 "Johanniskrautweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Johannisstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Johannisthal":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },	// S-Bahnhof
-"Johannisthaler Chaussee":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Baumschulenweg", "Britz", "Buckow", "Gropiusstadt", "Rudow"] },	// U-Bahnhof
+"Johannisthaler Chaussee":	{ variants:  [
+                    { localities:["Baumschulenweg"],      white: ["alpenrosenweg", "aprikosensteig", "blumenhain", "frohsinn", "heideweg", "kleingartenanlage", "kleingärten", "königsheide", "königsheideweg","ligusterweg", "mahonienweg"] },
+                    { localities:["Britz"],               white: ["ideal", "kleingartenanlage", "kleingärten"] },
+                    { localities:["Buckow"],              white: ["alt-buckow", "baumläuferweg", "buchfinkweg", "buckower damm", "feuerwache", "heideläuferweg", "rudower straße", "steinträgerweg", "stieglitzweg", "töpferweg", "wildmeisterdamm"] },
+                    { localities:["Gropiusstadt"],        white: ["u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"] }, // U-Bahnhof
+                    { localities:["Gropiusstadt"],        white: ["am regenweiher", "fritz-elert-allee", "gropius passagen", "gropiuspassagen", "höltermannsteig", "imbuschweg", "kirschnerweg", "kölner damm", "tischlerzeile", "uci luxe", "wermuthweg"] },
+                    { localities:["Rudow"],               white: ["beifußweg", "fenchelweg", "glockenblumenweg", "martin-mährlein-weg", "ortolanweg", "petunienweg", "rohrdommelweg", "sportanlage", "stadion"] },
+                    { localities:["Baumschulenweg", "Britz", "Buckow", "Gropiusstadt", "Rudow"],
+                      segments:   [
+                    { from: 3,   to: 109, parity: "odd",  locality: "Baumschulenweg" },
+                    { from: 4,   to: 102, parity: "even", locality: "Baumschulenweg" },
+                    { from: 113, to: 169, parity: "odd",  locality: "Rudow" },
+                    { from: 162, to: 162, parity: "even", locality: "Britz" },
+                    { from: 164, to: 170, parity: "even", locality: "Buckow" },
+                    { from: 171, to: 177, parity: "odd",  locality: "Rudow" },
+                    { from: 174, to: 262, parity: "both", locality: "Buckow" },
+                    { from: 258, to: 372, parity: "both", locality: "Gropiusstadt" },
+                    { from: 378, to: 390, parity: "even", locality: "Britz" },
+                    { from: 381, to: 443, parity: "both", locality: "Buckow" }]},
+                    ]},
 "Johannisthaler Landschaftspark":	     { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },	// Grünanlage
 "Johannisthaler Park":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },  // Grünanlage
 "Johanniterstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
@@ -8467,6 +8560,7 @@ streetDirectory: {
 "Juliushof":	    { districts: ["Neukölln"], localities: ["Britz", "Neukölln"] },
 
 "Julius-Leber-Brücke":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // S-Bahnhof
+"Julius-Leber-Kaserne":	    { districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Julius-Meyen-Straße":	    { districts: ["Lichtenberg"], localities: ["Falkenberg"] },
 "Juliusruh":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] }, // Kleingartenanlage
 "Juliusstraße":	    { districts: ["Neukölln"], localities: ["Neukölln"] },
@@ -8496,6 +8590,7 @@ streetDirectory: {
 "Jüterboger Straße":{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Jutta-Langenau-Straße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Juttastraße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+"JVA Moabit":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 //// K /////////////
 "Kabelitzweg":	    { districts: ["Pankow"], localities: ["Rosenthal"] },
 "Kabelpfuhlweg":	{ districts: ["Neukölln"], localities: ["Britz"] },
@@ -8512,15 +8607,18 @@ streetDirectory: {
 
 "Kaisereiche":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Friedenau"] },
 "Kaiser-Friedrich-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
+"Kaiserecke":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Kiez
 "Kaiserin-Augusta-Allee":	{ districts: ["Charlottenburg-Wilmersdorf", "Mitte"], localities: ["Charlottenburg", "Moabit"] },
 
 "Kaiserin-Augusta-Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] }, // U-Bahnhof
 "Kaiserkorso":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Kaiserkronenweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+"Kaisersaal":	    { districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Kaiserstraße":	    { districts: ["Spandau", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Hakenfelde", "Lichterfelde", "Mariendorf", "Wannsee"] },
 
 "Kaiserstuhlstraße":{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Kaiserswerther Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
+"Kaiser-Friedrich-Gedächtniskirche":{ districts: ["Mitte"], localities: ["Hansaviertel"] }, // Sehenswürdigkeit
 "Kaiser-Wilhelm-Gedächtniskirche":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Sehenswürdigkeit
 "Kaiser-Wilhelm-Passage":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] }, // Handel
 "Kaiser-Wilhelm-Platz":	{ districts: ["Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Dahlem", "Schöneberg"] },
@@ -8623,19 +8721,36 @@ streetDirectory: {
                     { localities:["Lichterfelde"],        white: ["lichterfelde", "steglitz", "zehlendorf"] }, // See
                     { localities:["Lübars"],              white: ["kleingarten", "kolonie", "lübars", "reinickendorf"] }, // Kleingartenanlage
                     ]},
-"Karpfenteichstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Plänterwald"] },
-"Karsenzeile":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },
+"Karpfenteichstraße": 	    { districts: ["Treptow-Köpenick"], localities: ["Plänterwald"] },
+"Karsenzeile":	    { districts: ["Neukölln"], localities: ["Gropiusstadt"] },
 "Kartoffelsteig":	{ districts: ["Pankow"], localities: ["Blankenfelde"] },
-"Karutzseeweg":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
+"Karutzseeweg":	    { districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
 "Karwendelstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Karwitzer Pfad":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
-"Kasinoweg":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
-"Kaskelkiez":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] }, // Kiez
-"Kaskelstraße":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
-"Kasperstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
-"Kastanienallee":	{ districts: ["Charlottenburg-Wilmersdorf", "Marzahn-Hellersdorf", "Mitte", "Pankow", "Treptow-Köpenick"], localities: ["Blankenburg", "Friedrichshagen", "Hellersdorf", "Mahlsdorf", "Mitte", "Prenzlauer Berg", "Rosenthal", "Westend"] },
-"Kastaniengarten":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Biergarten
-"Kastanienhain":	{ districts: ["Pankow"], localities: ["Karow"] },	// Kleingartenanlage
+"Kasinoweg":	    { districts: ["Reinickendorf"], localities: ["Frohnau"] },
+"Kasischer Werder":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Kiez
+"Kaskelkiez":	    { districts: ["Lichtenberg"], localities: ["Rummelsburg"] }, // Kiez
+"Kaskelstraße":	    { districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
+"Kasow":	        { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Kiez
+"Kasperstraße":	    { districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
+"Kastanienallee":	{ variants:  [
+                    { localities:["Blankenburg"],         white: ["ahornallee", "blankenburg", "direktion 1", "friedhof", "gartenstraße", "grundschule", "harzburger straße", "jungbornstraße", "pankow", "spatzenburg", "unter den bäumen", "urbacher straße", "verkehrsunfalldienst"] },
+                    { localities:["Friedrichshagen"],     white: ["abschnitt 66", "am goldmannpark", "bölschestraße", "breestpromenade", "bruno-wille-straße", "direktion 6", "fürstenwalder damm", "hartlebenstraße", "kinderladen", "scharnweberstraße", "steinplatz", "werlseestraße"] },
+                    { localities:["Hellersdorf"],         white: ["eva-strittmatter-straße", "havelländer ring", "helios", "hellersdorfer straße", "helleum", "henny-porten-straße", "janusz-korczak-straße", "kastanienknirpse", "kieztreff", "kinderforschungszentrum", "kurt-weill-platz", "liberty", "pusteblume", "sarah-kirsch-straße", "senftenberger straße", "stendaler straße", "zossener straße"] },
+                    { localities:["Mahlsdorf"],           white: ["abschnitt 66", "best sabel", "best-sabel", "direktion 6", "donathstraße", "frei und geborgen", "hirschgarten", "hultschiner damm", "mirower straße", "ravensteinstraße", "ruhlsdorfer straße", "seestraße", "vierradener weg", "wilhelm-blos-straße", "willestraße"] },
+                    { localities:["Mitte"],               white: ["dietrich bonhoeffer", "fehrbelliner straße", "marone", "schwedter straße", "weinbergsweg", "zionskirche", "zionskirchplatz", "zionskirchstraße"] },
+                    { localities:["Prenzlauer Berg"],     white: ["abschnitt 15", "biergarten", "campus", "choriner straße", "danziger straße", "dietrich bonhoeffer", "dock 11", "eberswalder straße", "gemeinsam für berlin", "griebenowstraße", "internation house", "künstlermagazin", "oderberger straße", "prater", "quasselstrippe", "schönhauser allee", "schramms", "sprachschule", "tanzstudio"] },
+                    { localities:["Rosenthal"],           white: ["ahornallee", "akazienallee", "an der priesterkoppel", "angerweg", "beratungsstelle", "birkenallee", "bratvogelweg", "buschhorster straße", "césar-franck-straße", "dietzgenstraße", "döbrabergweg", "erbeskopfweg", "eschenallee", "frieden-himmelfahrt", "friedhof", "friedrich-engels-straße", "hauptstraße", "märkisches viertel", "nordend", "pankow", "rosenthal", "rosskastanienhof", "rudolf-dörrier-grundschule", "schönhauser straße", "schönholzer weg", "sportplatz", "taufsteinweg", "weißdornstraße", "wiesenwichtel", "wilckeweg", "wilhelmsruh"] },
+                    { localities:["Westend"],             white: ["abschnitt 24", "akazienallee", "bayernallee", "branitzer platz", "charlottenburg", "ebereschenallee", "eichenallee", "halmstraße", "heerstraße", "kita kastanie", "messe nord", "nußbaumallee", "pestalozzi-fröbel-haus", "platanenallee", "reichsstraße", "reinhold-otto-grundschule", "rüsternallee", "spandauer damm", "ulmenallee", "villenkolonie", "wilmersdorf"] },
+                    { localities:["Mitte", "Prenzlauer Berg"],
+                      segments:   [
+                    { from: 1,   to: 35,  parity: "even", locality: "Prenzlauer Berg" },
+                    { from: 36,  to: 69,  parity: "even", locality: "Mitte" },
+                    { from: 70,  to: 103, parity: "even", locality: "Prenzlauer Berg" }]},
+                    ]},
+"Kastaniengarten":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Biergarten
+"Kastanienhain":	{ districts: ["Pankow"], localities: ["Karow"] }, // Kleingartenanlage
+"Kastanienhof":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Kastanienstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Kastanienwäldchen Mitte":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Kastanienweg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
@@ -8667,6 +8782,7 @@ streetDirectory: {
 "Katzsteinweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Katzwanger Steig":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Kaubstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
+"Kaufhaus Jandorf":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Kaufzentrum Siemensstadt":	{ districts: ["Spandau"], localities: ["Siemensstadt"] },	// Handel
 "Kaulbachstraße":	{ districts: ["Marzahn-Hellersdorf", "Steglitz-Zehlendorf"], localities: ["Lankwitz", "Mahlsdorf"] },
 "Kaulsdorfer Busch":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },	// Kleingartenanlage
@@ -8775,6 +8891,8 @@ streetDirectory: {
 "Kirchbachstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Schöneberg"] },
 "Kirchblick":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Kirchdorfer Straße":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
+"Kirche St. Ansgar":	{ districts: ["Mitte"], localities: ["Hansaviertel"] },	// Sehenswürdigkeit
+"Kirche St. Elisabeth":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Kirchengelände":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },	// Kleingartenanlage
 "Kirchgasse":	{ districts: ["Neukölln", "Reinickendorf", "Spandau"], localities: ["Neukölln", "Spandau", "Tegel"] },
 "Kirchhainer Damm":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
@@ -8959,7 +9077,10 @@ streetDirectory: {
 "Kollatzstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Kolle 37":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },	// Spielplatz
 "Kolleg Schöneberg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },	// Hochschule
-"Köllnische Heide":	{ districts: ["Neukölln"], localities: ["Neukölln"] },	// S-Bahnhof
+"Köllnische Heide":	{ variants:  [
+                    { localities:["Adlershof"],           white: ["aussichtspunkt", "birkenweg", "bunkerberg", "hundesportverein", "kattunsteig", "landschaftspark", "rodelberg"] }, // Landschaftspark
+                    { localities:["Neukölln"],            white: ["s-bahnhof", "s-bahn", "s bahnhof", "bahnhof", "s-bahnstation"] }, // S-Bahnhof
+                    ]},
 "Köllnische Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Niederschöneweide"] },
 "Köllnischer Park":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Grünanlage
 "Köllnischer Platz":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
@@ -8982,17 +9103,21 @@ streetDirectory: {
 "Kombibad Mariendorf":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },	// Badestelle
 "Kombibad Seestraße":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Badestelle
 "Kombibad Spandau-Süd":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },	// Badestelle
+"Kommandantenhaus":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Kommandantenstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte", "Steglitz-Zehlendorf"], localities: ["Kreuzberg", "Lichterfelde", "Mitte"] },
 "Kommunale Galerie":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },	// Museum
+"Kommunikationsmuseum": { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Komturstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Kongostraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Königin-Elisabeth-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Königin-Luise-Stiftung":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },	// Schule
 "Königin-Luise-Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem", "Steglitz"] },
+"Königliche Bibliothek":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Königsbacher Zeile":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Königsberger Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Königsdamm":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },	// Kleingartenanlage
 "Königsgraben":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },	// Kleingartenanlage
+"Königsheide ":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] }, // Kiez
 "Königsheideweg":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg", "Johannisthal"] },
 "Königshorster Straße":	{ districts: ["Reinickendorf"], localities: ["Märkisches Viertel"] },
 "Königshütter Weg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
@@ -9077,7 +9202,7 @@ streetDirectory: {
 "Köttgenstraße":	{ districts: ["Spandau"], localities: ["Siemensstadt"] },
 "Kottmeierstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
 "Kötztinger Straße":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
-"KPM":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Museum
+"KPM":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Museum
 "Kraatzweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Kracauerplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Krachtstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
@@ -9139,6 +9264,7 @@ streetDirectory: {
 "Krielower Weg":	{ districts: ["Spandau"], localities: ["Gatow"] },
 "Kriemhildstraße":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
 "Krienickesteig":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Kriminalgericht":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Krimnitzer Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
 "Krischanweg":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Krohnweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
@@ -9214,6 +9340,7 @@ streetDirectory: {
 "Kulmbacher Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Kulmer Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Kulmseestraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
+"Kulturen der Welt":{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Kulturforum Potsdamer Platz":	{ districts: ["Mitte"], localities: ["Tiergarten"] },	// Museum
 "Kulturforum":	{ districts: ["Mitte"], localities: ["Tiergarten"] },	// Museum
 "KulturGut 44":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] }, // Sehenswürdigkeit
@@ -9231,10 +9358,13 @@ streetDirectory: {
 "Künnekeweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Kuno-Fischer-Platz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Kuno-Fischer-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
+"Kunstgewerbemuseum":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "KunstHalle":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
 "Künstlerweg":	{ districts: ["Spandau"], localities: ["Gatow", "Kladow"] },
 "Kunstraum":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },	// Museum
-"Kunz-Buntschuh-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },
+"Kunstverein Tiergarten":	 { districts: ["Mitte"], localities: ["Moabit"] }, // Museum
+"Kunst-Werke":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Kunz-Buntschuh-Straße":	 { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },
 "Künzelsauer Weg":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Kunzendorfstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Kunzeweg":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
@@ -9279,6 +9409,7 @@ streetDirectory: {
 "Kynaststraße":	{ districts: ["Friedrichshain-Kreuzberg", "Lichtenberg"], localities: ["Friedrichshain", "Rummelsburg"] },
 "Kyritzer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Kyritzer Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+//// L /////////////
 "La Famille-Straße":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Labeser Weg":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Laböer Straße":	{ districts: ["Mitte"], localities: ["Gesundbrunnen"] },
@@ -9490,6 +9621,7 @@ streetDirectory: {
 "Leonhardyweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Leonore-Goldschmidt-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
 "Leonorenstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
+"Leopoldkiez":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Leopoldplatz":	{ districts: ["Mitte"], localities: ["Wedding"] },	// U-Bahnhof
 "Leopoldstraße":	{ districts: ["Lichtenberg", "Marzahn-Hellersdorf"], localities: ["Kaulsdorf", "Rummelsburg"] },
 "Leo-Slezak-Straße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
@@ -9778,6 +9910,7 @@ streetDirectory: {
 "Ludwigkirchstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Ludwig-Klapp-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] },
 "Ludwig-Lesser-Park":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },	// Grünanlage
+"Ludwig Loewe":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Ludwig-Pick-Straße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Ludwig-Prandtl-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Ludwig-Quidde-Straße":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
@@ -9835,6 +9968,7 @@ streetDirectory: {
 "Lynarstraße":	{ districts: ["Charlottenburg-Wilmersdorf", "Mitte", "Spandau"], localities: ["Grunewald", "Spandau", "Wedding"] },
 "Lyonel-Feininger-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Lyonstraße":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
+//// M /////////////
 "Maarer Straße":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Maaßenstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Machandelweg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
@@ -9855,6 +9989,8 @@ streetDirectory: {
 "Magdeburger Platz":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Magellanzeisigweg":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
 "Maggy-Breittmayer-Pfad":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Heckmann-Höfe":    { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
+"Magic Museum":     { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Magirusstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Magistratsweg":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Magnolienring":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
@@ -9887,7 +10023,7 @@ streetDirectory: {
 "Malergarten":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] },
 "Malersteig":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Malevkeweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
-"Mall of Berlin":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Handel
+"Mall of Berlin":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Malmedyer Straße":	{ districts: ["Pankow"], localities: ["Buch"] },
 "Malmöer Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Malplaquetstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
@@ -9953,6 +10089,7 @@ streetDirectory: {
 "Mariannenstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Steglitz-Zehlendorf", "Treptow-Köpenick"], localities: ["Kreuzberg", "Lichterfelde", "Schmöckwitz"] },	// Spielplatz
 "Maria-Rimkus-Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Marie-Curie-Allee":	{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde", "Rummelsburg"] },
+"Marie-Elisabeth-Lüders-Haus":   { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Marie-Elisabeth-Lüders-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Marie-Elisabeth-von-Humboldt-Straße":	{ districts: ["Lichtenberg"], localities: ["Falkenberg"] },
 "Marie-Grünberg-Straße":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
@@ -9977,6 +10114,7 @@ streetDirectory: {
 "Marienstraße":	{ districts: ["Mitte", "Pankow", "Steglitz-Zehlendorf", "Treptow-Köpenick"], localities: ["Französisch Buchholz", "Lichterfelde", "Mitte", "Oberschöneweide"] },
 "Marientaler Straße":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Baumschulenweg", "Britz"] },
 "Marienwerder Weg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Marienwerder ":	{ districts: ["Neukölln"], localities: ["Buckow"] }, // Kiez
 "Marienwerderweg":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
 "Marie-Schlei-Platz":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Marie-Vögtlin-Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -10063,12 +10201,14 @@ streetDirectory: {
 "Marzahnstraße":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Mascha-Kaléko-Park":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },	// Grünanlage
 "Mascha-Kaléko-Weg":	{ districts: ["Spandau"], localities: ["Kladow"] },
+"Maselakepark":	{ districts: ["Spandau"], localities: ["Hakenfelde"] }, // Grünanlage
 "Maskenzeisigweg":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
 "Massiner Weg":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Maßliebweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Maßmannstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Massolleweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Massower Straße":	{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },
+"Mastul Kunstverein":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Sehenswürdigkeit
 "Masurenallee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Masurenstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Masurenweg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
@@ -10082,6 +10222,7 @@ streetDirectory: {
 "Matternstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Mattersburger Weg":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Matthäifriedhofsweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
+"Matthäikirche":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Matthäikirchplatz":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Matthäusweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Matthesstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Alt-Treptow"] },
@@ -10094,6 +10235,7 @@ streetDirectory: {
 "Mauerstraße":	{ districts: ["Mitte", "Spandau"], localities: ["Mitte", "Spandau"] },
 "Maulbeerallee":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Maulbronner Ufer":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
+"Mauer-Panorama":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Maurerweg":	{ districts: ["Neukölln"], localities: ["Britz", "Buckow"] },
 "Maurice-Ravel-Straße":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Mauritiuskirchstraße":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
@@ -10101,8 +10243,8 @@ streetDirectory: {
 "Mauserstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
 "Mausohrweg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
 "Mauswieselweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
-"Max Liebermann Haus":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
-"Max-Liebermann-Haus":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
+"Max Liebermann Haus":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
+"Max-Liebermann-Haus":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Max-Beckmann-Platz":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
 "Max-Beer-Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Max-Born-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
@@ -10114,6 +10256,7 @@ streetDirectory: {
 "Max-Fettling-Platz":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Max-Herrmann-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Maxie-Wander-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
+"Maxim Gorki Theater":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
 "Maximilian-Kaller-Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
 "Maximilian-Kolbe-Straße":	{ districts: ["Spandau"], localities: ["Gatow"] },
 "Maximiliankorso":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
@@ -10154,6 +10297,7 @@ streetDirectory: {
 "Mehrower Allee":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },	// S-Bahnhof
 "Mehrower Zeile":	{ districts: ["Reinickendorf"], localities: ["Märkisches Viertel"] },
 "Meierottostraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
+"Meilenwerk":	    { districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Meinekestraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg", "Wilmersdorf"] },
 "Meiningenallee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Meininger Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
@@ -10166,7 +10310,14 @@ streetDirectory: {
 "Meißner Weg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Meistergasse":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Melanchthonplatz":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
-"Melanchthonstraße":	{ districts: ["Marzahn-Hellersdorf", "Mitte", "Reinickendorf", "Spandau", "Steglitz-Zehlendorf"], localities: ["Hermsdorf", "Lankwitz", "Mahlsdorf", "Moabit", "Wilhelmstadt"] },
+"Melanchthonstraße":{ variants:  [
+                    { localities: ["Hermsdorf"],  white: ["am büchenberg", "calvinstraße", "carl-benz", "flitzesternchen", "hermsdorfer damm", "martin-luther-straße", "oberschule", "reinickendorf", "ringstraße", "schulzendorfer straße"] },
+                    { localities: ["Lankwitz"],  white: ["alt-lankwitz", "bruchwitzstraße", "dreifaltigkeitskirche", "grundschule", "kaiser-wilhelm-straße", "lankwitz", "lankwitzer spielkitze", "mühlenstraße", "paul-schneider-straße", "polizeidirektion süd", "schulstraße", "stadtbibliothek", "stadtbücherei", "steglitz", "zehlendorf"] },
+                    { localities: ["Mahlsdorf"],  white: ["abschnitt 33", "albrecht-dürer-straße", "am lupinenfeld", "am rosenhag", "burggrafenstraße", "evangelischer kindergarten", "ev. kindergarten", "florastraße", "hellersdorf", "hönower straße", "karlshafener straße", "lindenhofstraße", "lübzer straße", "mahlsdorfer grundschule", "markgrafenstraße", "marzahn", "menzelstraße", "polizeidirektion 3", "rohrpfuhl", "sportanlage", "südermannstraße"] },
+                    { localities: ["Moabit"],  white: ["alt-moabit", "bellevue", "bunte stifte", "calvinstraße", "carl-von-pssietzky-park", "charité", "flemingstraße", "landespolizeidirektion", "lüneburger straße", "moabiter grundschule", "paulstraße", "spenerstraße"] },
+                    { localities: ["Wilhelmstadt"],  white: ["abschnitt 23", "adamstraße", "alfred-balen-weg", "beratungsstelle", "gatower straße", "gesundheitsamt", "kombibad", "konkordiastraße", "melanchthonplatz", "paul-moor-schule", "schulhort", "seniorenclub", "seniorenwohnheim", "spandau", "wilhelmstraße", ] },
+                    { localities: ["Hermsdorf", "Lankwitz", "Mahlsdorf", "Moabit", "Wilhelmstadt"] }
+                    ]},
 "Melchiorstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Meldenweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Meldorfer Steig":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
@@ -10351,6 +10502,8 @@ streetDirectory: {
 "Mönkeberger Straße":	{ districts: ["Mitte"], localities: ["Gesundbrunnen"] },
 "Monopolstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Monschauer Weg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
+"Monsieur Vuong":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
+"Monsterkambinett": { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Montanstraße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Montessori Campus":	{ districts: ["Reinickendorf", "Treptow-Köpenick"], localities: ["Köpenick", "Tegel"] }, // Schule
 "Monumentenstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Tempelhof-Schöneberg"], localities: ["Kreuzberg", "Schöneberg"] },
@@ -10474,6 +10627,7 @@ streetDirectory: {
 "Mürwiker Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Musäusstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Muschelkalkweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
+"Museum am Checkpoint Charlie":	 { districts: ["Mitte"], localities: ["Kreuzberg"] }, // Sehenswürdigkeit
 "Museum Berggruen":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Museum
 "Museum Berlin-Karlshorst":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },	// Museum
 "Museum Blindenwerkstatt":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
@@ -10517,6 +10671,7 @@ streetDirectory: {
 "Myliusgarten":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
 "Myrtenweg":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Myslowitzer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+//// N /////////////
 "Nach der Höhe":	{ districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
 "Nachodstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Nachtalbenweg":	{ districts: ["Pankow"], localities: ["Stadtrandsiedlung Malchow"] },
@@ -10555,6 +10710,7 @@ streetDirectory: {
 "Naumburger Ring":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Naumburger Straße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Naunynstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Nazarethkirche":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Sehenswürdigkeit
 "Nazarethkirchstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "NBE-Rosentreterpromenade":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },	// Kleingartenanlage
 "Neanderstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
@@ -10577,6 +10733,7 @@ streetDirectory: {
 "Nennhauser Damm":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Nentershäuser Platz":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Nentwigstraße":{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+"Neptunbrunnen":{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Neptunstraße":	{ districts: ["Reinickendorf", "Treptow-Köpenick"], localities: ["Bohnsdorf", "Reinickendorf"] },	// Spielplatz
 "Neptunsweg":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Nernstweg":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
@@ -10585,9 +10742,10 @@ streetDirectory: {
 "Nesselweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Nestorstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Halensee"] },
 "Netphener Weg":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
-"Nettelbeckplatz":	{ districts: ["Mitte"], localities: ["Wedding"] },
+"Nettelbeckplatz":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Nettestraße":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Netzestraße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
+"Neu-Bohnsdorf":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] }, // Kiez
 "Neu Malchow":	{ districts: ["Lichtenberg"], localities: ["Malchow"] },	// Kleingartenanlage
 "Neubrandenburger Straße":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen", "Wartenberg"] },
 "Neubrücker Straße":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
@@ -10614,12 +10772,14 @@ streetDirectory: {
 "Neue Mittel Tempelhof":	     { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] }, // Quartier
 "Neue Nationalgalerie":	{ districts: ["Mitte"], localities: ["Tiergarten"] },	// Museum
 "Neue Promenade":	{ districts: ["Mitte"], localities: ["Mitte"] },
+"Neue Reichskanzlei":   { districts: ["Mitte"], localities: ["Mitte"] }, // Verschwundene Orte
 "Neue Roßstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Neue Schönhauser Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Neue Schönholzer Straße":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Neue Späthstraße":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Baumschulenweg", "Britz"] },
 "Neue Steinmetzstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Neue Straße":	{ districts: ["Spandau", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Staaken", "Tempelhof", "Zehlendorf"] },	// Spielplatz
+"Neue Synagoge":    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Neue Weberstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Neue Welt":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Neue Wiesen":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
@@ -10668,6 +10828,7 @@ streetDirectory: {
 "Neumarkplan":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Neumeisterstraße":	{ districts: ["Spandau"], localities: ["Spandau"] },
 "Neunkircher Steig":	{ districts: ["Spandau"], localities: ["Staaken"] },
+"neurotitan":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Neuruppiner Straße":	{ districts: ["Marzahn-Hellersdorf", "Steglitz-Zehlendorf"], localities: ["Hellersdorf", "Zehlendorf"] },
 "Neuseeland":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] },	// Kleingartenanlage
 "Neustädter Straße":	{ districts: ["Pankow"], localities: ["Karow"] },
@@ -10811,6 +10972,7 @@ streetDirectory: {
 "Nuthestraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Nymphenburger Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Nymphenufer":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
+//// O /////////////
 "Obentrautstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },	// Spielplatz
 "Oberbaumbrücke":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Oberbaumstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
@@ -10897,6 +11059,7 @@ streetDirectory: {
 "Ohmstraße":	{ districts: ["Mitte", "Spandau"], localities: ["Mitte", "Siemensstadt"] },
 "Öhringer Weg":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Ohserring":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+"OK international":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Okarinastraße":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Okerstraße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Okertalstraße":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
@@ -10950,7 +11113,7 @@ streetDirectory: {
 "Oranienstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Oranke am See":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] }, // Biergarten
 "Orankekirchhof":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] }, // Friedhof
-"Orankesee": { districts: ["Lichtenberg"], localities: ["Hohenschönhausen"] }, // See
+"Orankesee": { districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] }, // See
 "Orankestrand":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Orankestraße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Orankeweg":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
@@ -10984,6 +11147,7 @@ streetDirectory: {
 "Osmar-Klemm-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
 "Osnabrücker Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Osningweg":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
+"Osramhöfe":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Sehenswürdigkeit
 "Ossastraße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Osserweg":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
 "Ossietzkyplatz":	{ districts: ["Pankow"], localities: ["Niederschönhausen"] },
@@ -11074,6 +11238,7 @@ streetDirectory: {
 "Overbeckstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Oxforder Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Oybinweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+//// P /////////////
 "Paarener Straße":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
 "Pablo-Neruda-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Pablo-Picasso-Straße":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
@@ -11082,6 +11247,10 @@ streetDirectory: {
 "Paddlerweg":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Paderborner Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Paetschstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
+"Palast der Republik": { districts: ["Mitte"], localities: ["Mitte"] }, // Verschwundene Orte
+"Palais am Festungsgraben":      { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Palais Bülow": { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Palais Populaire":    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Palisadenstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Pallasstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Palmkernzeile":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
@@ -11165,6 +11334,7 @@ streetDirectory: {
 "Parkwegbrücke":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Parlerstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
 "Parnemannweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
+"Parochialkirche":  { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Parochialstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Parrisiusstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Parsevalstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
@@ -11204,6 +11374,7 @@ streetDirectory: {
 "Paul-Krause-Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Paul-Lincke-Ufer":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Paul-Löbe-Allee":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
+"Paul-Löbe-Haus":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Paul-Mebes-Park":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },	// Grünanlage
 "Paul-Oestreich-Straße":	{ districts: ["Pankow"], localities: ["Weißensee"] },
 "Paul-Rahn-Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
@@ -11268,6 +11439,7 @@ streetDirectory: {
 "Peter-Weiss-Gasse":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Petitweg":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Petkusser Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
+"Petri":        { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Petriplatz":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Petrusweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Pettenkoferstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
@@ -11326,6 +11498,7 @@ streetDirectory: {
 "Pflugstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Pforzheimer Straße":	{ districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
 "Pfuelstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Philharmonie":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Bühne
 "Philipp-Franck-Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] },
 "Philipp-Gerlach-Weg":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Philippistraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
@@ -11408,7 +11581,8 @@ streetDirectory: {
 "Plöner Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },	// Spielplatz
 "Plönzeile":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
 "Plonzstraße":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },
-"Plötzensee":	{ districts: ["Mitte"], localities: ["Wedding"] },	// See
+"Plötzensee":	{ districts: ["Mitte"], localities: ["Wedding"] }, // See
+"Plötzensee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] }, // Kiez
 "Plötzenseeanlage":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Plüschowstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Plutoweg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
@@ -11446,16 +11620,17 @@ streetDirectory: {
 "Popperstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Porschestraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
 "Portaer Straße":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
-"Porthanweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
+"Porthanweg":	    { districts: ["Spandau"], localities: ["Kladow"] },
 "Porzer Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
-"Posaunenweg":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
+"Posaunenweg":	    { districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Poschingerstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },
 "Pößnecker Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
-"Poßweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
-"Poßwegbrücke":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
-"Posthausweg":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
-"Poststraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
-"Potsdamer Chaussee":	{ variants:  [
+"Poßweg":	        { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+"Poßwegbrücke":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+"Postfuhramt":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Posthausweg":	    { districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
+"Poststraße":	    { districts: ["Mitte"], localities: ["Mitte"] },
+"Potsdamer Chaussee":	    { variants:  [
                     { localities:["Gatow"],                white: ["außenweg", "landschaftsfriedhof", "maximilian-kolbe-straße", "schießplatz", "straße 269"] },
                     { localities:["Kladow"],               white: ["am landschaftspark gatow", "ritterfelddamm", "stadtgrenze"] },
                     { localities:["Nikolassee"],           white: ["17. juni 1953", "anna-und-hermann-muthesius-steig", "dreilinden", "isoldestraße", "jugendausbildungszentrum", "kreuz zehlendorf", "kurstraße", "lissabonallee", "mutter-mochow-weg", "nibelungenstraße", "quantzstraße", "spanische allee", "theodor-wenzel-werk", "von-luck-straße", "waldfriedhof", "wasgensraße", "wiesenschlag", "zollamt"] },
@@ -11472,22 +11647,22 @@ streetDirectory: {
                     ]},
 "Potsdamer Platz":	{ districts: ["Mitte"], localities: ["Mitte", "Tiergarten"] },	// S+U-Bahnhof
 "Potsdamer Straße":	{ districts: ["Mitte", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Lichterfelde", "Schöneberg", "Tiergarten", "Zehlendorf"] },
-"Pottensteiner Weg":	{ districts: ["Spandau"], localities: ["Kladow"] },
-"Prachttomate":	{ districts: ["Neukölln"], localities: ["Neukölln"] },	// Grünanlage
-"Prackenbacher Straße":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
-"Pradelstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
-"Prager Platz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
+"Pottensteiner Weg":{ districts: ["Spandau"], localities: ["Kladow"] },
+"Prachttomate":	    { districts: ["Neukölln"], localities: ["Neukölln"] },	// Grünanlage
+"Prackenbacher Straße":	    { districts: ["Lichtenberg"], localities: ["Karlshorst"] },
+"Pradelstraße":	    { districts: ["Pankow"], localities: ["Pankow"] },
+"Prager Platz":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Prager Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
-"Prausestraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Prausestraße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Prechtlstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
 "Predigergarten":	{ districts: ["Spandau"], localities: ["Spandau"] },
-"Prellerweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },	// Spielplatz
-"Premnitzer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+"Prellerweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },	// Spielplatz
+"Premnitzer Straße":{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Prendener Straße":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
 "Prendener Zeile":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Prenzlauer Allee":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },	// S-Bahnhof
 "Prenzlauer Berg":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
-"Prenzlauer Promenade": { variants:  [
+"Prenzlauer Promenade":     { variants:  [
                     { localities:["Pankow"],       white: ["menschen mit handicap"] },
                     { localities:["Weißensee"],    white: ["brotfabrik"] },
                     { localities:["Heinersdorf", "Pankow", "Prenzlauer Berg", "Weißensee"],
@@ -11526,6 +11701,7 @@ streetDirectory: {
 "Prinzengasse":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Prinzenstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Kreuzberg", "Lichterfelde", "Mariendorf"] },	// U-Bahnhof
 "Prinzessinnengärten":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },	// Grünanlage
+"Prinzessinnenpalais":  { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Prinzessinnenstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Tempelhof-Schöneberg"], localities: ["Kreuzberg", "Lichtenrade"] },
 "Prinz-Eugen-Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Prinz-Friedrich-Karl-Weg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
@@ -11587,6 +11763,7 @@ streetDirectory: {
 "Puttkamerstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Püttlinger Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Pyramidenring":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+//// Q /////////////
 "Quäkerstraße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Quantzstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Quappenzeile":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
@@ -11611,6 +11788,7 @@ streetDirectory: {
 "Quittensteig":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Quittenweg":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Quitzowstraße":	{ districts: ["Mitte"], localities: ["Moabit"] },
+//// R /////////////
 "Raabestraße":	{ districts: ["Pankow", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Prenzlauer Berg"] },	// Spielplatz
 "Rabenhorststraße":	{ districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
 "Rabensteiner Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -11698,6 +11876,7 @@ streetDirectory: {
 "Rauhkopfweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Raumbacher Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] },
 "Raumerstraße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
+"Rausch":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Handel
 "Rauschener Allee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Rauschensteinweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Räuschstraße":	{ districts: ["Reinickendorf"], localities: ["Borsigwalde"] },
@@ -11760,10 +11939,10 @@ streetDirectory: {
                     { from: 186, to: 186, parity: "even", locality: "Reinickendorf" }]},
                     { localities: ["Gesundbrunnen", "Reinickendorf"] }
                     ]},
-"Reglinstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
+"Reglinstraße":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Rehagener Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
-"Rehauer Pfad":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
-"Rehberge":	{ districts: ["Mitte"], localities: ["Wedding"] },	// U-Bahnhof
+"Rehauer Pfad":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
+"Rehberge":	        { districts: ["Mitte"], localities: ["Wedding"] }, // U-Bahnhof // Kiez
 "Rehborner Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] },
 "Rehbrücker Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Rehfeldtstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
@@ -11775,11 +11954,13 @@ streetDirectory: {
 "Reichensteiner Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem", "Lichterfelde"] },
 "Reichnerweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Reichpietschufer":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte"], localities: ["Kreuzberg", "Tiergarten"] },
+"Reichsbahnsiedlung":	{ districts: ["Neukölln"], localities: ["Britz"] }, // Kiez
 "Reichsbahnstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] },
 "Reichshofer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
+"Reichsluftfahrtministerium":    { districts: ["Mitte"], localities: ["Mitte"] }, // Verschwundene Orte
 "Reichssportfeld":  { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Reichsstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },	// Spielplatz
-"Reichstag":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
+"Reichstag ":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Reichstagufer":	{ districts: ["Mitte"], localities: ["Mitte", "Tiergarten"] },
 "Reichweilerweg":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] },
 "Reichweindamm":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] },
@@ -11828,6 +12009,7 @@ streetDirectory: {
 "Resedenstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Residenzstraße":	{ districts: ["Mitte", "Reinickendorf"], localities: ["Gesundbrunnen", "Reinickendorf"] },	// U-Bahnhof
 "Resselsteig":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Restaurant Baret":	{ districts: ["Mitte"], localities: ["Mitte"] },  // Dachterrasse Humboldtforum
 "Rethelstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Plänterwald"] },
 "Rettigweg":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Retzbacher Weg":	{ districts: ["Pankow"], localities: ["Pankow"] },
@@ -11945,6 +12127,7 @@ streetDirectory: {
 "Ritterspornweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Rittersteinweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
 "Ritterstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Spandau", "Steglitz-Zehlendorf"], localities: ["Kreuzberg", "Lichterfelde", "Spandau"] },
+"Rixdorf":	{ districts: ["Neukölln"], localities: ["Neukölln"] }, // Kiez
 "Rixdorfer Straße":	{ districts: ["Tempelhof-Schöneberg", "Treptow-Köpenick"], localities: ["Johannisthal", "Mariendorf", "Niederschöneweide"] },
 "Röbeler Weg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
 "Röbellweg":	{ districts: ["Pankow"], localities: ["Buch"] },
@@ -12061,6 +12244,7 @@ streetDirectory: {
 "Rosenthaler Grenzweg":	{ districts: ["Pankow"], localities: ["Niederschönhausen"] },
 "Rosenthaler Platz":	{ districts: ["Mitte"], localities: ["Mitte"] },	// U-Bahnhof
 "Rosenthaler Straße":	{ districts: ["Mitte", "Pankow"], localities: ["Französisch Buchholz", "Mitte"] },	// Spielplatz
+"Rosenthaler Vorstadt":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Kiez
 "Rosenthaler Weg":	{ districts: ["Pankow"], localities: ["Blankenfelde", "Französisch Buchholz"] },
 "Rosenthal-Süd":	{ districts: ["Pankow"], localities: ["Rosenthal"] },	// Kleingartenanlage
 "Rosentreterpromenade":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
@@ -12189,8 +12373,12 @@ streetDirectory: {
 "Ruhegarten":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Ruheplatzstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Ruhlaer Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
-"Ruhleben":	{ districts: ["Spandau"], localities: ["Spandau"] },	// U-Bahnhof
-"Ruhlebener Straße":	{ districts: ["Spandau"], localities: ["Spandau", "Wilhelmstadt"] },	// Kleingartenanlage
+"Ruhleben":	        { variants:  [
+                    { localities:["Spandau"],             white: ["am hain", "charkottenburger chaussee", "eichtal", "freiheit", "heizkraftwerk", "kleingarten", "kleingärten", "müllverbrennung", "ruhleben", "sonnenschein", "stresow", "trabrennbahn", "werkring", "wiesendamm"] },
+                    { localities:["Spandau"],             white: ["u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"] }, // U-Bahnhof
+                    { localities:["Westend"],             white: ["eigenheimsiedlung", "fließwiese", "friedhof", "gemeindehaus", "krematorium", "murellenberg", "naturschutzgebiet", "ruhleben", "siedlung", "siedlungsgebiet", "wohnsiedlung"] }
+                    ]},
+"Ruhlebener Straße":{ districts: ["Spandau"], localities: ["Spandau", "Wilhelmstadt"] },	// Kleingartenanlage
 "Ruhlsdorfer Straße":	{ districts: ["Friedrichshain-Kreuzberg", "Marzahn-Hellersdorf"], localities: ["Kreuzberg", "Mahlsdorf"] },
 "Ruhmannsfeldener Straße":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
 "Rühmkorffstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -12245,6 +12433,7 @@ streetDirectory: {
 "Ruwersteig":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Rybniker Straße":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Rykestraße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
+//// S /////////////
 "S4G":	        { districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Saalburgstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Saaleckplatz":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -12313,9 +12502,12 @@ streetDirectory: {
 "Sambesistraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Sameiskystraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
 "Samländische Straße":	{ districts: ["Pankow"], localities: ["Pankow"] },
+"Sammlung Boros":   { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
+"Sammlung Hoffmann":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Sammlung Scharf-Gerstenberg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Museum
 "Sammlungen des Winckelmann-Instituts":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
 "Samoastraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
+"Samurai Museum":   { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Sandbacher Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
 "Sandbergstraße":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Sanddornstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Niederschöneweide"] },
@@ -12337,9 +12529,12 @@ streetDirectory: {
 "Sangerhauser Weg":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Sangestraße":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Sankt-Galler-Straße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
+"Sankt-Hedwigs-Kathedrale":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Sankt Oberholz":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Sansibarstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Sanssouci":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },	// Kleingartenanlage
-"Säntisstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf", "Marienfelde"] },	// Spielplatz
+"Säntisstaße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf", "Marienfelde"] },	// Spielplatz
+"Saravanaa Bhavan":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Gastronomie
 "Sarkauer Allee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Sarner Weg":	{ districts: ["Pankow"], localities: ["Heinersdorf"] },
 "Sarntaler Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -12358,6 +12553,7 @@ streetDirectory: {
 "Savignyplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// S-Bahnhof
 "Savoyenweg":	{ districts: ["Pankow"], localities: ["Blankenfelde"] },
 "Scabellstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] },
+//// SCH ///////////
 "Schächentaler Weg":	{ districts: ["Pankow"], localities: ["Heinersdorf"] },
 "Schachtelhalmweg":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Schackelsterstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -12420,6 +12616,7 @@ streetDirectory: {
 "Schererstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Scheringstraße":	{ districts: ["Mitte"], localities: ["Gesundbrunnen"] },
 "Schettkatstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
+"Scheunenviertel":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Kiez
 "Scheveninger Straße":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Schichauweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Marienfelde"] },	// S-Bahnhof
 "Schicklerstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
@@ -12440,8 +12637,9 @@ streetDirectory: {
 "Schiller Park Center":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Handel
 "Schillerfalterstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Schillerhof":	{ districts: ["Mitte"], localities: ["Wedding"] },
+"Schillerhöhe":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Schillerkiez":	{ districts: ["Neukölln"], localities: ["Neukölln"] }, // Kiez
-"Schillerpark":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Grünanlage
+"Schillerpark":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Grünanlage  // Kiez
 "Schillerpromenade":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Neukölln", "Oberschöneweide"] },	// Spielplatz
 "Schillerring":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },	// Kleingartenanlage
 "Schillerstraße":	{ districts: ["Charlottenburg-Wilmersdorf", "Pankow", "Steglitz-Zehlendorf", "Tempelhof-Schöneberg", "Treptow-Köpenick"], localities: ["Bohnsdorf", "Charlottenburg", "Lichtenrade", "Lichterfelde", "Niederschönhausen", "Wilhelmsruh", "Zehlendorf"] },	// Spielplatz
@@ -12449,7 +12647,9 @@ streetDirectory: {
 "Schillingstraße":	{ districts: ["Mitte", "Reinickendorf"], localities: ["Mitte", "Reinickendorf"] },	// U-Bahnhof
 "Schillingweg":	{ districts: ["Pankow"], localities: ["Blankenfelde", "Französisch Buchholz"] },
 "Schillstraße":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
+"Schinkel Pavillon":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Schinkelplatz":	{ districts: ["Mitte"], localities: ["Mitte"] },
+"Schinkelsche Bauakademie":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Schinkelstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },
 "Schinkestraße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },	// Spielplatz
 "Schirmpilzstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] },
@@ -12467,6 +12667,7 @@ streetDirectory: {
                     { localities:["Zehlendorf"],          white: ["natur", "ufer", "umwelt", "wasser"]} // See
                     ]},
 "Schlachtensee-Süd":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },	// Kleingartenanlage
+"Schlange":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },  // Wohnkomplex
 "Schlangenbader Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },
 "Schlawer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Schleffiner Straße":	{ districts: ["Neukölln"], localities: ["Rudow"] },
@@ -12491,6 +12692,7 @@ streetDirectory: {
 "Schleuse Neukölln": { districts: ["Neukölln"], localities: ["Neukölln"] }, // Schleuse
 "Schleuse Plötzensee": { districts: ["Charlottenburg-Wilmersdorf", "Mitte"], localities: ["Charlottenburg-Nord", "Wedding"] }, // Schleuse
 "Schleuse Spandau": { districts: ["Spandau"], localities: ["Spandau"] }, // Schleuse
+"Schleusenkrug":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Gastronomie
 "Schleusenufer":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Schleusinger Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Schlichtallee":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
@@ -12597,6 +12799,7 @@ streetDirectory: {
 "Schöllkrautstraße":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Scholzplatz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Schomburgstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
+"Schönhorst":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] }, // Kiez
 "Schonacher Straße":	{ districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
 "Schönagelstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Schönauer Weg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
@@ -13625,6 +13828,7 @@ streetDirectory: {
 "Schweinekopf":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },	// Kleingartenanlage
 "Schweinfurthstraße":	{ districts: ["Charlottenburg-Wilmersdorf", "Steglitz-Zehlendorf"], localities: ["Dahlem", "Schmargendorf"] },
 "Schweitzerstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+"Schweizer Botschaft":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Schweizer Tal":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Schweizerhofpark":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },	// Grünanlage
 "Schwelmer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
@@ -13793,6 +13997,7 @@ streetDirectory: {
 "Seylerstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] },
 "SEZ":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] }, // Quartier
 "Shawweg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
+"Shell-Haus":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Sehenswürdigkeit
 "Sibeliusweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Sibyllenstraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lankwitz"] },
 "Sichelsteig":	{ districts: ["Pankow"], localities: ["Blankenfelde"] },
@@ -13803,30 +14008,7 @@ streetDirectory: {
 "Siedelmeisterweg":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Siedlergemeinschaft Am Grünen Weg":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Siedlers Eck":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
-"Siedlung":	        { variants:  [
-                    { black:     ["siedlungsring", "siedlungsstraße", "siedlungsweg"]},
-                    { localities:["Adlershof"],           white: [""] },
-                    { localities:["Alt-Hohenschönhausen"],white: ["dingelstädter straße", "dorfkern", "gartenstadt", "hansastraße", "hauptstraße", "landsberger allee", "malchower weg", "märkisches viertel", "villenviertel", "weiße taube", "wilhelmsberg"] },
-                    { localities:["Charlottenburg"],      white: ["alt-lietzow", "ernst-reuter-platz", "kaiserecke", "kalowswerder", "klausenerplatz", "luisenplatz", "nithackstraße", "savignyplatz", "witzleben"] },
-                    { localities:["Charlottenburg-Nord"], white: ["charlottenburg-nord", "großsiedlung siemensstadt", "jungfernheide", "paul-hertz-siedlung", "plötzensee", "saatwinkler damm"] },
-                    { localities:["Mahlsdorf"],           white: [""] },
-                    { localities:["Moabit"],              white: [""] },
-                    { localities:["Rahnsdorf"],           white: [""] },
-                    { localities:["Staaken"],             white: ["albrechtshof", "brunsbütteler damm", "dorf staaken", "finkenkruger weg", "gartenstadt staaken", "hahneberg", "heerstraße", "louise-schröder", "magistratweg", "nennhauser damm", "neu-jeresulaem", "rudolf-wissel", "siemens-siedlung", "west-staaken"] },
-                    { localities:["Wedding"],             white: [""]}
-                    ]},
-"Siedlung Albrechtshof":	{ districts: ["Spandau"], localities: ["Staaken"] }, // Siedlung
-"Siedlung am Walde":	    { districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },	// Kleingartenanlage
-"Siedlung Deutsche Scholle":{ districts: ["Neukölln"], localities: ["Britz"] }, // Siedlung
-"Siedlung Eichkamp":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Siedlung
-"Siedlung Heerstraße":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] }, // Siedlung
-"Siedlung Interessengemeinschaft Rudow": { districts: ["Neukölln"], localities: ["Rudow"] },
-"Siedlung Kaiserecke":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
-"Siedlung Marienwerder":	{ districts: ["Neukölln"], localities: ["Buckow"] }, // Siedlung
-"Siedlung Plötzensee":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg-Nord"] }, // Siedlung
-"Siedlung Ruhleben":        { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend", "Spandau"] }, // Siedlung
-"Siedlung Schillerpark":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Siedlung
-"Siedlung Schönhorst":	    { districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] }, // Siedlung
+"Siedlung am Walde":	 { districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
 "Siedlungsring":	{ districts: ["Pankow"], localities: ["Karow"] },
 "Siedlungsstraße":	{ districts: ["Pankow"], localities: ["Buch"] },
 "Siedlungsweg":	{ districts: ["Spandau"], localities: ["Staaken"] },
@@ -13979,6 +14161,8 @@ streetDirectory: {
 "Sophie-Charlotten-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Sophie-Charlotte-Platz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// U-Bahnhof
 "Sophie-Charlotte-Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem", "Zehlendorf"] },
+"Sophie-Gips-Höfe":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Sophiensaele":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Sophienstraße":	{ districts: ["Lichtenberg", "Mitte", "Steglitz-Zehlendorf"], localities: ["Lichterfelde", "Mitte", "Rummelsburg"] },
 "Sophienwerder":	{ districts: ["Spandau"], localities: ["Haselhorst"] },	// Kleingartenanlage
 "Sophienwerderweg":	{ districts: ["Spandau"], localities: ["Haselhorst", "Spandau"] },
@@ -13989,6 +14173,7 @@ streetDirectory: {
 "Sowjetisches Ehrenmal Schönholzer Heide":	{ districts: ["Pankow"], localities: ["Niederschönhausen"] },	// Friedhof
 "Sowjetisches Ehrenmal Tiergarten":	{ districts: ["Mitte"], localities: ["Tiergarten"] },	// Friedhof
 "Sowjetisches Ehrenmal Treptower Park":	{ districts: ["Treptow-Köpenick"], localities: ["Alt-Treptow"] },	// Friedhof
+//// SP ////////////
 "Spachtelweg":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Spandau":	{ districts: ["Spandau"], localities: ["Spandau"] },	// S-Bahnhof
 "Spandauer Berg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },	// Kleingartenanlage
@@ -13999,12 +14184,14 @@ streetDirectory: {
 "Spandauer Havelpromenade":	{ districts: ["Spandau"], localities: ["Haselhorst"] },
 "Spandauer Straße":	{ districts: ["Mitte", "Spandau"], localities: ["Mitte", "Staaken"] },
 "Spandauer-See-Brücke":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Spandauer Vorstadt":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Kiez
 "Spanheimstraße":	{ districts: ["Mitte"], localities: ["Gesundbrunnen"] },
 "Spanische Allee":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },
 "Sparnecker Weg":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Sparrplatz":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Spielplatz
 "Sparrstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Spatenweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
+"Späthsfelde  ":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] }, // Kiez
 "Späthsfelder Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] },
 "Späthstraße":	{ districts: ["Neukölln", "Treptow-Köpenick"], localities: ["Baumschulenweg", "Britz"] },
 "Späthstraßenbrücke":	{ districts: ["Neukölln"], localities: ["Britz"] },
@@ -14087,8 +14274,8 @@ streetDirectory: {
 "Spreeweg":	{ districts: ["Mitte"], localities: ["Moabit", "Tiergarten"] },
 "Spreewiesen":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },	// Kleingartenanlage
 "Spremberger Straße":	{ districts: ["Marzahn-Hellersdorf", "Neukölln"], localities: ["Hellersdorf", "Neukölln"] },
-"Sprengelkiez":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Kiez
-"Sprengelpark":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Grünanlage
+"Sprengelkiez":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Kiez
+"Sprengelpark":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Grünanlage
 "Sprengelstraße":	{ districts: ["Mitte", "Spandau"], localities: ["Wedding", "Wilhelmstadt"] },
 "Springbornstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
 "Springeberger Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
@@ -14103,8 +14290,10 @@ streetDirectory: {
 "Sputendorfer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Sredzkistraße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "SRH Hochschule":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Hochschule
+//// ST ////////////
 "St. Hedwig-Friedhof":	{ districts: ["Lichtenberg", "Pankow"], localities: ["Alt-Hohenschönhausen", "Weißensee"] },	// Friedhof
 "St. Joseph-Steg":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
+"St. Marienkirche":   { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "St. Matthias-Friedhof":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Friedhof
 "St. Pius-Friedhof":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },	// Friedhof
 "St. Sebastian-Friedhof":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },	// Friedhof
@@ -14112,6 +14301,8 @@ streetDirectory: {
 "Staaken Center":	{ districts: ["Spandau"], localities: ["Staaken"] },	// Handel
 "Staakener Feldstraße":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Staakener Straße":	{ districts: ["Spandau"], localities: ["Spandau", "Staaken"] },
+"Staatsoper":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
+"Staatsratsgebäude": { districts: ["Mitte"], localities: ["Mitte"] }, // Verschwundene Orte
 "Stabholzgarten":	{ districts: ["Spandau"], localities: ["Spandau"] },
 "Stabholzgartenpark":	{ districts: ["Spandau"], localities: ["Spandau"] },
 "Stachelbartweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -14144,6 +14335,8 @@ streetDirectory: {
 "Stadtpark Spandau":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
 "Stadtpark Steglitz":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Steglitz"] },	// Grünanlage
 "Stadtrandstraße":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
+"Stadtschloss": { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Stadtschloß":  { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Staehleweg":	{ districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Staffelder Weg":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Stahlheimer Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
@@ -14154,6 +14347,7 @@ streetDirectory: {
 "Stallschreiberstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Mitte"], localities: ["Kreuzberg", "Mitte"] },
 "Stallstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
 "Stallupöner Allee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
+"Ständige Vertretung":  { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Stangeweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Stanzer Zeile":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Stargarder Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
@@ -14222,6 +14416,7 @@ streetDirectory: {
 "Stephan-Born-Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Stephaniweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Stephankiez":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Kiez
+"Stephanskiez":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Kiez
 "Stephanstraße":	{ districts: ["Mitte", "Steglitz-Zehlendorf"], localities: ["Moabit", "Steglitz"] },
 "Stephanusring":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
 "Sterckmannweg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -14343,7 +14538,7 @@ streetDirectory: {
                     { localities:["Karow"],               white: ["13125", "straße 94", "karow", "pankow", "boenkestraße", "bullenwiese", "graben 1", "kastanienhain", "leobschützergraben", "panke", "pankgrafenstraße", "rosengarten", "rübeländer graben", "rübeländergraben", "sandbergstraße", "streckfußstraße", ] },
                     { localities:["Neukölln"],            white: ["12349", "straße 44", "neukölln", "an den feldern", "buckower weg", "christian-henkel-straße", "haewererweg", "kestenzeile", "leonardo-da-vinci", "leonardo da vinci", "lindholzweg", "michel-klinitz-weg", "warmensteinacher straße"] },
                     { localities:["Niederschönhausen"],   white: ["13156", "straße 103", "niederschönhausen", "pankow", "blankenburger straße", "charlottenstraße", "friedhof", "herthaplatz", "klothildestraße", "lyonstraße", "spatzenhaus", "stechowstraße", "wackenbergstraße"] },
-                    // OLD STYLE
+                /*  // OLD STYLE
                     { localities:["Borsigwalde"],         white: ["13509", "straße 12", "borsigwalde", "reinickendorf", "allerheiligenkirche", "alt-wittenau", "am nordgraben", "borsigwalde 1910", "borsigwalder weg", "eichborndamm", "ernststraße", "evangelisch", "fußball", "gnade-christi-kirche", "grundschule", "katholisch", "kirchengemeinde", "klinnerweg", "kriegsopfer", "miraustraße", "peter-witte", "räuschstraße", "rüdnitzer zeile", "schubartstraße", "tietzstraße"] },
                     { localities:["Buch"],                white: ["13125", "straße 4", "straße 5", "straße 6", "straße 7", "buch", "pankow", "akademie der gesundheit", "alwall-haus", "am stener berg", "ilse-krause-straße", "nadrauer straße", "panke", "pankeland", "rosa-coutelle-straße", "rose-scheuer-karpin-streaße", "röntgental", "schwanebeck", "sudauer straße", "villa kunterbunt", "zepernicker straße", "zillertaler straße"] },
                     { localities:["Buch"],                white: ["13125", "straße 34", "straße 41", "buch", "pankow", "alt-karow", "blankenburger chaussee", "grundschule", "karower knirpse", "kattowitzer straße", "schräger weg", "steinauer straße", "tarnowitzer straße", "upstrallgraben"] },
@@ -14383,7 +14578,7 @@ streetDirectory: {
                     { localities:["Wartenberg"],          white: ["13059", "straße 1", "straße 2", "straße 3", "straße 4", "straße 5", "straße 6", "straße 7", "straße 8", "straße 9", "straße 10", "straße 11", "wartenberg", "lichtenberg"] },
                     { localities:["Weißensee"],           white: ["", "straße 206", "straße 210", "straße 229", "straße 245", "straße 246", "straße 250", "straße 251", "weißensee", "pankow"] },
                     { localities:["Wilhelmsruh"],         white: ["", "straße 33", "wilhelmsruh", "pankow"] },
-                    { localities:["Wilhelmstadt"],        white: ["", "straße 270", "straße 467", "wilhelmstadt", "spandau"] },
+                    { localities:["Wilhelmstadt"],        white: ["", "straße 270", "straße 467", "wilhelmstadt", "spandau"] }, */
                     ]},
 "Straße am Flugplatz":	{ districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },
 "Straße am Schaltwerk":	{ districts: ["Spandau"], localities: ["Siemensstadt"] },
@@ -14411,6 +14606,7 @@ streetDirectory: {
 "Straße zur Gaststätte Rübezahl":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
 "Straße zur Krampenburg":	{ districts: ["Treptow-Köpenick"], localities: ["Müggelheim"] },
 "Straßenbahnhof Marzahn":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+"Straßenbahndepot":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Straßentunnel Alexanderplatz":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Straßmannstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Straubinger Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -14507,9 +14703,12 @@ streetDirectory: {
 "Syringenplatz":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Syringenweg":	{ districts: ["Pankow", "Reinickendorf"], localities: ["Prenzlauer Berg", "Tegel"] },
 "Syrische Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },
+//// T /////////////
 "Tabbertstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
 "Taborstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Tacheles":	        { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Tacitusstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
+"Tadshikische Teestube":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Tahitiweg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
 "Takustraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Talberger Straße":	{ districts: ["Neukölln"], localities: ["Britz"] },
@@ -14655,6 +14854,7 @@ streetDirectory: {
 "the temporary bauhaus-archiv":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Museum
 "The Wall Museum":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },	// Museum
 "Theanolte-Bähnisch-Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
+"Theater im Palais":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Bühne
 "Theaterstudio":{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] }, // Schule
 "Thea-Rasche-Zeile":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Theatergasse":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
@@ -14796,6 +14996,7 @@ streetDirectory: {
 "Trakehner Allee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Trampenauer Steig":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Tramper Weg":	{ districts: ["Reinickendorf"], localities: ["Märkisches Viertel"] },
+"Tränenpalast": { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Tränkeweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
 "Transvaalstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Trappenfelder Pfad":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -14849,6 +15050,7 @@ streetDirectory: {
 "Tronjepfad":	{ districts: ["Pankow"], localities: ["Stadtrandsiedlung Malchow"] },
 "Tropfsteinweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
 "Troppauer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
+"Trümmerberg":	    { districts: ["Mitte"], localities: ["Gesundbrunnen"] }, // Sehenswürdigkeit
 "Trusepark":	{ districts: ["Neukölln"], localities: ["Neukölln"] },	// Grünanlage
 "Trusetaler Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Truseweg":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
@@ -14871,6 +15073,7 @@ streetDirectory: {
 "Tunnel Tiergarten":	{ districts: ["Mitte"], localities: ["Moabit", "Tiergarten"] },
 "Tunnelstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Tunnelweg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
+"Turbinenfabrik":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Turfweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
 "Turiner Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Türkenstraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
@@ -14879,7 +15082,7 @@ streetDirectory: {
 "Turmfalkenstraße":	{ districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
 "Turmstraße":       { variants:  [
                     { black:     ["glockenturmstraße"] },
-                    { localities:["Mitte"],               white: ["moabit", "turmstraße", "u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"] }
+                    { localities:["Moabit"],               white: ["moabit", "turmstraße", "u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"] }
                     ]},
 "Türrschmidtstraße":	{ districts: ["Lichtenberg"], localities: ["Rummelsburg"] },
 "Tuschkastensiedlung":	{ districts: ["Treptow-Köpenick"], localities: ["Bohnsdorf"] }, // Siedlung > Gartenstadt Falkenberg
@@ -14887,6 +15090,7 @@ streetDirectory: {
 "Tutzinger Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Tuxer Steig":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Tychyer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
+//// U /////////////
 "Übergang":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Ubierstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Ückeritzer Ring":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
@@ -14946,6 +15150,7 @@ streetDirectory: {
 "Unter der Kranbahn":	{ districts: ["Treptow-Köpenick"], localities: ["Oberschöneweide"] },
 "Unterbaumstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Unterschleuse": { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Schleuse
+"Unterwelten":	    { districts: ["Mitte"], localities: ["Gesundbrunnen"] }, // Sehenswürdigkeit
 "Untere Havel-Wasserstraße": { districts: ["Reinickendorf", "Spandau", "Steglitz-Zehlendorf"], localities: ["Gatow", "Hakenfelde", "Heiligensee", "Kladow", "Konradshöhe", "Nikolassee", "Spandau", "Tegel", "Wannsee", "Wilhelmstadt"] }, // Kanal
 "Unterfeld":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
 "Untertürkheimer Straße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Mariendorf"] },
@@ -14977,6 +15182,8 @@ streetDirectory: {
 "Uthmannstraße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Utrechter Straße":	{ districts: ["Mitte"], localities: ["Wedding"] },	// Spielplatz
 "Uwe-Lieschied-Straße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
+//// V /////////////
+"Vagabund Brauerei":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Sehenswürdigkeit
 "Valentinswerder":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },
 "Valeska-Gert-Straße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Valwiger Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
@@ -15063,6 +15270,8 @@ streetDirectory: {
 "Volkmarstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Volkrad-Passage":	{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },	// Handel
 "Volkradstraße":	{ districts: ["Lichtenberg"], localities: ["Friedrichsfelde"] },
+"Volksbad":     { districts: ["Mitte"], localities: ["Mitte"] }, // Temporäre Kultur
+"Volksbühne":   { districts: ["Mitte"], localities: ["Mitte"] }, // Kultur
 "Volkspark am Weinbergsweg":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Grünanlage
 "Volkspark Anton Saefkow":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },	// Grünanlage
 "Volkspark Anton-Saefkow":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
@@ -15111,6 +15320,7 @@ streetDirectory: {
 "Voßstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Voxstraße":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Vulkanstraße":	{ districts: ["Lichtenberg"], localities: ["Fennpfuhl", "Lichtenberg"] },
+//// W /////////////
 "Waadter Zeile":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Wachenheimer Weg":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Wacholderheide":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },	// Kleingartenanlage
@@ -15362,6 +15572,7 @@ streetDirectory: {
 "Wehlener Straße":	{ districts: ["Pankow"], localities: ["Weißensee"] },
 "Wehneltsteig":	{ districts: ["Spandau"], localities: ["Siemensstadt"] },
 "Wehnertstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
+"Weinerwirtschaft":	 { districts: ["Mitte"], localities: ["Mitte"] }, // Gewerbe
 "Weichselmünder Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
 "Weichselpark":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
 "Weichselplatz":	{ districts: ["Neukölln"], localities: ["Neukölln"] },	// Spielplatz
@@ -15385,6 +15596,7 @@ streetDirectory: {
 "Weinbergsweg":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Weinbrennerweg":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Weingartenweg":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
+"Weinhaus Huth":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Gastronomie
 "Weinheimer Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] },
 "Weinholdweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
 "Weinmeisterhornweg": { variants: [
@@ -15432,6 +15644,7 @@ streetDirectory: {
 "Welsestraße":	{ districts: ["Lichtenberg"], localities: ["Neu-Hohenschönhausen"] },
 "Welsumerpfad":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Welterpfad":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Marienfelde"] },
+"Weltzeituhr":  { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Welzower Steig":	{ districts: ["Reinickendorf"], localities: ["Märkisches Viertel"] },
 "Wenckebachstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Wendehalsweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
@@ -15690,6 +15903,7 @@ streetDirectory: {
 "Wismarer Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Wismarplatz":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Wisserweg":	{ districts: ["Spandau"], localities: ["Kladow"] },
+"WISTA":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] }, // Hochschule
 "Wißlerstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
 "Wissmannstraße":	{ districts: ["Charlottenburg-Wilmersdorf", "Neukölln"], localities: ["Grunewald", "Neukölln"] },
 "Wittekindstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
@@ -15842,13 +16056,16 @@ streetDirectory: {
 "Wutzkycenter":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },	// Handel
 "Wutzky Center":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },	// Handel
 "Wutzky-Center":	{ districts: ["Neukölln"], localities: ["Gropiusstadt"] },	// Handel
+//// X /////////////
 "Xantener Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },	// Spielplatz
+//// Y /////////////
 "Yehudi-Menuhin-Park":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Nikolassee"] },	// Grünanlage
 "Yitzhak-Rabin-Straße":	{ districts: ["Mitte"], localities: ["Tiergarten"] },
 "Yorckstraße (Großgörschenstraße)":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },	// S-Bahnhof
 "Yorckstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Tempelhof-Schöneberg"], localities: ["Kreuzberg", "Schöneberg"] },	// S+U-Bahnhof
 "Ystader Straße":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Yva-Bogen":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },
+//// Z /////////////
 "Zaandamer Straße":	{ districts: ["Neukölln"], localities: ["Britz"] },
 "Zabel-Krüger-Damm":	{ districts: ["Reinickendorf"], localities: ["Lübars", "Waidmannslust"] },
 "Zaberner Straße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
@@ -15863,6 +16080,7 @@ streetDirectory: {
 "Zangengasse":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Zanower Weg":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Zantochweg":	{ districts: ["Neukölln"], localities: ["Britz"] },
+"Zapf-Siedlung":	{ districts: ["Neukölln"], localities: ["Neukölln"] }, // Kiez
 "Zastrowstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Zaucher Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
 "Zauchwitzer Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
@@ -15883,7 +16101,7 @@ streetDirectory: {
 "Zeisigweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Zeißpfad":	{ districts: ["Neukölln", "Tempelhof-Schöneberg"], localities: ["Buckow", "Lichtenrade"] },
 "Zeitzer Straße":	{ districts: ["Neukölln"], localities: ["Neukölln"] },
-"Zellengefängnis Moabit":	{ districts: ["Mitte"], localities: ["Moabit"] },	// Grünanlage
+"Zellengefängnis Moabit":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Grünanlage
 "Zellerfelder Straße":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Zellerweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Zellestraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
@@ -15894,6 +16112,7 @@ streetDirectory: {
 "Zempiner Steig":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Zentralarchiv":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
 "Zentralfriedhof Friedrichsfelde":	{ districts: ["Lichtenberg"], localities: ["Lichtenberg"] },	// Friedhof
+"Zentrum für Kunst und Urbanistik":	{ districts: ["Mitte"], localities: ["Moabit"] }, // Sehenswürdigkeit
 "Zentrum Schöneweide":	{ districts: ["Treptow-Köpenick"], localities: ["Niederschöneweide"] },	// Handel
 "Zepernicker Straße":	{ districts: ["Pankow"], localities: ["Buch"] },
 "Zeppelinplatz":	{ districts: ["Mitte"], localities: ["Wedding"] },
@@ -15924,7 +16143,8 @@ streetDirectory: {
 "Zieselweg":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
 "Zietenstraße":	{ districts: ["Steglitz-Zehlendorf", "Tempelhof-Schöneberg"], localities: ["Lankwitz", "Schöneberg"] },
 "Zikadenweg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
-"Zille Museum":	{ districts: ["Mitte"], localities: ["Mitte"] },	// Museum
+"Zille Museum":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Museum
+"Zille-Museum": { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Zillertalstraße":	{ districts: ["Pankow"], localities: ["Pankow"] },
 "Zillestraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] },	// Spielplatz
 "Zimbelstraße":	{ districts: ["Pankow"], localities: ["Französisch Buchholz"] },
@@ -15942,6 +16162,8 @@ streetDirectory: {
 "Zinsgutstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Zinsweilerweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Zinzendorfstraße":	{ districts: ["Mitte"], localities: ["Moabit"] },
+"Zionskirche":	    { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
+"Zionskirchplatz":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Zionskirchstraße":	{ districts: ["Mitte", "Pankow"], localities: ["Mitte", "Prenzlauer Berg"] },
 "Zipser Weg":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Mahlsdorf"] },
 "Zirkelsteinweg":	{ districts: ["Pankow"], localities: ["Rosenthal"] },
@@ -16013,6 +16235,7 @@ streetDirectory: {
 "Zur Haveldüne":	{ districts: ["Spandau"], localities: ["Wilhelmstadt"] },
 "Zur Holzoper":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Zur Innung":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
+"Zur letzten Instanz":       { districts: ["Mitte"], localities: ["Mitte"] }, // Gastronomie
 "Zur Lübarser Bahn":	{ districts: ["Reinickendorf"], localities: ["Lübars"] },
 "Zur Marktflagge":	{ districts: ["Pankow"], localities: ["Prenzlauer Berg"] },
 "Zur Nachtheide":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
@@ -16187,10 +16410,10 @@ const CFG_DEFAULTS = {
         { pattern: "Maßstab(?:\\s+von)?\\s+(\\d+)[\\s.:]+(\\d+)", flags: "gu", replacement: "Maßstab $(1):$(2)" },
 
         // Tausendertrennzeichen optimieren
-        { pattern: "(?:^|\\b)(\\d{1,3})[\\.\\s\\u0020](\\d{3})[\\.\\s\\u0020]?(\\d{3})[\.\\s\\u0020]?(\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)\u202F$(2)\u202F$(3)\u202F$(4)" }, // 13–10-stellig
+        { pattern: "(?:^|\\b)(\\d{1,3})[\\.\\s\\u0020](\\d{3})[\\.\\s\\u0020]?(\\d{3})[\.\\s\\u0020]?(\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)\u202F$(2)\u202F$(3)\u202F$(4)" }, // 12–10-stellig
         { pattern: "(?:^|\\b)(\\d{1,3})[\\.\\s\\u0020](\\d{3})[\\.\\s\\u0020]?(\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)\u202F$(2)\u202F$(3)" }, // 9–7-stellig
-        { pattern: "(?:^|\\b)(\\d{1,3})[\\.\\s\\u0020](\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)\u202F$(2)" }, // 6–5-stellig
-        { pattern: "(?:^|\\b)(\\d{1})[\\.\\s\\u0020](\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)$(2)" }, // 4-stellig ohne Dezimal
+        { pattern: "(?:^|\\b)(\\d{2,3})[\\.\\s\\u0020](\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)\u202F$(2)" }, // 6–5-stellig
+        { pattern: "(?:^|\\b)(\\d{1})[\\.\\u0020](\\d{3})(?:\\b|$)", flags: "gu", replacement: "$(1)$(2)" }, // 4-stellig ohne Dezimal
 
         // Telefonnummern für CUE optimieren
         { pattern: "\\bTelefon\\s*:?\\s*(?=[(+]?\\s*\\d)", flags: "gu", replacement: "Tel. " },
