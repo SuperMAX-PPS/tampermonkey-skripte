@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.1.85 Multi-Site Struktur
+// @name SuperMAX 7.1.86 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.1.85
+// @version 7.1.86
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -9544,30 +9544,30 @@ streetDirectory: {
 "Landhausstraße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },	// Spielplatz
 "Landhausweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Landjägerstraße":	{ districts: ["Treptow-Köpenick"], localities: ["Köpenick"] },
-"Landoltweg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
+"Landoltweg":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Landoltwegbrücke":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },
 "Landreiterweg":	{ districts: ["Neukölln"], localities: ["Buckow"] },
-"Landréstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
-"Landsberger Allee":    { variants: [
-                { localities: ["Prenzlauer Berg"], white: ["s-bahnhof", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
-                { localities: ["Prenzlauer Berg"], white: ["forum landsberger allee"] }, // Handel
-                { localities: ["Lichtenberg"],     white: ["einkaufspassage", "einkaufspassagen"] }, // Handel
-                { localities: ["Alt-Hohenschönhausen", "Fennpfuhl", "Friedrichshain", "Lichtenberg", "Marzahn", "Prenzlauer Berg"],
-                  segments:   [
-                { from: 2,   to: 102,  parity: "even", locality: "Friedrichshain" },
-                { from: 15,  to: 77,   parity: "odd",  locality: "Friedrichshain" },
-                { from: 79,  to: 127,  parity: "odd",  locality: "Prenzlauer Berg" },
-                { from: 104, to: 104,  parity: "even", locality: "Prenzlauer Berg" },
-                { from: 106, to: 228,  parity: "even", locality: "Fennpfuhl" },
-                { from: 131, to: 193,  parity: "odd",  locality: "Fennpfuhl" },
-                { from: 201, to: 367,  parity: "odd",  locality: "Alt-Hohenschönhausen" },
-                { from: 230, to: 364,  parity: "even", locality: "Lichtenberg" },
-                { from: 366, to: 576,  parity: "even", locality: "Marzahn" },
-                { from: 401, to: 565,  parity: "odd",  locality: "Marzahn" } ] },
-                ] },
-"Landsberger Chaussee":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },	// Spielplatz
-"Landsberger Straße":	{ districts: ["Marzahn-Hellersdorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Mahlsdorf"] },
-"Landsberger Tor":    { districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] }, // Verschwundene Orte
+"Landréstraße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+"Landsberger Allee":{ variants: [
+                    { localities: ["Prenzlauer Berg"], white: ["s-bahnhof", "s bahnhof", "bahnhof", "station"] }, // S-Bahnhof
+                    { localities: ["Prenzlauer Berg"], white: ["forum landsberger allee"] }, // Handel
+                    { localities: ["Lichtenberg"],     white: ["einkaufspassage", "einkaufspassagen"] }, // Handel
+                    { localities: ["Alt-Hohenschönhausen", "Fennpfuhl", "Friedrichshain", "Lichtenberg", "Marzahn", "Prenzlauer Berg"],
+                      segments:   [
+                    { from: 2,   to: 102,  parity: "even", locality: "Friedrichshain" },
+                    { from: 15,  to: 77,   parity: "odd",  locality: "Friedrichshain" },
+                    { from: 79,  to: 127,  parity: "odd",  locality: "Prenzlauer Berg" },
+                    { from: 104, to: 104,  parity: "even", locality: "Prenzlauer Berg" },
+                    { from: 106, to: 228,  parity: "even", locality: "Fennpfuhl" },
+                    { from: 131, to: 193,  parity: "odd",  locality: "Fennpfuhl" },
+                    { from: 201, to: 367,  parity: "odd",  locality: "Alt-Hohenschönhausen" },
+                    { from: 230, to: 364,  parity: "even", locality: "Lichtenberg" },
+                    { from: 366, to: 576,  parity: "even", locality: "Marzahn" },
+                    { from: 401, to: 565,  parity: "odd",  locality: "Marzahn" } ] },
+                    ] },
+"Landsberger Chaussee":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },	// Spielplatz
+"Landsberger Straße":	    { districts: ["Marzahn-Hellersdorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Mahlsdorf"] },
+"Landsberger Tor":  { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] }, // Hundeauslaufgebiet
 "Landschaftsfriedhof Gatow":	{ districts: ["Spandau"], localities: ["Gatow"] },	// Friedhof
 "Landschaftspark Adlershof":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },	// Grünanlage
 "Landschaftspark Johannisthal":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },	// Grünanlage
@@ -11101,14 +11101,15 @@ streetDirectory: {
 "Oberbaumbrücke":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Oberbaumstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
 "Oberdorfer Steig":	{ districts: ["Spandau"], localities: ["Staaken"] },
+"Oberfeldpark":     { districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] }, // Hundeauslaufgebiet
 "Oberfeldstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Oberhaardter Weg":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },
-"Oberhauser Straße":	{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
+"Oberhauser Straße":{ districts: ["Spandau"], localities: ["Falkenhagener Feld"] },
 "Oberhofer Platz":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
 "Oberhofer Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
-"Oberjägerweg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
+"Oberjägerweg":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
 "Oberlandgarten":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
-"Oberlandpark":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Grünanlage
+"Oberlandpark":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },	// Grünanlage
 "Oberlandstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Tempelhof"] },
 "Oberlin Seminar":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] }, // Schule
 "Oberlin-Seminar":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] }, // Schule
@@ -11128,26 +11129,26 @@ streetDirectory: {
 "Oberspreestraße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof", "Köpenick", "Niederschöneweide"] },
 "Obersteiner Weg":	{ districts: ["Pankow"], localities: ["Weißensee"] },
 "Oberstufenzentrum": 	     { variants:  [
-                    { localities:["Britz"],               white: ["osz", "oberstufe", "informations- und medizintechnik", "oszimt", "neukölln", "britz", "haarlemer straße"] },
-                    { localities:["Charlottenburg"],      white: ["anna-freud-schule", "osz", "oberstufe", "anna", "freud", "sozialwesen", "charlottenburg", "halemweg"] },
-                    { localities:["Charlottenburg"],      white: ["hans-litten-schule", "osz", "oberstufe", "hlsberlin", "hans", "litten", "recht", "wirtschaft", "charlottenburg", "dankelmannstraße"] },
-                    { localities:["Charlottenburg"],      white: ["osz", "oberstufe", "ästhetik", "technik", "oszaet", "charlottenburg", "schillerstraße"] },
-                    { localities:["Charlottenburg"],      white: ["osz", "oberstufe", "kraftfahrzeugtechnik", "oszkfz", "charlottenburg", "gierkeplatz"] },
-                    { localities:["Charlottenburg"],      white: ["ruth-cohn-schule", "osz", "oberstufe", "ruth", "cohn", "sozialwesen", "charlottenburg", "bismarckstraße"] },
-                    { localities:["Friedrichshain"],      white: ["august-sander-schule", "osz", "oberstufe", "august", "sander", "friedrichshain", "naglerstraße"] },
-                    { localities:["Friedrichshain"],      white: ["jane-addams-schule", "osz", "oberstufe", "jane", "addams", "sozialwesen", "osz-jas", "friedrichshain", "straßmannstraße"] },
-                    { localities:["Gropiusstadt"],        white: ["lise-meitner-schule", "osz", "oberstufe", "lise", "meitner", "chemie", "physik", "biologie", "osz-lise-meitner", "neukölln", "gropiusstadt", "lipschitzallee"] },
-                    { localities:["Kreuzberg"],           white: ["hans-böckler-schule", "osz", "oberstufe", "hans", "böckler", "konstruktionsbautechnik", "osz-kt", "kreuzberg", "lobeckstraße"] },
-                    { localities:["Kreuzberg"],           white: ["modeschule", "osz", "oberstufe", "bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
-                    { localities:["Kreuzberg"],           white: ["osz", "oberstufe", "bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
-                    { localities:["Kreuzberg"],           white: ["osz", "oberstufe", "handel", "oszhandel", "kreuzberg", "wrangelstraße"] },
-                    { localities:["Lichtenberg"],         white: ["hein-moeller-schule", "hein", "moeller", "osz", "oberstufe", "energietechnik", "lichtenberg", "allee der kosmonauten"] },
-                    { localities:["Moabit"],              white: ["osz", "oberstufe", "banken", "immobilien", "versicherung", "moabit", "alt-moabit"] },
-                    { localities:["Rummelsburg"],         white: ["friedrich-list-schule", "osz", "oberstufe", "friedrich", "list", "fls", "büromanagement", "wirtschaftssprachen", "lichtenberg", "rummelsburg", "marktstraße"] },
-                    { localities:["Rummelsburg"],         white: ["max-taut-schule", "osz", "oberstufe", "max", "taut", "gebäude", "umwelt", "technik", "lichtenberg", "rummelsburg", "fischerstraße"] },
-                    { localities:["Wedding"],             white: ["osz", "oberstufe", "gesundheit", "osz-gesundheit", "wedding", "schwyzer straße"] },
-                    { localities:["Wedding"],             white: ["osz", "oberstufe", "kommunikation", "information", "medientechnik", "oszkim", "wedding", "osloer straße"] },
-                    { localities:["Wilmersdorf"],         white: ["leopold-ullstein-schule", "osz", "oberstufe", "leopold", "ullstein", "wirtschaft", "wilmersdorf", "prinzregentenstraße"] },
+                    { localities:["Britz"],               white: ["informations- und medizintechnik", "oszimt", "neukölln", "britz", "haarlemer straße"] },
+                    { localities:["Charlottenburg"],      white: ["anna-freud-schule", "anna", "freud", "sozialwesen", "charlottenburg", "halemweg"] },
+                    { localities:["Charlottenburg"],      white: ["hans-litten-schule", "hlsberlin", "hans", "litten", "recht", "wirtschaft", "charlottenburg", "dankelmannstraße"] },
+                    { localities:["Charlottenburg"],      white: ["ästhetik", "technik", "oszaet", "charlottenburg", "schillerstraße"] },
+                    { localities:["Charlottenburg"],      white: ["kraftfahrzeugtechnik", "oszkfz", "charlottenburg", "gierkeplatz"] },
+                    { localities:["Charlottenburg"],      white: ["ruth-cohn-schule", "ruth", "cohn", "sozialwesen", "charlottenburg", "bismarckstraße"] },
+                    { localities:["Friedrichshain"],      white: ["august-sander-schule", "august", "sander", "friedrichshain", "naglerstraße"] },
+                    { localities:["Friedrichshain"],      white: ["jane-addams-schule", "jane", "addams", "sozialwesen", "osz-jas", "friedrichshain", "straßmannstraße"] },
+                    { localities:["Gropiusstadt"],        white: ["lise-meitner-schule", "lise", "meitner", "chemie", "physik", "biologie", "osz-lise-meitner", "neukölln", "gropiusstadt", "lipschitzallee"] },
+                    { localities:["Kreuzberg"],           white: ["hans-böckler-schule", "hans", "böckler", "konstruktionsbautechnik", "osz-kt", "kreuzberg", "lobeckstraße"] },
+                    { localities:["Kreuzberg"],           white: ["modeschule", "bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
+                    { localities:["Kreuzberg"],           white: ["bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
+                    { localities:["Kreuzberg"],           white: ["handel", "oszhandel", "kreuzberg", "wrangelstraße"] },
+                    { localities:["Lichtenberg"],         white: ["hein-moeller-schule", "hein", "moeller", "energietechnik", "lichtenberg", "allee der kosmonauten"] },
+                    { localities:["Moabit"],              white: ["banken", "immobilien", "versicherung", "moabit", "alt-moabit"] },
+                    { localities:["Rummelsburg"],         white: ["friedrich-list-schule", "friedrich", "list", "fls", "büromanagement", "wirtschaftssprachen", "lichtenberg", "rummelsburg", "marktstraße"] },
+                    { localities:["Rummelsburg"],         white: ["max-taut-schule", "max", "taut", "gebäude", "umwelt", "technik", "lichtenberg", "rummelsburg", "fischerstraße"] },
+                    { localities:["Wedding"],             white: ["gesundheit", "osz-gesundheit", "wedding", "schwyzer straße"] },
+                    { localities:["Wedding"],             white: ["kommunikation", "information", "medientechnik", "oszkim", "wedding", "osloer straße"] },
+                    { localities:["Wilmersdorf"],         white: ["leopold-ullstein-schule", "leopold", "ullstein", "wirtschaft", "wilmersdorf", "prinzregentenstraße"] },
                     ]},
 "Oberverwaltungsgericht":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Charlottenburg"] }, // Gericht
 "Oberwallstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
@@ -11305,26 +11306,26 @@ streetDirectory: {
 "Oswaldstraße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Oswinsteig":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
 "OSZ": 	            { variants:  [
-                    { localities:["Britz"],               white: ["osz", "oberstufe", "informations- und medizintechnik", "oszimt", "neukölln", "britz", "haarlemer straße"] },
-                    { localities:["Charlottenburg"],      white: ["anna-freud-schule", "osz", "oberstufe", "anna", "freud", "sozialwesen", "charlottenburg", "halemweg"] },
-                    { localities:["Charlottenburg"],      white: ["hans-litten-schule", "osz", "oberstufe", "hlsberlin", "hans", "litten", "recht", "wirtschaft", "charlottenburg", "dankelmannstraße"] },
-                    { localities:["Charlottenburg"],      white: ["osz", "oberstufe", "ästhetik", "technik", "oszaet", "charlottenburg", "schillerstraße"] },
-                    { localities:["Charlottenburg"],      white: ["osz", "oberstufe", "kraftfahrzeugtechnik", "oszkfz", "charlottenburg", "gierkeplatz"] },
-                    { localities:["Charlottenburg"],      white: ["ruth-cohn-schule", "osz", "oberstufe", "ruth", "cohn", "sozialwesen", "charlottenburg", "bismarckstraße"] },
-                    { localities:["Friedrichshain"],      white: ["august-sander-schule", "osz", "oberstufe", "august", "sander", "friedrichshain", "naglerstraße"] },
-                    { localities:["Friedrichshain"],      white: ["jane-addams-schule", "osz", "oberstufe", "jane", "addams", "sozialwesen", "osz-jas", "friedrichshain", "straßmannstraße"] },
-                    { localities:["Gropiusstadt"],        white: ["lise-meitner-schule", "osz", "oberstufe", "lise", "meitner", "chemie", "physik", "biologie", "osz-lise-meitner", "neukölln", "gropiusstadt", "lipschitzallee"] },
-                    { localities:["Kreuzberg"],           white: ["hans-böckler-schule", "osz", "oberstufe", "hans", "böckler", "konstruktionsbautechnik", "osz-kt", "kreuzberg", "lobeckstraße"] },
-                    { localities:["Kreuzberg"],           white: ["modeschule", "osz", "oberstufe", "bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
-                    { localities:["Kreuzberg"],           white: ["osz", "oberstufe", "bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
-                    { localities:["Kreuzberg"],           white: ["osz", "oberstufe", "handel", "oszhandel", "kreuzberg", "wrangelstraße"] },
-                    { localities:["Lichtenberg"],         white: ["hein-moeller-schule", "hein", "moeller", "osz", "oberstufe", "energietechnik", "lichtenberg", "allee der kosmonauten"] },
-                    { localities:["Moabit"],              white: ["osz", "oberstufe", "banken", "immobilien", "versicherung", "moabit", "alt-moabit"] },
-                    { localities:["Rummelsburg"],         white: ["friedrich-list-schule", "osz", "oberstufe", "friedrich", "list", "fls", "büromanagement", "wirtschaftssprachen", "lichtenberg", "rummelsburg", "marktstraße"] },
-                    { localities:["Rummelsburg"],         white: ["max-taut-schule", "osz", "oberstufe", "max", "taut", "gebäude", "umwelt", "technik", "lichtenberg", "rummelsburg", "fischerstraße"] },
-                    { localities:["Wedding"],             white: ["osz", "oberstufe", "gesundheit", "osz-gesundheit", "wedding", "schwyzer straße"] },
-                    { localities:["Wedding"],             white: ["osz", "oberstufe", "kommunikation", "information", "medientechnik", "oszkim", "wedding", "osloer straße"] },
-                    { localities:["Wilmersdorf"],         white: ["leopold-ullstein-schule", "osz", "oberstufe", "leopold", "ullstein", "wirtschaft", "wilmersdorf", "prinzregentenstraße"] },
+                    { localities:["Britz"],               white: ["informations- und medizintechnik", "oszimt", "neukölln", "britz", "haarlemer straße"] },
+                    { localities:["Charlottenburg"],      white: ["anna-freud-schule", "anna", "freud", "sozialwesen", "charlottenburg", "halemweg"] },
+                    { localities:["Charlottenburg"],      white: ["hans-litten-schule", "hlsberlin", "hans", "litten", "recht", "wirtschaft", "charlottenburg", "dankelmannstraße"] },
+                    { localities:["Charlottenburg"],      white: ["ästhetik", "technik", "oszaet", "charlottenburg", "schillerstraße"] },
+                    { localities:["Charlottenburg"],      white: ["kraftfahrzeugtechnik", "oszkfz", "charlottenburg", "gierkeplatz"] },
+                    { localities:["Charlottenburg"],      white: ["ruth-cohn-schule", "ruth", "cohn", "sozialwesen", "charlottenburg", "bismarckstraße"] },
+                    { localities:["Friedrichshain"],      white: ["august-sander-schule", "august", "sander", "friedrichshain", "naglerstraße"] },
+                    { localities:["Friedrichshain"],      white: ["jane-addams-schule", "jane", "addams", "sozialwesen", "osz-jas", "friedrichshain", "straßmannstraße"] },
+                    { localities:["Gropiusstadt"],        white: ["lise-meitner-schule", "lise", "meitner", "chemie", "physik", "biologie", "osz-lise-meitner", "neukölln", "gropiusstadt", "lipschitzallee"] },
+                    { localities:["Kreuzberg"],           white: ["hans-böckler-schule", "hans", "böckler", "konstruktionsbautechnik", "osz-kt", "kreuzberg", "lobeckstraße"] },
+                    { localities:["Kreuzberg"],           white: ["modeschule", "bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
+                    { localities:["Kreuzberg"],           white: ["bekleidung", "mode", "modeschule", "kreuzberg", "kochstraße"] },
+                    { localities:["Kreuzberg"],           white: ["handel", "oszhandel", "kreuzberg", "wrangelstraße"] },
+                    { localities:["Lichtenberg"],         white: ["hein-moeller-schule", "hein", "moeller", "energietechnik", "lichtenberg", "allee der kosmonauten"] },
+                    { localities:["Moabit"],              white: ["banken", "immobilien", "versicherung", "moabit", "alt-moabit"] },
+                    { localities:["Rummelsburg"],         white: ["friedrich-list-schule", "friedrich", "list", "fls", "büromanagement", "wirtschaftssprachen", "lichtenberg", "rummelsburg", "marktstraße"] },
+                    { localities:["Rummelsburg"],         white: ["max-taut-schule", "max", "taut", "gebäude", "umwelt", "technik", "lichtenberg", "rummelsburg", "fischerstraße"] },
+                    { localities:["Wedding"],             white: ["gesundheit", "osz-gesundheit", "wedding", "schwyzer straße"] },
+                    { localities:["Wedding"],             white: ["kommunikation", "information", "medientechnik", "oszkim", "wedding", "osloer straße"] },
+                    { localities:["Wilmersdorf"],         white: ["leopold-ullstein-schule", "leopold", "ullstein", "wirtschaft", "wilmersdorf", "prinzregentenstraße"] },
                     ]},
 "Otawistraße":	{ districts: ["Mitte"], localities: ["Wedding"] },
 "Othellostraße":	{ districts: ["Pankow"], localities: ["Heinersdorf"] },
@@ -11919,38 +11920,42 @@ streetDirectory: {
 "Quittenweg":	{ districts: ["Treptow-Köpenick"], localities: ["Altglienicke"] },
 "Quitzowstraße":	{ districts: ["Mitte"], localities: ["Moabit"] },
 //// R /////////////
-"Raabestraße":	{ districts: ["Pankow", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Prenzlauer Berg"] },	// Spielplatz
+"Raabestraße":	    { districts: ["Pankow", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Prenzlauer Berg"] },	// Spielplatz
+
 "Rabenhorststraße":	{ districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
-"Rabensteiner Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
-"Rabenstraße":	{ districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
-"Rabindranath-Tagore-Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Grünau"] },
-"Rachelweg":	{ districts: ["Lichtenberg"], localities: ["Karlshorst"] },
+"Rabensteiner Straße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+"Rabenstraße":	    { districts: ["Reinickendorf"], localities: ["Konradshöhe"] },
+"Rabindranath-Tagore-Straße":	 { districts: ["Treptow-Köpenick"], localities: ["Grünau"] },
+"Rachelweg":	    { districts: ["Lichtenberg"], localities: ["Karlshorst"] },
 "Rackebüller Weg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Räcknitzer Steig":	{ districts: ["Spandau"], localities: ["Staaken"] },
-"Rackwitzer Straße":	{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
+"Rackwitzer Straße":{ districts: ["Lichtenberg"], localities: ["Alt-Hohenschönhausen"] },
 "Radduscher Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
 "Radeberger Weg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
-"Radebeuler Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
+"Radebeuler Straße":{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Radelandstraße":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
-"Rademeierweg":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
+"Rademeierweg":	    { districts: ["Tempelhof-Schöneberg"], localities: ["Lichtenrade"] },
 "Radenzer Straße":	{ districts: ["Treptow-Köpenick"], localities: ["Baumschulenweg"] },
 "Radewiesenweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Radfahrerwiese":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },	// Badestelle
 "Radickestraße":	{ districts: ["Treptow-Köpenick"], localities: ["Adlershof"] },
 "Radieschenpfad":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Radolfzeller Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
-"Radtkestraße":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
+"Radtkestraße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Zehlendorf"] },
 "Raduhner Straße":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Ragazer Straße":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
 "Rägeliner Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
 "Ragniter Allee":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
-"Ragower Weg":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
-"Rahel-Hirsch-Straße":	{ districts: ["Mitte"], localities: ["Mitte", "Moabit"] },
-"Rahel-Varnhagen-Promenade":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
-"Rahnestraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
+"Ragower Weg":	    { districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
+"Rahel-Hirsch-Straße":	    { districts: ["Mitte"], localities: ["Mitte", "Moabit"] },
+"Rahel-Varnhagen-Promenade":{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Rahnestraße":	    { districts: ["Marzahn-Hellersdorf"], localities: ["Kaulsdorf"] },
 "Rahnsdorf Süd":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },	// Kleingartenanlage
-"Rahnsdorf":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },	// S-Bahnhof
-"Rahnsdorfer Straße":	{ districts: ["Marzahn-Hellersdorf", "Treptow-Köpenick"], localities: ["Friedrichshagen", "Mahlsdorf"] },
+"Rahnsdorf":	    { districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },	// S-Bahnhof
+"Rahnsdorfer Straße":	    { variants:  [
+                    { localities:["Friedrichshagen"],     white: ["köpenick", "treptow"] },
+                    { localities:["Mahlsdorf"],           white: ["bsr", "friedhofstraße", "hellersdorf", "hochwieser straße", "hoppegarten", "hultschiner damm", "hundeauslaufgebiet", "lehnitzstraße", "marzahn", "pilgramer straße", "recyclinghof", "röbeler weg", "summter straße", "wolfsberger straße"] }
+                    ]},
 "Rainweg":	{ districts: ["Treptow-Köpenick"], localities: ["Schmöckwitz"] },
 "Rallenweg":	{ districts: ["Reinickendorf"], localities: ["Heiligensee"] },
 "Rambowstraße":	{ districts: ["Neukölln"], localities: ["Britz"] },
