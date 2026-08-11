@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.1.84 Multi-Site Struktur
+// @name SuperMAX 7.1.85 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.1.84
+// @version 7.1.85
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -9567,6 +9567,7 @@ streetDirectory: {
                 ] },
 "Landsberger Chaussee":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },	// Spielplatz
 "Landsberger Straße":	{ districts: ["Marzahn-Hellersdorf", "Tempelhof-Schöneberg"], localities: ["Lichtenrade", "Mahlsdorf"] },
+"Landsberger Tor":    { districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] }, // Verschwundene Orte
 "Landschaftsfriedhof Gatow":	{ districts: ["Spandau"], localities: ["Gatow"] },	// Friedhof
 "Landschaftspark Adlershof":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },	// Grünanlage
 "Landschaftspark Johannisthal":	    { districts: ["Treptow-Köpenick"], localities: ["Johannisthal"] },	// Grünanlage
@@ -10684,9 +10685,17 @@ streetDirectory: {
 "Mühlendamm":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Mühlendorfstraße":	{ districts: ["Spandau"], localities: ["Staaken"] },
 "Mühlenfeldstraße":	{ districts: ["Reinickendorf"], localities: ["Hermsdorf"] },
-"Mühlenfließbrücke":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
-"Mühlenstraße":	{ districts: ["Friedrichshain-Kreuzberg", "Pankow", "Steglitz-Zehlendorf", "Treptow-Köpenick"], localities: ["Blankenburg", "Französisch Buchholz", "Friedrichshagen", "Friedrichshain", "Lankwitz", "Pankow", "Zehlendorf"] },
-
+"Mühlenfließbrücke":{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },
+"Mühlenstraße":	    { variants:  [
+                    { black:     ["lohmühlenstraße"] },
+                    { localities:["Blankenburg"],         white: ["abschnitt 14", "am fließ", "blankenburger wichtel", "brockenweg", "golf", "karow", "kirchstraße", "lindenberger weg", "marie-grünberg-straße", "parkstraße", "stadtrandsiedlung malchow", "straße 24", "straße 42", "straße 45", "suderoder graben", "suderoder straße", "ziegelstraße"] },
+                    { localities:["Französisch-Buchholz"],white: ["clémentweg", "direktion 1", "französisch buchholz", "friedhof", "gartenstraße", "gravensteinstraße", "hauptstraße", "navarraplatz", "rosenthaler weg", "schule am birkenhof", "straße 74", "triftstraße"] },
+                    { localities:["Friedrichshagen"],     white: ["albertusheim", "dahlewitzer landschtraße", "erpe", "erpestraße", "falkenhagen", "hoppegarten", "ravenstein", "ravensteiner promenade", "revierförsterei"] },
+                    { localities:["Friedrichshain"],      white: ["am postbahnhof", "bsr", "eastside gallery", "edith-kiss-straße", "eierkühlhaus", "eierspeicher", "hedwig-wachenheim-straße", "mariane-von-rantzau-straße", "mildred-harnack-straße", "ostbahnhof", "osthafen", "park an der spree", "pirates", "rummelsburger platz", "spree", "stralauer allee", "stralauer platz", "stralauer tor", "straße der pariser kommune", "tamara-danz-straße", "uber", "valeska-gert-straße", "warschauer straße"] },
+                    { localities:["Lankwitz"],            white: ["alt-lankwitz", "boraweg", "bibliothek", "bruchwitzstraße", "dreifaltigkeit", "friedhof", "gallwitzallee", "gemeindepark", "iyuno", "kamaradenweg", "kamenzer damm", "kriegsopfer", "lankwitzer spielkiste", "malteserstraße", "melanchthonstraße", "paul-schneider-straße", "polizeidirektion süd", "schulstraße", "stadtbücherei"] },
+                    { localities:["Pankow"],              white: ["abschnitt 13", "b96a", "botschaft", "berliner straße", "breite straße", "brennerstraße", "direktion 1", "florastraße", "gesang", "heinz-knobloch-platz", "ion luca caragiale", "jugendclub", "kambodscha", "krisendienst", "m24", "masurenstraße", "maximilianstraße", "ötztaler straße", "pankower wichtel", "samländische straße", "schulstraße", "seniorenwohnhaus", "tiroler straße", "vinetastraße", "vocasa vocal school", "wundermusikschule", "zillertalstraße"] },
+                    { localities:["Zehlendorf"],          white: ["bertholdstraße", "bowlingbahn", "dahlemer weg", "echtermeyerstraße", "finkensteinallee", "grünstreifen", "herbergerweg", "hochbaumstraße", "im mühlenfelde", "jänickestraße", "knesebeckstraße", "prinz-andjery-straße", "schönower straße", "schreberstraße", "seehofstraße", "sportpark", "stephanus", "stubenrauchstraße", "sundgauer straße"] }
+                    ]},
 "Mühlenweg":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
 "Mühlenwiese-Finkenheerd":	{ districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },	// Kleingartenanlage
 "Mühlsteinweg":	{ districts: ["Reinickendorf"], localities: ["Lübars"] },
@@ -11616,6 +11625,7 @@ streetDirectory: {
 "Pflugstraße":	{ districts: ["Mitte"], localities: ["Mitte"] },
 "Pforzheimer Straße":	{ districts: ["Reinickendorf"], localities: ["Waidmannslust"] },
 "Pfuelstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Kreuzberg"] },
+"Pharussäle":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Sehenswürdigkeit
 "Philharmonie":	{ districts: ["Mitte"], localities: ["Tiergarten"] }, // Bühne
 "Philipp-Franck-Weg":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Wannsee"] },
 "Philipp-Gerlach-Weg":	{ districts: ["Spandau"], localities: ["Staaken"] },
@@ -11809,6 +11819,8 @@ streetDirectory: {
 "Priesterstege":	{ districts: ["Pankow"], localities: ["Blankenburg"] },
 "Priesterweg":	{ districts: ["Neukölln", "Tempelhof-Schöneberg"], localities: ["Britz", "Schöneberg"] },	// S-Bahnhof
 "Prignitzstraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Biesdorf"] },
+"prime time theater":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Bühne
+"primetimetheater":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Bühne
 "Primelweg":	{ districts: ["Neukölln"], localities: ["Rudow"] },
 "Primusweg":	{ districts: ["Reinickendorf"], localities: ["Wittenau"] },
 "Prinz-Adalbert-Weg":	{ districts: ["Spandau"], localities: ["Hakenfelde"] },
@@ -14626,6 +14638,7 @@ streetDirectory: {
 "Stralauer Allee":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Stralauer Platz":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Stralauer Straße":	{ districts: ["Mitte"], localities: ["Mitte"] },
+"Stralauer Tor":    { districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] }, // Verschwundene Orte
 "Stralsunder Straße":	{ districts: ["Marzahn-Hellersdorf", "Mitte"], localities: ["Gesundbrunnen", "Mahlsdorf"] },
 "Strandbad am Tegeler See":	{ districts: ["Reinickendorf"], localities: ["Tegel"] },	// Badestelle
 "Strandbad Friedrichshagen":	{ districts: ["Treptow-Köpenick"], localities: ["Friedrichshagen"] },	// Badestelle
@@ -16949,7 +16962,7 @@ const CFG_DEFAULTS = {
         { pattern: "\\bsorg(en|t|te|ten?)\\b\\s+für\\s+Streit", flags: "gu", replacement: "führ$(1) zu Streit" },
         { pattern: "\\bspiegelverkehrt", flags: "gu", replacement: "seitenverkehrt" },
         { pattern: "\\b(Standby|Stand-By)", flags: "gu", replacement: "Stand-by" },
-        { pattern: "(S|s?)trasse", flags: "gu", replacement: "$(1)traße" },
+        { pattern: "([Ss])trasse", flags: "gu", replacement: "$(1)traße" }, // DEBUGGING Trasse
         { pattern: "\\bvon Bernd Meyer\\b", flags: "gu", replacement: "von Bernd S. Meyer" },
         { pattern: "\\b(Voranmeldung|vorherige Anmeldung|vorheriger Anmeldung)", flags: "gu", replacement: "Anmeldung" },
         { pattern: "\\bvorprogrammiert", flags: "gu", replacement: "programmiert" },
