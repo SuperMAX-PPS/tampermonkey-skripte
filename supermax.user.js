@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.1.92 Multi-Site Struktur
+// @name SuperMAX 7.1.93 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.1.92
+// @version 7.1.93
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -17557,7 +17557,7 @@ const CFG_DEFAULTS = {
         { pattern: "f3\\s*-\\s*", flags: "gu", replacement: "f³\u202F–\u202F" }, // Kultur-Fix
         { pattern: "\\b(\\d{1,4})\\s*[–-]\\s*(\\d{1,4})\\b", flags: "gu", replacement: "$(1)-$(2)" }, // Gedankenstrich zwischen zwei Zahlen wird Bindestrich
         { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s*–\\s*([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u00A0–\u00A0$(2)" }, // Gedankenstrich mit Leerzeichen bekommt geschützte Leerzeichen (vormals \u202F, jetzt \u00A0)
-        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\\u00A0–\u00A0$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich mit geschützten Leerzeichen (vormals \u202F, jetzt \u00A0)
+        { pattern: "(\\b[a-zA-ZäöüÄÖÜß]{2,})\\s-\\s([a-zA-ZäöüÄÖÜß]{2,}\\b)", flags: "gu", replacement: "$(1)\u00A0–\u00A0$(2)" },   // Bindestrich mit Leerzeichen wird Gedankenstrich mit geschützten Leerzeichen (vormals \u202F, jetzt \u00A0)
         { pattern: "(?<=\\b[a-zA-ZäöüÄÖÜß]{3,})\\s+/\\s+(?=[a-zA-ZäöüÄÖÜß]{3,}\\b)", flags: "gu", replacement: "\u00A0/\u00A0" },    // Slash mit Leerzeichen bekommt geschützte Leerzeichen (vormals \u202F, jetzt \u00A0)
         { pattern: "(\\(?\\d+)(\\s*)(/)(\\s*)(\\(?\\d+)", flags: "gu", replacement: "$(1)$(3)$(5)" }, // Slash zwischen zwei Zahlen ohne Leerzeichen
         { pattern: "\\s*#\\+\\s*", flags: "g", replacement: " " }, // Manuellen Absatz aus PPS (PEIQ) entfernen
