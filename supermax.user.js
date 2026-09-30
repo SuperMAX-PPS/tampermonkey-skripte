@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name SuperMAX 7.1.97 Multi-Site Struktur
+// @name SuperMAX 7.1.98 Multi-Site Struktur
 // @namespace https://www.berliner-woche.de/
-// @version 7.1.97
+// @version 7.1.98
 // @author Frank Luhn, Berliner Woche ©2026
 // @description SuperPORT (Textfelderkennung) | SuperSHIRT | SuperLINK | SuperERASER | SuperRED | SuperNOTES | SuperMAX (RegEx)
 // @updateURL https://raw.githubusercontent.com/SuperMAX-PPS/tampermonkey-skripte/main/supermax.user.js
@@ -9799,11 +9799,11 @@ streetDirectory: {
 "Kochemer Weg":	    { districts: ["Spandau"], localities: ["Hakenfelde"] },
 "Kochhannstraße":	{ districts: ["Friedrichshain-Kreuzberg"], localities: ["Friedrichshain"] },
 "Kochstraße":	    { variants:  [
-                    { localities:["Kreuzberg"],           white: ["u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"] } // U-Bahnhof
-                    { localities:["Kreuzberg"],           white: ["axel springer", "charlottenstraße", "checkpoint charlie", "friedrichstraße", "niederkirchnerstraße", "puttkamerstraße", "rudi-dutschke-straße", "topographie des terrors", "wilhelmstraße", "zimmerstraße"] },
-                    { localities:["Mariendorf"],          white: ["tempelhof"] }
+                    { localities:["Kreuzberg"],           white: ["u-bahnhof", "u-bahn", "u bahnhof", "bahnhof", "u-bahnstation"] }, // U-Bahnhof
+                    { localities:["Kreuzberg"],           white: ["abschnitt 53", "axel springer", "bekleidung und mode", "bundesverband", "charlottenstraße", "checkpoint charlie", "direktion 5", "friedrichstraße", "gipsindustrie", "lindenstraße", "markgrafenstraße", "modeschule", "niederkirchnerstraße", "oberstufenzentrum", "osz", "puttkamerstraße", "rudi-dutschke-straße", "stresemannstraße", "topographie des terrors", "wilhelmstraße", "zimmerstraße"] },
+                    { localities:["Mariendorf"],          white: ["bilingual", "kaiserstraße", "königstraße", "kurfürstenstraße", "machonstraße", "mariendorfer damm", "rathausstraße", "reulestraße", "schützenstraße", "skandinavisch", "tempelhof"] }
                     ]},
-"Koeltzepark":	    { districts: ["Spandau"], localities: ["Spandau"] },	// Grünanlage
+"Koeltzepark":	    { districts: ["Spandau"], localities: ["Spandau"] }, // Grünanlage
 "Koenigsallee":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] },
 "Koenigssee": 	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Grunewald"] }, // See
 "Kögelstraße":	    { districts: ["Reinickendorf"], localities: ["Reinickendorf"] },
@@ -9822,8 +9822,10 @@ streetDirectory: {
 "Kokoschkastraße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Hellersdorf"] },
 "Kokosfinkweg":	    { districts: ["Pankow"], localities: ["Blankenburg"] },
 "Kolberger Platz":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Schmargendorf"] }, // Spielplatz
-"Kolberger Straße":	{ districts: ["Marzahn-Hellersdorf", "Mitte"], localities: ["Gesundbrunnen", "Mahlsdorf"] },
-
+"Kolberger Straße":	{ variants:  [
+                    { localities:["Gesundbrunnen"],       white: ["abschnitt 18", "direktion 1", "gerichtstraße", "hochstraße", "humboldthain", "kunkelstraße", "pankstraße", "spielplatz", "walter-nicklitz-promenade", "wedding", "wiesenstraße"] },
+                    { localities:["Mahlsdorf"],           white: ["birkenstein", "daffingerweg", "dahlewitzer straße", "graffplatz", "hellersdorf", "kita der pad", "landsberger straße", "mahlsdorfer grundschule", "stralsunder straße", "tizianstraße", "terwestenstraße"] }
+                    ]},
 "Kolibriweg":	    { districts: ["Neukölln"], localities: ["Buckow"] },
 "Kolk":	            { districts: ["Spandau"], localities: ["Spandau"] }, // Spielplatz
 "Kolkrabenweg":	    { districts: ["Neukölln"], localities: ["Buckow"] },
@@ -9846,10 +9848,12 @@ streetDirectory: {
 "Kolonie Flora":	{ districts: ["Reinickendorf"], localities: ["Reinickendorf"] }, // Kleingartenanlage
 "Kolonie Wedding":	{ districts: ["Mitte"], localities: ["Wedding"] }, // Ausstellungen
 "Kolonie Zukunft":	{ variants:  [
-                    { localities:["Lichterfelde"],   white: ["kleingarten", "kleingartenanlage"] } // Kleingartenanlage
+                    { localities:["Lichterfelde"],        white: ["kleingarten", "kleingartenanlage"] } // Kleingartenanlage
                     ]},
-"Koloniestraße":	{ districts: ["Mitte", "Steglitz-Zehlendorf"], localities: ["Gesundbrunnen", "Lichterfelde"] },
-
+"Koloniestraße":	{ variants:  [
+                    { localities:["Gesundbrunnen"],       white: ["abschnitt 18", "badstraße", "bärenbande", "carl kraemer", "carl-kraemer", "direktion 1", "drontheimer straße", "exerzierstraße", "fischhauser weg", "fordoner straße", "franzosenbecken", "granatenstraße", "gustav böß", "gustav-böß", "heubuder straße", "holzstraße", "holzweg", "hugo-heim-brücke", "jugendfreizeiteinrichtung", "kühnemannstraße", "osloer straße", "panke", "phönix", "prinzenallee", "provinzstraße", "scherbeneck", "schönholz", "soldiner straße", "sommerglück", "sportanlage", "stockholmer straße", "werner kluge", "werner-kluge", "zechliner straße"] },
+                    { localities:["Lichterfelde"],        white: ["abschnitt 46", "blochmannstraße", "direktion 4", "geitnerweg", "glauberstraße", "großbeerenstraße", "hildburghauser straße", "holzkirche", "kaiserstraße", "karpfenteich", "lilienthal", "osdorfer straße", "resselsteig", "saaleckplatz", "schütte-lanz-straße", "sonnenblume", "steglitz", "südpark"] }
+                    ]},
 "Kolonnenstraße":	{ districts: ["Tempelhof-Schöneberg"], localities: ["Schöneberg"] },
 "Kölpiner Straße":	{ districts: ["Marzahn-Hellersdorf"], localities: ["Marzahn"] },
 "Kolpiner Weg":	    { districts: ["Treptow-Köpenick"], localities: ["Rahnsdorf"] },
@@ -9859,12 +9863,15 @@ streetDirectory: {
 "Kombibad Seestraße":	    { districts: ["Mitte"], localities: ["Wedding"] },	// Badestelle
 "Kombibad Spandau-Süd":	    { districts: ["Spandau"], localities: ["Wilhelmstadt"] },	// Badestelle
 "Komische Oper":    { variants:  [
-                    { localities:["Charlottenburg"],      white: ["schillertheater", "bismarckstraße", "charlottenburg"] }, // Bühne
-                    { localities:["Tempelhof"],           white: ["flughafen tempelhof", "columbiadamm", "tempelhof"] }, // Bühne
+                    { localities:["Charlottenburg"],      white: ["schillertheater", "bismarckstraße", "charlottenburg"] }, // Temporäre Bühne
+                    { localities:["Tempelhof"],           white: ["flughafen tempelhof", "columbiadamm", "tempelhof"] } // Temporäre Bühne
                     ]},
 "Kommandantenhaus":	        { districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
-"Kommandantenstraße":	    { districts: ["Friedrichshain-Kreuzberg", "Mitte", "Steglitz-Zehlendorf"], localities: ["Kreuzberg", "Lichterfelde", "Mitte"] },
-
+"Kommandantenstraße":	    { variants:  [
+                    { localities:["Kreuzberg"],           white: ["alexandrinenstraße", "alte jakobstraße", "axel-springer-straße", "beuthstraße", "botschaft", "krausenstraße", "luisenstadt", "moritzplatz", "neue grünstraße", "oranienstraße", "schützenstraße", "seydelstraße", "simbabwe", "stallschreiberstraße", "uganda", "waldeckpark"] },
+                    { localities:["Lichterfelde"],        white: ["steglitz"] },
+                    { localities:["Mitte"],               white: [""] }
+                    ]},
 "Kommunale Galerie":	    { districts: ["Charlottenburg-Wilmersdorf"], localities: ["Wilmersdorf"] },	// Museum
 "Kommunikationsmuseum":     { districts: ["Mitte"], localities: ["Mitte"] }, // Museum
 "Kompetenzzentrum":	{ variants:  [
@@ -9886,6 +9893,7 @@ streetDirectory: {
 "Königin-Elisabeth-Straße":	{ districts: ["Charlottenburg-Wilmersdorf"], localities: ["Westend"] },
 "Königin-Luise-Stiftung":	{ districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem"] },	// Schule
 "Königin-Luise-Straße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Dahlem", "Steglitz"] },
+
 "Königliche Bibliothek":	{ districts: ["Mitte"], localities: ["Mitte"] }, // Sehenswürdigkeit
 "Königsbacher Zeile":	    { districts: ["Reinickendorf"], localities: ["Frohnau"] },
 "Königsberger Straße":	    { districts: ["Steglitz-Zehlendorf"], localities: ["Lichterfelde"] },
